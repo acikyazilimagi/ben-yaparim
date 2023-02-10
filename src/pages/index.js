@@ -1,7 +1,127 @@
+import { useState, useEffect } from "react";
+
 import Head from "next/head";
 import Router from "next/router";
+import { db } from "@/src/firebase-config";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 
 export default function Home() {
+  const [requests, setRequests] = useState([]);
+  const requestRef = collection(db, "requests");
+
+  const [title, setTitle] = useState();
+  const [description, setDescription] = useState();
+  const [date, setDate] = useState();
+
+  const getRequests = async () => {
+    let response;
+
+    try {
+      response = await getDocs(collection(db, "requests"));
+      setRequests(response.docs.map((req) => ({ ...req.data(), id: req.id })));
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response.data);
+        console.log(err.response.status);
+        console.log(err.response.headers);
+      } else if (err.request) {
+        console.log(err.request);
+      } else {
+        console.log("Error", err.message);
+      }
+      response = err.response;
+    }
+
+    return response;
+  };
+
+  const openRequest = async () => {
+    let response;
+
+    try {
+      response = await addDoc(requestRef, {
+        title: title,
+        description: description,
+        date: date,
+      });
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response.data);
+        console.log(err.response.status);
+        console.log(err.response.headers);
+      } else if (err.request) {
+        console.log(err.request);
+      } else {
+        console.log("Error", err.message);
+      }
+      response = err.response;
+    }
+
+    return response;
+  };
+
+  const updateRequest = async (id) => {
+    let response;
+
+    const request = doc(db, "requests", id);
+    const newFields = {
+      title: "new title",
+      description: "new description",
+      date: "new date",
+    };
+
+    try {
+      response = await updateDoc(request, newFields);
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response.data);
+        console.log(err.response.status);
+        console.log(err.response.headers);
+      } else if (err.request) {
+        console.log(err.request);
+      } else {
+        console.log("Error", err.message);
+      }
+      response = err.response;
+    }
+
+    return response;
+  };
+
+  const deleteRequest = async (id) => {
+    let response;
+
+    const request = doc(db, "requests", id);
+
+    try {
+      response = await deleteDoc(request);
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response.data);
+        console.log(err.response.status);
+        console.log(err.response.headers);
+      } else if (err.request) {
+        console.log(err.request);
+      } else {
+        console.log("Error", err.message);
+      }
+      response = err.response;
+    }
+
+    return response;
+  };
+
+  useEffect(() => {
+    getRequests();
+  }, []);
+
   return (
     <>
       <Head>
@@ -10,10 +130,44 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex h-screen justify-between items-center mx-[20%]">
-        <button className="primary" onClick={()=> Router.push('/register')}>Gönüllü Ol</button>
-        <button className="primary">Gönüllü Bul</button>
-      </main>
+
+      <div className="grid bottom border-black justify-center my-2">
+        <input
+          placeholder="Title"
+          onChange={(e) => {
+            setTitle(e.target.value);
+          }}
+        />
+        <input
+          placeholder="Descrition"
+          onChange={(e) => {
+            setDescription(e.target.value);
+          }}
+        />
+        <input
+          placeholder="Date"
+          onChange={(e) => {
+            setDate(e.target.value);
+          }}
+        />
+        <button className="primary" onClick={() => openRequest()}>Add</button>
+      </div>
+
+      <div className="grid gap-2">
+        {requests?.map((req) => {
+          return (
+            <button className="primary" key={req.id}>
+              <h1>{req.title}</h1>
+              <p>{req.description}</p>
+              <p>{req.date}</p>
+              <div className="flex items-center justify-center gap-2">
+                <a className=" hover:text-red-400" onClick={() => updateRequest(req.id)}>Update</a>
+                <a className=" hover:text-red-400" onClick={() => deleteRequest(req.id)}>Delete</a>
+              </div>
+            </button>
+          );
+        })}
+      </div>
     </>
   );
 }
