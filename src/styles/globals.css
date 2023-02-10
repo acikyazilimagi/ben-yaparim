@@ -21,6 +21,7 @@
     border-color: lightgrey;
     border-radius: 0.4rem;
     box-shadow: 2px 2px lightgray;
+    cursor: pointer;
 }
 
 .primary:hover {
