@@ -54,7 +54,6 @@ export default function Home() {
           </svg>
         </div>
         <div className="flex justify-center space-x-10">
-          {console.log(calls)}
           {calls?.map((call) => {
             return (
               <Card
@@ -64,6 +63,7 @@ export default function Home() {
                 endDate={call.date.endDate}
                 needOfVolunteer={call.needOfVolunteer}
                 location="İstanbul"
+                id={call.id}
               />
             );
           })}
