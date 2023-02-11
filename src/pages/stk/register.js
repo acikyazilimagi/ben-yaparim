@@ -1,5 +1,4 @@
-import { useState, useEffect, useContext } from "react";
-
+import { useState, useContext } from "react";
 import { app } from "@/src/firebase-config";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
@@ -17,7 +16,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
 
   const userRef = collection(db, "users");
-  const { value, setValue } = useContext(UserContext);
+  const { stkProfile, setSdkProfile } = useContext(UserContext);
 
   const registerSTK = async (email, password) => {
     try {
@@ -26,7 +25,7 @@ export default function Register() {
         email,
         password
       );
-      setValue(user);
+      setSdkProfile(user);
       return user;
     } catch (err) {
       toast.error(err.message);
