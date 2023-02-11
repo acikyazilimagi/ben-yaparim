@@ -11,6 +11,7 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
+import Card from "@/components/Card";
 
 export default function Home() {
   const [requests, setRequests] = useState([]);
@@ -168,6 +169,25 @@ export default function Home() {
           );
         })}
       </div>
+      <main>
+        <div>
+          <p className="text-6xl text-center text-pink-600 mt-10 font-bold">
+            Kim yapar?
+          </p>
+          <p className="text-6xl text-center text-pink-600 mt-4 font-bold">
+            BEN YAPARIM
+          </p>
+          <p className="text-center max-w-xl w-1/2 m-auto my-20">
+            Ben Yaparım! <br /> Afet zamanlarında belli yetkinliklere sahip acil
+            gönüllü ihtiyacı duyan kurumlarla, bu ihtiyacı karşılayabilecek
+            gönüllü uzmanları bir araya getiren platformdur.
+          </p>
+          <p className="text-xl text-center text-pink-600 mt-10 font-bold">
+            Aktif çağrıları incele
+          </p>
+        </div>
+        <Card />
+      </main>
     </>
   );
 }
