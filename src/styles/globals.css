@@ -14,3 +14,16 @@
         height: 100%;
     }
 }
+
+.primary {
+    padding: 0.5rem;
+    border-width: 0.1rem;
+    border-color: lightgrey;
+    border-radius: 0.4rem;
+    box-shadow: 2px 2px lightgray;
+    cursor: pointer;
+}
+
+.primary:hover {
+    background-color: lightgrey;
+}
