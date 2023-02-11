@@ -124,6 +124,7 @@ const CallProvider = (props) => {
         setCallInput,
         calls,
         createNewCall,
+        getCalls
       }}
     >
       {props.children}

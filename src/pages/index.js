@@ -53,10 +53,11 @@ export default function Home() {
             />
           </svg>
         </div>
-        <div className="flex justify-center space-x-10">
-          {calls?.map((call) => {
+        <div className="flex flex-col lg:flex-row justify-center">
+          {calls?.map((call, i) => {
             return (
               <Card
+                key={i}
                 title={call.title}
                 description={call.description}
                 startDate={call.date.startDate}
