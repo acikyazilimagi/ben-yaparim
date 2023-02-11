@@ -1,12 +1,27 @@
 import { app } from "@/src/firebase-config";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 
 import toast from "react-hot-toast";
+import { UserContext } from "@/src/context/UserContext";
+import { useContext, useEffect } from "react";
+
+import Router from "next/router";
 
 const auth = getAuth(app);
 
 export default function Profile() {
-  
+  const { value, setValue } = useContext(UserContext);
+
+  useEffect(()=> {
+    onAuthStateChanged(auth, (value) => {
+      if (value) {
+      } else {
+        Router.push('/')
+      }
+    });
+  },[value])
+ 
+
   const logoutSTK = async () => {
     try {
       await signOut(auth);
@@ -18,7 +33,7 @@ export default function Profile() {
 
   return (
     <div>
-      <h1>Hello User</h1>
+      <h1>{value}</h1>
       <button
         className="primary bg-purple-400 hover:bg-purple-600"
         onClick={() => logoutSTK()}

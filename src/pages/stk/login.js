@@ -1,5 +1,7 @@
 import Router from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+
+import { UserContext } from "@/src/context/UserContext";
 
 import { app } from "@/src/firebase-config";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
@@ -12,6 +14,8 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { value, setValue } = useContext(UserContext);
+
   const loginSTK = async (email, password) => {
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
@@ -23,7 +27,10 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await loginSTK(email, password).then(() => Router.push("/stk/profile"));
+    await loginSTK(email, password).then((e) => {
+      setValue(e);
+      Router.push('/stk/profile')
+    });
   };
 
   return (
