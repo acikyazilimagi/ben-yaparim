@@ -1,5 +1,5 @@
+import Card from "@/components/Card";
 import Head from "next/head";
-import Router from "next/router";
 
 export default function Home() {
   return (
@@ -10,9 +10,24 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex h-screen justify-between items-center mx-[20%]">
-        <button className="primary" onClick={()=> Router.push('/register')}>Gönüllü Ol</button>
-        <button className="primary">Gönüllü Bul</button>
+      <main>
+        <div>
+          <p className="text-6xl text-center text-pink-600 mt-10 font-bold">
+            Kim yapar?
+          </p>
+          <p className="text-6xl text-center text-pink-600 mt-4 font-bold">
+            BEN YAPARIM
+          </p>
+          <p className="text-center max-w-xl w-1/2 m-auto my-20">
+            Ben Yaparım! <br /> Afet zamanlarında belli yetkinliklere sahip acil
+            gönüllü ihtiyacı duyan kurumlarla, bu ihtiyacı karşılayabilecek
+            gönüllü uzmanları bir araya getiren platformdur.
+          </p>
+          <p className="text-xl text-center text-pink-600 mt-10 font-bold">
+            Aktif çağrıları incele
+          </p>
+        </div>
+        <Card />
       </main>
     </>
   );
