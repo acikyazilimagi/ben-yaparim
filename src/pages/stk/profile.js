@@ -1,18 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { app } from "@/src/firebase-config";
-import {
-  getAuth,
-  signOut,
-  onAuthStateChanged,
-} from "firebase/auth";
-import toast from "react-hot-toast";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { UserContext } from "@/src/context/UserContext";
 import { CallContext } from "src/context/CallContext";
 import Router from "next/router";
 import { Button, Textarea, Input } from "@material-tailwind/react";
 import CallTabs from "@/components/CallTabs";
 import Modal from "@/components/Modal";
-import { DateRange } from "react-date-range";
 
 const auth = getAuth(app);
 
@@ -21,12 +15,7 @@ export default function Profile() {
     useContext(UserContext);
   const { callInput, setCallInput, createNewCall, calls, getCalls } =
     useContext(CallContext);
-  const [callModalStatus, toggleCallModal] = useState(false);
   const [profileModalStatus, toggleProfileModal] = useState(false);
-
-  const handleInputChange = (e) => {
-    setCallInput({ ...callInput, [e.target.name]: e.target.value });
-  };
 
   const handleProfileInputChange = (e) => {
     setUpdatedFields({ ...updatedField, [e.target.name]: e.target.value });
@@ -53,13 +42,6 @@ export default function Profile() {
     });
   }, [date]);
 
-  const createCall = () => {
-    createNewCall();
-    toggleCallModal(false);
-    setCallInput({});
-    getCalls();
-  };
-
   useEffect(() => {
     onAuthStateChanged(auth, (stkData) => {
       if (stkData) {
@@ -69,15 +51,6 @@ export default function Profile() {
       }
     });
   }, [stkData]);
-
-  const logoutSTK = async () => {
-    try {
-      await signOut(auth);
-      return true;
-    } catch (err) {
-      toast.error(err.message);
-    }
-  };
 
   return (
     <div className="m-10 lg:mx-36 space-y-10">
@@ -135,74 +108,11 @@ export default function Profile() {
           </div>
         </div>
       </div>
-      <Button color="pink" onClick={toggleCallModal}>
+      <Button color="pink" onClick={() => Router.push("/stk/open-call")}>
         + Yeni Çağrı Oluştur
       </Button>
       <CallTabs calls={calls} />
-      <Modal
-        show={callModalStatus}
-        close={() => {
-          toggleCallModal(false);
-        }}
-      >
-        <div className="w-fit z-30 mt-2 bg-background space-y-3">
-          <Input
-            variant="outlined"
-            label="Başlık"
-            name="title"
-            value={callInput.title}
-            onChange={(e) => handleInputChange(e)}
-          />
-          <Textarea
-            variant="outlined"
-            label="Açıklama"
-            name="description"
-            value={callInput.description}
-            onChange={(e) => handleInputChange(e)}
-          />
-          <Textarea
-            variant="outlined"
-            label="Ön koşul ve beklenen çalışma frekansı"
-            name="precondition"
-            value={callInput.precondition}
-            onChange={(e) => handleInputChange(e)}
-          />
-          <Input
-            variant="outlined"
-            label="Gönüllü Sayısı"
-            name="needOfVolunteer"
-            type="number"
-            value={callInput.needOfVolunteer}
-            onChange={(e) => handleInputChange(e)}
-          />
-          <Input
-            variant="outlined"
-            label="Konum"
-            name="location"
-            value={callInput.location}
-            onChange={(e) => handleInputChange(e)}
-          />
-          <Textarea
-            variant="outlined"
-            label="Notlar"
-            name="notes"
-            value={callInput.notes}
-            onChange={(e) => handleInputChange(e)}
-          />
-          <div>
-            <DateRange
-              editableDateInputs={true}
-              onChange={(item) => setDate([item.selection])}
-              moveRangeOnFirstSelection={false}
-              ranges={date}
-            />
-          </div>
 
-          <Button variant="outlined" onClick={createCall}>
-            Çağrı Oluştur
-          </Button>
-        </div>
-      </Modal>
       <Modal
         show={profileModalStatus}
         close={() => {

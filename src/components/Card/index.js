@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import Router from "next/router";
+
 import { Button } from "@material-tailwind/react";
 
 export default function Card({
@@ -8,7 +10,9 @@ export default function Card({
   endDate,
   needOfVolunteer,
   location,
+  id,
 }) {
+
   return (
     <div className="w-96 h-auto border-2 border-gray-300 p-5">
       <div className="flex justify-between my-3">
@@ -118,9 +122,12 @@ export default function Card({
         </div>
         <p className="my-2">{description}</p>
         <div className="flex justify-between">
-          <p className="text-pink-600 text-xs font-bold cursor-pointer items-center">
+          <button
+            className="text-pink-600 text-xs font-bold cursor-pointer items-center"
+            onClick={() => Router.push(`/${id}`)}
+          >
             Detaya Git
-          </p>
+          </button>
           <svg
             width="22"
             height="22"
