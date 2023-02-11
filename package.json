@@ -9,13 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@material-tailwind/react": "^1.2.5",
     "@next/font": "13.1.6",
     "@tailwindcss/forms": "^0.5.3",
     "firebase": "^9.17.1",
     "next": "13.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hot-toast": "^2.4.0"
+    "react-hot-toast": "^2.4.0",
+    "react-date-range": "^1.4.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",
