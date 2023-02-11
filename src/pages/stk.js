@@ -1,24 +1,44 @@
-import React, { useState } from "react";
-import { Button, Chip } from "@material-tailwind/react";
+import React, { useState, useContext, useEffect } from "react";
+import { Button, Chip, Textarea, Input } from "@material-tailwind/react";
 import CallTabs from "@/components/CallTabs";
 import Modal from "@/components/Modal";
 import Collapse from "@/components/Collapse";
 import Tooltip from "@/components/Tooltip";
-import { Textarea } from "@material-tailwind/react";
-import { Input } from "@material-tailwind/react";
+import { CallContext } from "src/context/CallContext";
+import { DateRange } from "react-date-range";
 
 export default function StkProfile() {
   const [showModal, toggleModal] = useState(false);
   const [showCallModal, openCreateCallModal] = useState(false);
 
-  const [callInput, setCallInput] = useState({});
+  const { callInput, setCallInput, createNewCall } = useContext(CallContext);
 
   const handleInputChange = (e) => {
     setCallInput({ ...callInput, [e.target.name]: e.target.value });
   };
 
+  const [date, setDate] = useState([
+    {
+      startDate: new Date(),
+      endDate: null,
+      key: "selection",
+    },
+  ]);
+
+  useEffect(() => {
+    setCallInput({
+      ...callInput,
+      date: date[0],
+    });
+  }, [date]);
+
+  const createCall = () => {
+    createNewCall();
+    openCreateCallModal(false);
+    setCallInput({});
+  };
   return (
-    <div className="m-10 lg:mx-36">
+    <div>
       <div className="flex items-center">
         <img
           width={100}
@@ -74,7 +94,7 @@ export default function StkProfile() {
           openCreateCallModal(false);
         }}
       >
-        <div className="w-96 z-30 mt-2 bg-background space-y-3">
+        <div className="w-fit z-30 mt-2 bg-background space-y-3">
           <Input
             variant="outlined"
             label="Başlık"
@@ -96,12 +116,19 @@ export default function StkProfile() {
             value={callInput.precondition}
             onChange={(e) => handleInputChange(e)}
           />
-
           <Input
             variant="outlined"
             label="Gönüllü Sayısı"
             name="needOfVolunteer"
+            type="number"
             value={callInput.needOfVolunteer}
+            onChange={(e) => handleInputChange(e)}
+          />
+          <Input
+            variant="outlined"
+            label="Konum"
+            name="location"
+            value={callInput.location}
             onChange={(e) => handleInputChange(e)}
           />
           <Textarea
@@ -111,6 +138,18 @@ export default function StkProfile() {
             value={callInput.notes}
             onChange={(e) => handleInputChange(e)}
           />
+          <div>
+            <DateRange
+              editableDateInputs={true}
+              onChange={(item) => setDate([item.selection])}
+              moveRangeOnFirstSelection={false}
+              ranges={date}
+            />
+          </div>
+
+          <Button variant="outlined" onClick={createCall}>
+            Çağrı Oluştur
+          </Button>
         </div>
       </Modal>
     </div>
