@@ -7,22 +7,38 @@ import {
 } from "@material-tailwind/react";
 import Card from "../Card";
 
-export default function CallTabs({ toggleModal }) {
+const renderOpenCallContent = (calls) => {
+  return calls?.map((call, i) => {
+    return (
+      <Card
+        key={i}
+        title={call.title}
+        description={call.description}
+        startDate={call.date.startDate}
+        endDate={call.date.endDate}
+        needOfVolunteer={call.needOfVolunteer}
+        location=""
+      />
+    );
+  });
+};
+
+export default function CallTabs({ calls }) {
   const data = [
     {
       label: "Açık Çağrılar",
       value: "acik",
-      desc: <Card toggleModal={toggleModal} />,
+      content: renderOpenCallContent(calls),
     },
     {
       label: "Kapalı Çağrılar",
       value: "kapali",
-      desc: <Card />,
+      content: "",
     },
     {
       label: "Taslaklar",
       value: "taslaklar",
-      desc: <Card />,
+      content: "",
     },
   ];
 
@@ -36,9 +52,9 @@ export default function CallTabs({ toggleModal }) {
         ))}
       </TabsHeader>
       <TabsBody>
-        {data.map(({ value, desc }) => (
+        {data.map(({ value, content }) => (
           <TabPanel key={value} value={value} className="my-5">
-            {desc}
+            <div className="flex justify-center space-x-10">{content}</div>
           </TabPanel>
         ))}
       </TabsBody>

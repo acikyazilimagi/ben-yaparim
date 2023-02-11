@@ -14,12 +14,12 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { value, setValue } = useContext(UserContext);
+  const { stkProfile, setSdkProfile } = useContext(UserContext);
 
   const loginSTK = async (email, password) => {
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
-      setValue(user);
+      setSdkProfile(user);
 
       return user;
     } catch (err) {
