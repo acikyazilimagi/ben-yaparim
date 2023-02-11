@@ -8,12 +8,12 @@ import { DateRange } from "react-date-range";
 import { UserContext } from "@/src/context/UserContext";
 
 import { app } from "@/src/firebase-config";
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const auth = getAuth(app);
 
 export default function OpenCall() {
-  const { callInput, setCallInput, createNewCall } = useContext(CallContext);
+  const { callInput, setCallInput, createNewCall, getCalls } = useContext(CallContext);
 
   const handleInputChange = (e) => {
     setCallInput({ ...callInput, [e.target.name]: e.target.value });
@@ -37,6 +37,7 @@ export default function OpenCall() {
   const createCall = () => {
     createNewCall();
     setCallInput({});
+    getCalls();
     Router.push('/stk/profile')
   };
 
