@@ -15,6 +15,7 @@ export default function Profile() {
   useEffect(()=> {
     onAuthStateChanged(auth, (value) => {
       if (value) {
+        console.log(auth.currentUser)
       } else {
         Router.push('/')
       }
@@ -33,7 +34,7 @@ export default function Profile() {
 
   return (
     <div>
-      <h1>{value}</h1>
+      <h1>{value.email}</h1>
       <button
         className="primary bg-purple-400 hover:bg-purple-600"
         onClick={() => logoutSTK()}

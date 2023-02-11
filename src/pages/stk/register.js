@@ -1,20 +1,23 @@
-import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useState, useEffect, useContext } from "react";
 
 import { app } from "@/src/firebase-config";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+import { db } from "@/src/firebase-config";
+import { collection, addDoc } from "firebase/firestore";
+import { UserContext } from "@/src/context/UserContext";
 
 import toast from "react-hot-toast";
+import Router from "next/router";
 
 const auth = getAuth(app);
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const userRef = collection(db, "users");
+  const { value, setValue } = useContext(UserContext);
 
   const registerSTK = async (email, password) => {
     try {
@@ -23,7 +26,24 @@ export default function Register() {
         email,
         password
       );
+      setValue(user);
       return user;
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  const addUser = async (user) => {
+    try {
+      const info = {
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        uid: user.uid,
+        needs: ["ilkyardim", "ehliyet"],
+      };
+
+      await addDoc(userRef, info);
     } catch (err) {
       toast.error(err.message);
     }
@@ -31,7 +51,12 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await registerSTK(email, password);
+    await registerSTK(email, password).then((e) => {
+      if (e.accessToken) {
+        addUser(e);
+        Router.push("/stk/profile");
+      }
+    });
   };
 
   return (

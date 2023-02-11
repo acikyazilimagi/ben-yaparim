@@ -19,6 +19,8 @@ export default function Login() {
   const loginSTK = async (email, password) => {
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
+      setValue(user);
+
       return user;
     } catch (err) {
       toast.error(err.message);
@@ -28,8 +30,9 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await loginSTK(email, password).then((e) => {
-      setValue(e);
-      Router.push('/stk/profile')
+      if (e.accessToken) {
+        Router.push("/stk/profile");
+      }
     });
   };
 
