@@ -6,7 +6,7 @@ import { app } from "@/src/firebase-config";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 
 export default function Navbar() {
-  const { value, setValue } = useContext(UserContext);
+  const { stkProfile } = useContext(UserContext);
 
   const logoutSTK = async () => {
     try {
@@ -19,7 +19,7 @@ export default function Navbar() {
   
   return (
     <div>
-      {!!value ? (
+      {!!stkProfile ? (
         <div className="flex justify-between items-center p-10 w-full">
           <div className="flex items-center">
             <img
