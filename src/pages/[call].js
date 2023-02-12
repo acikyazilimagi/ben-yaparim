@@ -1,6 +1,10 @@
 import Router from "next/router";
 import { useEffect, useState } from "react";
 
+import { UserContext } from "@/src/context/UserContext";
+import { app } from "@/src/firebase-config";
+import { getAuth, signOut } from "firebase/auth";
+
 import { db } from "@/src/firebase-config";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 
@@ -11,6 +15,8 @@ import Modal from "@/components/Modal";
 export default function CallDetail({ details }) {
   console.log(details);
   const [showModal, toggleModal] = useState(false);
+
+  const auth = getAuth(app);
 
   return (
     <>
@@ -127,7 +133,9 @@ export default function CallDetail({ details }) {
             </li>
           </ul>
           <button
-            onClick={() => toggleModal(true)}
+            onClick={() => {
+              !!auth.currentUser ? toggleModal(true) : Router.push("/register");
+            }}
             className="bg-pink-600 text-white p-3 text-sm rounded-full my-5 font-bold"
           >
             BEN YAPARIM!

@@ -6,7 +6,9 @@ import { db } from "@/src/firebase-config";
 import { collection, addDoc } from "firebase/firestore";
 import { UserContext } from "@/src/context/UserContext";
 import toast from "react-hot-toast";
+
 import Router from "next/router";
+import Link from "next/link";
 
 const auth = getAuth(app);
 
@@ -143,6 +145,12 @@ export default function Register() {
         <Button color="gray" type="submit" disabled={!email || !password}>
           Kayıt ol
         </Button>
+        <Link
+          href={"/login"}
+          className="text-center text-pink-600 font-bold hover:text-pink-800"
+        >
+          Zaten Kaydın Var mı? Giriş Yap.
+        </Link>
       </form>
     </div>
   );

@@ -18,7 +18,7 @@ const renderOpenCallContent = (calls) => {
         key={i}
         title={call.title}
         description={call.description}
-        startDate={call.date.startDate}
+        startDate={call?.date?.startDate}
         endDate={call.date.endDate}
         needOfVolunteer={call.needOfVolunteer}
         location=""
@@ -64,8 +64,6 @@ export default function Profile() {
       content: "",
     },
   ];
-
-  console.log("data", stkData);
 
   const handleProfileInputChange = (e) => {
     setUpdatedFields({ ...updatedField, [e.target.name]: e.target.value });
