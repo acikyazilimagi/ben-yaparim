@@ -29,7 +29,7 @@ const renderOpenCallContent = (calls) => {
 };
 
 export default function Profile() {
-  const { stkData, updateStkInfo, updatedField, setUpdatedFields, getStkInfo } =
+  const { profileData, updateStkInfo, updatedField, setUpdatedFields, getStkInfo } =
     useContext(UserContext);
   const { callInput, setCallInput, createNewCall, calls, getCalls } =
     useContext(CallContext);
@@ -92,18 +92,18 @@ export default function Profile() {
   }, [date]);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (stkData) => {
-      if (stkData) {
+    onAuthStateChanged(auth, (profileData) => {
+      if (profileData) {
         console.log(auth.currentUser);
       } else {
         Router.push("/");
       }
     });
-  }, [stkData]);
+  }, [profileData]);
 
   return (
     <div className="m-10 lg:mx-36 space-y-10">
-      {stkData?.role === "admin" ? (
+      {profileData?.role === "admin" ? (
         <>
           <div className="flex items-center">
             <p className="text-5xl font-bold mr-10">Kurum Profili</p>
@@ -133,25 +133,25 @@ export default function Profile() {
             <div className="flex flex-col space-y-5">
               <div className="flex space-x-5">
                 <p className="font-bold">Kurum İsmi </p>
-                <p>{stkData?.displayName}</p>
+                <p>{profileData?.displayName}</p>
               </div>
               <div className="flex space-x-5">
                 <p className="font-bold">Website</p>
-                <p>{stkData?.website}</p>
+                <p>{profileData?.website}</p>
               </div>
               <div className="flex space-x-5">
                 <p className="font-bold">E-mail </p>
-                <p>{stkData?.email}</p>
+                <p>{profileData?.email}</p>
               </div>
             </div>
             <div className="flex flex-col space-y-5">
               <div className="flex space-x-5">
                 <p className="font-bold">Adres </p>
-                <p>{stkData?.address}</p>
+                <p>{profileData?.address}</p>
               </div>
               <div className="flex space-x-5">
                 <p className="font-bold">Telefon </p>
-                <p>{stkData?.phone}</p>
+                <p>{profileData?.phone}</p>
               </div>
               <div className="flex space-x-5">
                 <p className="font-bold">Faaliyet Alanları</p>
@@ -237,16 +237,16 @@ export default function Profile() {
               <div className="flex space-x-5">
                 <p className="font-bold">İsim - Soyisim </p>
                 <p>
-                  {stkData?.name} {stkData?.surname}
+                  {profileData?.name} {profileData?.surname}
                 </p>
               </div>
               <div className="flex space-x-5">
                 <p className="font-bold">Telefon</p>
-                <p>{stkData?.phone}</p>
+                <p>{profileData?.phone}</p>
               </div>
               <div className="flex space-x-5">
                 <p className="font-bold">E-mail </p>
-                <p>{stkData?.email}</p>
+                <p>{profileData?.email}</p>
               </div>
               <div className="flex space-x-5">
                 <p className="font-bold">Lokasyon </p>

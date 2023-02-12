@@ -33,7 +33,7 @@ export default function OpenCall() {
 
   const { callInput, setCallInput, createNewCall, getCalls } =
     useContext(CallContext);
-  const { stkProfile } = useContext(UserContext);
+  const { autProfileData } = useContext(UserContext);
 
   const handleInputChange = (e) => {
     setCallInput({ ...callInput, [e.target.name]: e.target.value });
@@ -100,7 +100,7 @@ export default function OpenCall() {
         Router.push("/");
       }
     });
-  }, [stkProfile]);
+  }, [autProfileData]);
 
   const skills = [
     "ilk yardım",

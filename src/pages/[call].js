@@ -5,7 +5,7 @@ import { app } from "@/src/firebase-config";
 import { getAuth, signOut } from "firebase/auth";
 
 import { db } from "@/src/firebase-config";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { UserContext } from "@/src/context/UserContext";
 import { CallContext } from "@/src/context/CallContext";
 
@@ -18,7 +18,7 @@ import Collapse from "@/components/Collapse";
 export default function CallDetail({ details, call }) {
   const [showModal, toggleModal] = useState(false);
   const [applicantModalStatus, setApplicantModalStatus] = useState(false);
-  const { stkData } = useContext(UserContext);
+  const { profileData } = useContext(UserContext);
   const { calls } = useContext(CallContext);
   const [allApplicants, setAllApplicants] = useState([]);
 
@@ -27,7 +27,7 @@ export default function CallDetail({ details, call }) {
 
     try {
       await updateDoc(request, {
-        applicants: arrayUnion(stkData),
+        applicants: arrayUnion(profileData),
       });
     } catch (err) {
       toast.error(err.message);
@@ -35,7 +35,7 @@ export default function CallDetail({ details, call }) {
   };
 
   const handleApplicationCall = () => {
-    if (stkData) {
+    if (profileData) {
       updateCall();
       toggleModal(true);
     } else {

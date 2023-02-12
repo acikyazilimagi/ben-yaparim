@@ -20,7 +20,7 @@ export default function Register() {
   });
 
   const userRef = collection(db, "users");
-  const { stkProfile, setSdkProfile } = useContext(UserContext);
+  const { setAuthProfileData } = useContext(UserContext);
 
   const registerSTK = async (email, password) => {
     try {
@@ -29,7 +29,7 @@ export default function Register() {
         email,
         password
       );
-      setSdkProfile(user);
+      setAuthProfileData(user);
       return user;
     } catch (err) {
       toast.error(err.message);
