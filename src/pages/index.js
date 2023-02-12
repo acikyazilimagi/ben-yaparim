@@ -53,7 +53,7 @@ export default function Home() {
             />
           </svg>
         </div>
-        <div className="flex flex-col lg:flex-row justify-center">
+        <div className="grid grid-cols-2 gap-4 xl:flex justify-center">
           {calls?.map((call, i) => {
             return (
               <Card
