@@ -24,6 +24,7 @@ export default function Card({
   checkedSkills,
   location,
   id,
+  role = "volunteer",
 }) {
   return (
     <div className="h-auto min-h-full border-2 border-gray-300 p-5">
@@ -39,7 +40,9 @@ export default function Card({
 
         <div className="flex items-center space-x-1">
           <People className="w-6 h-6" />
-          <p className="text-sm font-bold text-gray-500">{applicants && applicants.length}+ </p>
+          <p className="text-sm font-bold text-gray-500">
+            {applicants && applicants.length}+{" "}
+          </p>
         </div>
       </div>
       <hr />
@@ -70,7 +73,7 @@ export default function Card({
           {applicants && applicants.length} gönüllü başvurdu.
         </p>
         <Button color="pink" onClick={() => Router.push(`/${id}`)}>
-          BEN YAPARIM!
+          {role === "volunteer" ? "BEN YAPARIM!" : "DETAYA GİT"}
         </Button>
       </div>
     </div>

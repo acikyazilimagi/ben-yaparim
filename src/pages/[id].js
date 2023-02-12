@@ -189,7 +189,9 @@ export default function CallDetail() {
             <li className="flex w-full border-b-2 py-4">
               <div
                 className="flex min-w-full justify-between cursor-pointer"
-                onClick={seeAllApplicants}
+                onClick={() => {
+                  profileData?.role === "admin" && seeAllApplicants();
+                }}
               >
                 <div className="flex space-x-2 text-l font-bold text-gray-600">
                   <Envelope className="w-6 h-6" />
@@ -205,14 +207,16 @@ export default function CallDetail() {
               </div>
             </li>
           </ul>
-          <button
-            onClick={handleApplicationCall}
-            //!!auth.currentUser ? toggleModal(true) : Router.push("/register");
+          {profileData?.role === "volunteer" && (
+            <button
+              onClick={handleApplicationCall}
+              //!!auth.currentUser ? toggleModal(true) : Router.push("/register");
 
-            className="bg-pink-600 text-white p-3 text-sm rounded-full my-5 font-bold"
-          >
-            BEN YAPARIM!
-          </button>
+              className="bg-pink-600 text-white p-3 text-sm rounded-full my-5 font-bold"
+            >
+              BEN YAPARIM!
+            </button>
+          )}
         </div>
       </div>
       <p className="text-xs mx-[6%] my-3">
