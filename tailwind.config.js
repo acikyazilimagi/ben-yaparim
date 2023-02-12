@@ -6,7 +6,11 @@ module.exports = withMT({
     "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        marker: ["PermanentMarker", "sans-serif"],
+      },
+    },
   },
   plugins: [require("@tailwindcss/forms")],
 });

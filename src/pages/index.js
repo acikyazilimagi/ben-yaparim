@@ -19,7 +19,7 @@ export default function Home() {
           <p className="text-6xl text-center text-pink-600 mt-10 font-bold">
             Kim yapar?
           </p>
-          <p className="text-6xl text-center text-pink-600 mt-4 font-bold">
+          <p className="text-6xl text-center text-pink-600 mt-4 font-bold font-marker">
             BEN YAPARIM
           </p>
           <p className="text-center max-w-xl w-1/2 m-auto my-20">
