@@ -1,6 +1,6 @@
 import Router from "next/router";
 import { useState, useEffect, useContext } from "react";
-
+import { Button, Textarea, Input } from "@material-tailwind/react";
 import { UserContext } from "@/src/context/UserContext";
 
 import { app } from "@/src/firebase-config";
@@ -39,35 +39,23 @@ export default function Login() {
   return (
     <div>
       <form className="max-w-xl mx-auto grid gap-y-4" onSubmit={handleSubmit}>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            E-posta adresi
-          </label>
-          <div className="mt-1">
-            <input
-              type="email"
-              placeholder="adin@örnek.com"
-              className="shadow-sm block w-full sm:text-sm border-gray-300 rounded-md"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-        </div>
+        <Input
+          type="email"
+          variant="outlined"
+          label="E-mail"
+          name="name"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Şifren
-          </label>
-          <div className="mt-1">
-            <input
-              type="password"
-              placeholder="********"
-              className="shadow-sm block w-full sm:text-sm border-gray-300 rounded-md"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-        </div>
+        <Input
+          type="password"
+          variant="outlined"
+          label="Şifre"
+          name="name"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
         <button
           disabled={!email || !password}

@@ -1,16 +1,16 @@
 import Router from "next/router";
 import { useState, useContext } from "react";
 
+import { app } from "@/src/firebase-config";
+import { getAuth, signOut } from "firebase/auth";
+
 import { db } from "@/src/firebase-config";
 import {
   collection,
   getDocs,
   doc,
   getDoc,
-  updateDoc,
-  arrayUnion,
 } from "firebase/firestore";
-import { UserContext } from "@/src/context/UserContext";
 
 import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
@@ -20,28 +20,7 @@ import toast from "react-hot-toast";
 export default function CallDetail({ details, call }) {
   const [showModal, toggleModal] = useState(false);
 
-  const { stkData } = useContext(UserContext);
-
-  const updateCall = async () => {
-    const request = doc(db, "requests", call);
-
-    try {
-      await updateDoc(request, {
-        applicants: arrayUnion(stkData),
-      });
-    } catch (err) {
-      toast.error(err.message);
-    }
-  };
-
-  const handleApplicationCall = () => {
-    if (stkData) {
-      updateCall();
-      toggleModal(true);
-    } else {
-      Router.push("/stk/register");
-    }
-  };
+  const auth = getAuth(app);
 
   return (
     <>
@@ -158,7 +137,9 @@ export default function CallDetail({ details, call }) {
             </li>
           </ul>
           <button
-            onClick={handleApplicationCall}
+            onClick={() => {
+              !!auth.currentUser ? toggleModal(true) : Router.push("/register");
+            }}
             className="bg-pink-600 text-white p-3 text-sm rounded-full my-5 font-bold"
           >
             BEN YAPARIM!
