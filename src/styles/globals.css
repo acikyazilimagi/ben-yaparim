@@ -15,6 +15,11 @@
     }
 }
 
+@font-face {
+    font-family: "PermanentMarker";
+    src: url("../../public/fonts/PermanentMarker.ttf");
+}
+
 .primary {
     padding: 0.5rem;
     border-width: 0.1rem;
