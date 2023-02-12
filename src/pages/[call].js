@@ -1,16 +1,47 @@
 import Router from "next/router";
-import { useEffect, useState } from "react";
+import { useState, useContext } from "react";
 
 import { db } from "@/src/firebase-config";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  updateDoc,
+  arrayUnion,
+} from "firebase/firestore";
+import { UserContext } from "@/src/context/UserContext";
 
 import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
 import Modal from "@/components/Modal";
+import toast from "react-hot-toast";
 
-export default function CallDetail({ details }) {
-  console.log(details);
+export default function CallDetail({ details, call }) {
   const [showModal, toggleModal] = useState(false);
+
+  const { stkData } = useContext(UserContext);
+
+  const updateCall = async () => {
+    const request = doc(db, "requests", call);
+
+    try {
+      await updateDoc(request, {
+        applicants: arrayUnion(stkData),
+      });
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleApplicationCall = () => {
+    if (stkData) {
+      updateCall();
+      toggleModal(true);
+    } else {
+      Router.push("/stk/register");
+    }
+  };
 
   return (
     <>
@@ -127,7 +158,7 @@ export default function CallDetail({ details }) {
             </li>
           </ul>
           <button
-            onClick={() => toggleModal(true)}
+            onClick={handleApplicationCall}
             className="bg-pink-600 text-white p-3 text-sm rounded-full my-5 font-bold"
           >
             BEN YAPARIM!
@@ -186,7 +217,7 @@ export async function getStaticProps({ params }) {
 
     const details = call_details_full;
 
-    return details ? { props: { details } } : { notFound: true };
+    return details ? { props: { details, call } } : { notFound: true };
   } catch (error) {
     console.error(error);
     return { notFound: true };
