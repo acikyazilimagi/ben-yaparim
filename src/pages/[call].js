@@ -1,16 +1,11 @@
 import Router from "next/router";
-import { useState, useContext } from "react";
+import { useState } from "react";
 
 import { app } from "@/src/firebase-config";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 import { db } from "@/src/firebase-config";
-import {
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-} from "firebase/firestore";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 
 import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
@@ -21,7 +16,7 @@ export default function CallDetail({ details, call }) {
   const [showModal, toggleModal] = useState(false);
 
   const auth = getAuth(app);
-
+  console.log(details);
   return (
     <>
       <Modal
@@ -52,14 +47,13 @@ export default function CallDetail({ details, call }) {
             <h1 className="text-4xl mt-4 font-bold">{details?.title}</h1>
           </div>
           <p className="max-w-xl w-1/2 my-10">{details?.description}</p>
+          <p className="max-w-xl w-1/2 my-8">{details?.precondition}</p>
           <div className="my-2">
             <p className="text-xl mt-4 font-bold text-gray-600">
               Aranan Yekinlikler
             </p>
             <div className="mt-2 flex gap-x-2">
-              <ColorTag text="ilk yardım" color="#FFDCDC" />
-              <ColorTag text="tercümanlık" color="#9CC7FF" />
-              <ColorTag text="tamir" color="#72DDC3" />
+              {details?.checkedSkills.map((skill)=> <ColorTag text={skill} color="#FFDCDC" />)}
             </div>
           </div>
 
@@ -69,14 +63,16 @@ export default function CallDetail({ details, call }) {
                 Dil Bilgisi
               </p>
               <div className="mt-2 flex gap-x-2">
-                <LanguageTag text="Çince" />
+                {details?.checkedLanguages.map((language) => (
+                  <LanguageTag text={language} />
+                ))}
               </div>
             </div>
             <div>
               <p className="text-xl mt-6 font-bold text-gray-600">
                 Ehliyet Bilgisi
               </p>
-              <p className="mt-2">Tags</p>
+              <p className="mt-2">{details?.checkedCertificates?.includes('Ehliyet') ? "Ehliyet gerekir." : "Ehliyet gerekmez."}</p>
             </div>
           </div>
 
@@ -84,7 +80,7 @@ export default function CallDetail({ details, call }) {
             <p className="text-xl mt-6 font-bold text-gray-600">
               Önemli Bilgiler
             </p>
-            <p className="mt-2">Tags</p>
+            <p className="max-w-xl w-1/2 my-3">{details?.notes}</p>
           </div>
         </div>
 
@@ -131,7 +127,7 @@ export default function CallDetail({ details, call }) {
                   <p>Başvuran Gönüllü Sayısı</p>
                 </div>
                 <div className="flex space-x-2 text-l font-bold">
-                  <p>76</p>
+                  <p>{details?.applicants?.length > 0 ? details?.applicants?.length : 'İlk adımı sen at!'}</p>
                 </div>
               </div>
             </li>
