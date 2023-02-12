@@ -22,10 +22,11 @@ export default function OpenCall() {
   const { callInput, setCallInput, createNewCall, getCalls } =
     useContext(CallContext);
 
-  const handleInputChange = (e) => {
-    setCallInput({ ...callInput, value: value });
-  };
-
+    const handleInputChange = (e) => {
+      setCallInput({ ...callInput, value: value });
+      console.log(callInput)
+    };
+    
   const [date, setDate] = useState([
     {
       startDate: new Date(),
@@ -41,6 +42,15 @@ export default function OpenCall() {
     });
   }, [date]);
 
+  const [checkedCertificates, setCheckedCertificates] = useState([]);
+  useEffect(() => {
+    setCallInput({
+      ...callInput,
+      checkedCertificates: validateSkillSelection(),
+    });
+    console.log(callInput)
+  }, [checkedCertificates]);
+
   const createCall = () => {
     createNewCall();
     setCallInput({});
@@ -53,7 +63,7 @@ export default function OpenCall() {
   useEffect(() => {
     onAuthStateChanged(auth, (value) => {
       if (value) {
-        console.log(auth.currentUser);
+        //console.log(auth.currentUser);
       } else {
         Router.push("/");
       }
@@ -74,9 +84,50 @@ export default function OpenCall() {
     ["yazılım", "#E5DCF9"],
   ];
 
-  const language_spoken = ["Türkçe", "İngilizce", "Arapça", "İspanyola", "Fransızca", "Japonca", "Portekizce", "Rusça"];
+  const language_spoken = [
+    "Türkçe",
+    "İngilizce",
+    "Arapça",
+    "İspanyola",
+    "Fransızca",
+    "Japonca",
+    "Portekizce",
+    "Rusça",
+  ];
   const certificates = ["Ehliyet", "İlk yardım eğitimi", "AKUT/AFAD eğitimi"];
   const facilities = ["Yol Masrafı", "Konaklama", "Yemek"];
+
+  function validateSkillSelection() {
+    const checked = []
+    var check_box = document.getElementsByName("skills");
+    for (var i = 0; i < check_box.length; i++) {
+      if (check_box[i].checked) {
+        checked.push(check_box[i].value);
+      }
+    }
+    return checked;
+  }
+
+  function validateLanguageSelection() {
+    var check_box = document.getElementsByName("languages");
+    for (var i = 0; i < check_box.length; i++) {
+      if (check_box[i].checked) CheckedItems++;
+    }
+  }
+
+  function validateCertificateSelection() {
+    var check_box = document.getElementsByName("certificates");
+    for (var i = 0; i < check_box.length; i++) {
+      if (check_box[i].checked) CheckedItems++;
+    }
+  }
+
+  function validateFacilitiesSelection() {
+    var check_box = document.getElementsByName("facilities");
+    for (var i = 0; i < check_box.length; i++) {
+      if (check_box[i].checked) CheckedItems++;
+    }
+  }
 
   return (
     <div className="border border-gray-200 mx-[6%] px-[2%] p-10 justify-start  bg-background space-y-3">
@@ -139,7 +190,6 @@ export default function OpenCall() {
                 type="number"
                 min={0}
                 value={callInput.needOfVolunteer}
-                onChange={(e) => handleInputChange(e)}
               />
             </div>
           </div>
@@ -152,9 +202,11 @@ export default function OpenCall() {
           return (
             <div className="flex min-w-fit items-center">
               <input
+                name="skills"
                 type="checkbox"
                 value={skill}
                 className="w-5 h-5 text-blue-600 bg-gray-100 border-gray"
+                onClick={() => setCheckedCertificates(skill[0])}
               />
               <label
                 for="checked-checkbox"
@@ -174,6 +226,7 @@ export default function OpenCall() {
           return (
             <div className="flex min-w-fit items-center">
               <input
+                name="languages"
                 type="checkbox"
                 value={languages}
                 className="w-5 h-5 text-blue-600 bg-gray-100 border-gray"
@@ -195,6 +248,7 @@ export default function OpenCall() {
           return (
             <div className="flex min-w-fit items-center">
               <input
+                name="certificates"
                 type="checkbox"
                 value={certificate}
                 className="w-5 h-5 text-blue-600 bg-gray-100 border-gray"
@@ -216,6 +270,7 @@ export default function OpenCall() {
           return (
             <div className="flex min-w-fit items-center">
               <input
+                name="facilities"
                 type="checkbox"
                 value={facility}
                 className="w-5 h-5 text-blue-600 bg-gray-100 border-gray"
