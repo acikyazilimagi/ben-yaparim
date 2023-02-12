@@ -28,9 +28,34 @@ const renderOpenCallContent = (calls) => {
   });
 };
 
+const renderAppliedCallContent = (calls, id) => {
+  return calls?.map((call, i) => {
+    return call?.applicants?.map(
+      (applicant) =>
+        applicant.id === id && (
+          <Card
+            key={i}
+            title={call.title}
+            description={call.description}
+            startDate={call?.date?.startDate}
+            endDate={call.date?.endDate}
+            needOfVolunteer={call.needOfVolunteer}
+            location=""
+            id={call.id}
+          />
+        )
+    );
+  });
+};
+
 export default function Profile() {
-  const { profileData, updateStkInfo, updatedField, setUpdatedFields, getStkInfo } =
-    useContext(UserContext);
+  const {
+    profileData,
+    updateStkInfo,
+    updatedField,
+    setUpdatedFields,
+    getStkInfo,
+  } = useContext(UserContext);
   const { callInput, setCallInput, createNewCall, calls, getCalls } =
     useContext(CallContext);
   const [profileModalStatus, toggleProfileModal] = useState(false);
@@ -57,7 +82,7 @@ export default function Profile() {
     {
       label: "Aktif Başvurularım",
       value: "aktif",
-      content: renderOpenCallContent(calls),
+      content: renderAppliedCallContent(calls, profileData?.id),
     },
     {
       label: "Kapanmış Başvurularım",
