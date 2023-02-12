@@ -8,11 +8,10 @@ import {
   Select,
   Option,
 } from "@material-tailwind/react";
-
+import { addCall } from "@/src/firebase/calls";
 import { CallContext } from "src/context/CallContext";
 import { DateRange } from "react-date-range";
 import { UserContext } from "@/src/context/UserContext";
-
 import { app } from "@/src/firebase-config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -31,7 +30,7 @@ export default function OpenCall() {
     },
   ]);
 
-  const { callInput, setCallInput, createNewCall, getCalls } =
+  const { callInput, setCallInput } =
     useContext(CallContext);
   const { autProfileData } = useContext(UserContext);
 
@@ -86,10 +85,8 @@ export default function OpenCall() {
   };
 
   const createCall = () => {
-    createNewCall();
-    setCallInput({});
-    getCalls();
     Router.push("/stk/profile");
+    addCall(callInput)
   };
 
   useEffect(() => {

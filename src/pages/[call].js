@@ -1,5 +1,5 @@
 import Router from "next/router";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import { app } from "@/src/firebase-config";
 import { getAuth } from "firebase/auth";
@@ -105,7 +105,7 @@ export default function CallDetail({ details, call }) {
               Aranan Yekinlikler
             </p>
             <div className="mt-2 flex gap-x-2">
-              {details?.checkedSkills.map((skill)=> <ColorTag text={skill} color="#FFDCDC" />)}
+              {details?.checkedSkills?.map((skill)=> <ColorTag text={skill} color="#FFDCDC" />)}
             </div>
           </div>
 
@@ -115,7 +115,7 @@ export default function CallDetail({ details, call }) {
                 Dil Bilgisi
               </p>
               <div className="mt-2 flex gap-x-2">
-                {details?.checkedLanguages.map((language) => (
+                {details?.checkedLanguages?.map((language) => (
                   <LanguageTag text={language} />
                 ))}
               </div>
