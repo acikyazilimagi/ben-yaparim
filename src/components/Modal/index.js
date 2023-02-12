@@ -10,7 +10,7 @@ export default function Modal({ title, children, show, close }) {
         }}
       >
         <div
-          className="p-5 rounded-md bg-blue-gray-100"
+          className="p-5 rounded-md bg-blue-gray-50"
           onClick={(e) => {
             e.stopPropagation();
           }}

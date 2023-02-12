@@ -14,12 +14,12 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { stkProfile, setSdkProfile } = useContext(UserContext);
+  const { autProfileData, setAuthProfileData } = useContext(UserContext);
 
   const loginSTK = async (email, password) => {
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
-      setSdkProfile(user);
+      setAuthProfileData(user);
 
       return user;
     } catch (err) {
@@ -30,7 +30,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await loginSTK(email, password).then((e) => {
-      if (e.accessToken) {
+      if (e?.accessToken) {
         Router.push("/stk/profile");
       }
     });

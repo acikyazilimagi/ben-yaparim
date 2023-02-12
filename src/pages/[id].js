@@ -1,27 +1,62 @@
-import Router from "next/router";
-import { useState } from "react";
+import Router, { useRouter } from "next/router";
+import { useState, useContext, useEffect } from "react";
 
 import { app } from "@/src/firebase-config";
 import { getAuth } from "firebase/auth";
 
 import { db } from "@/src/firebase-config";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
-
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  updateDoc,
+  arrayUnion,
+} from "firebase/firestore";
+import { UserContext } from "@/src/context/UserContext";
 import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
 import Modal from "@/components/Modal";
 import toast from "react-hot-toast";
-
+import Collapse from "@/components/Collapse";
+import { getAllCalls, getCall } from "@/src/firebase/calls";
+import {
+  addApplicant,
+  getApplicants,
+  updateApplicantApprovedStatus,
+} from "../firebase/applicants";
+import { updateUserAppliedCalls } from "../firebase/users";
 import Location from "@/src/components/icons/Location";
 import Calendar from "@/src/components/icons/Calendar";
 import People from "@/src/components/icons/People";
 import Envelope from "@/src/components/icons/Envelope";
 
-export default function CallDetail({ details, call }) {
+export default function CallDetail() {
   const [showModal, toggleModal] = useState(false);
+  const [applicantModalStatus, setApplicantModalStatus] = useState(false);
+  const { profileData } = useContext(UserContext);
 
-  const auth = getAuth(app);
-  console.log(details);
+  const router = useRouter();
+  const { id } = router.query;
+  const [call, setCall] = useState([]);
+  const [applicants, setApplicants] = useState();
+
+  useEffect(() => {
+    if (id) {
+      getCall(id).then((data) => setCall(data));
+    }
+  }, [id]);
+
+  const handleApplicationCall = () => {
+    addApplicant(id);
+    updateUserAppliedCalls(null, id, "pending");
+  };
+
+  const seeAllApplicants = () => {
+    getApplicants().then((data) => setApplicants(data));
+    setApplicantModalStatus(true);
+  };
+
   return (
     <>
       <Modal
@@ -46,22 +81,42 @@ export default function CallDetail({ details, call }) {
         </div>
       </Modal>
 
+      <Modal
+        show={applicantModalStatus}
+        close={() => {
+          setApplicantModalStatus(false);
+        }}
+      >
+        <div className="w-96 h-96 z-30 mt-2 bg-background items-center text-center overflow-y-auto overflow-x-hidden">
+          {applicants?.map((user) => (
+            <Collapse
+              name={user.name}
+              surname={user.surname}
+              location="Ankara"
+              key={user.uid}
+              id={user.uid}
+              callId={id}
+            />
+          ))}
+        </div>
+      </Modal>
+
       <div className="border border-gray-200 m-[6%] px-[2%] pb-10 xl:flex justify-start">
         <div className="w-1/2 mr-[5%]">
           <div className="my-5 flex justify-between">
-            <h1 className="text-4xl mt-4 font-bold">{details?.title}</h1>
+            {/* <h1 className="text-4xl mt-4 font-bold">{details?.title}</h1> */}
           </div>
-          <p className="max-w-xl w-1/2 my-10">{details?.description}</p>
-          <p className="max-w-xl w-1/2 my-8">{details?.precondition}</p>
+          {/* <p className="max-w-xl w-1/2 my-10">{details?.description}</p>
+          <p className="max-w-xl w-1/2 my-8">{details?.precondition}</p> */}
           <div className="my-2">
             <p className="text-xl mt-4 font-bold text-gray-600">
               Aranan Yekinlikler
             </p>
-            <div className="mt-2 flex gap-x-2">
+            {/* <div className="mt-2 flex gap-x-2">
               {details?.checkedSkills?.map((skill) => (
                 <ColorTag text={skill} color="#FFDCDC" />
               ))}
-            </div>
+            </div> */}
           </div>
 
           <div className="my-2 flex justify-between">
@@ -69,20 +124,20 @@ export default function CallDetail({ details, call }) {
               <p className="text-xl mt-6 font-bold text-gray-600">
                 Dil Bilgisi
               </p>
-              <div className="mt-2 flex gap-x-2">
+              {/* <div className="mt-2 flex gap-x-2">
                 {details?.checkedLanguages?.map((language) => (
                   <LanguageTag text={language} />
                 ))}
-              </div>
+              </div> */}
             </div>
             <div>
               <p className="text-xl mt-6 font-bold text-gray-600">
                 Ehliyet Bilgisi
               </p>
               <p className="mt-2">
-                {details?.checkedCertificates?.includes("Ehliyet")
+                {/* {details?.checkedCertificates?.includes("Ehliyet")
                   ? "Ehliyet gerekir."
-                  : "Ehliyet gerekmez."}
+                  : "Ehliyet gerekmez."} */}
               </p>
             </div>
           </div>
@@ -91,7 +146,7 @@ export default function CallDetail({ details, call }) {
             <p className="text-xl mt-6 font-bold text-gray-600">
               Önemli Bilgiler
             </p>
-            <p className="max-w-xl w-1/2 my-3">{details?.notes}</p>
+            {/* <p className="max-w-xl w-1/2 my-3">{details?.notes}</p> */}
           </div>
         </div>
 
@@ -132,25 +187,28 @@ export default function CallDetail({ details, call }) {
               </div>
             </li>
             <li className="flex w-full border-b-2 py-4">
-              <div className="flex min-w-full justify-between">
+              <div
+                className="flex min-w-full justify-between cursor-pointer"
+                onClick={seeAllApplicants}
+              >
                 <div className="flex space-x-2 text-l font-bold text-gray-600">
                   <Envelope className="w-6 h-6" />
                   <p>Başvuran Gönüllü Sayısı</p>
                 </div>
                 <div className="flex space-x-2 text-l font-bold">
-                  <p>
+                  {/* <p>
                     {details?.applicants?.length > 0
                       ? details?.applicants?.length
                       : "İlk adımı sen at!"}
-                  </p>
+                  </p> */}
                 </div>
               </div>
             </li>
           </ul>
           <button
-            onClick={() => {
-              !!auth.currentUser ? toggleModal(true) : Router.push("/register");
-            }}
+            onClick={handleApplicationCall}
+            //!!auth.currentUser ? toggleModal(true) : Router.push("/register");
+
             className="bg-pink-600 text-white p-3 text-sm rounded-full my-5 font-bold"
           >
             BEN YAPARIM!
@@ -176,42 +234,4 @@ export default function CallDetail({ details, call }) {
       </p>
     </>
   );
-}
-
-export async function getStaticPaths() {
-  let paths = [];
-
-  try {
-    const querySnapshot = await getDocs(collection(db, "requests"));
-
-    querySnapshot.forEach((doc) => {
-      paths.push({ params: { call: doc?.id } });
-    });
-  } catch (e) {
-    console.log(e);
-  }
-
-  return {
-    paths,
-    fallback: true,
-  };
-}
-
-export async function getStaticProps({ params }) {
-  const { call } = params;
-
-  try {
-    const docRef = doc(db, "requests", call);
-    const call_details = await getDoc(docRef);
-
-    const call_details_full = call_details.data();
-    delete call_details_full.date;
-
-    const details = call_details_full;
-
-    return details ? { props: { details, call } } : { notFound: true };
-  } catch (error) {
-    console.error(error);
-    return { notFound: true };
-  }
 }
