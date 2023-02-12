@@ -4,6 +4,7 @@ import Link from "next/link";
 import { UserContext } from "@/src/context/UserContext";
 import { app } from "@/src/firebase-config";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import toast from "react-hot-toast";
 
 export default function Navbar() {
   const { stkProfile } = useContext(UserContext);
@@ -41,7 +42,7 @@ export default function Navbar() {
       ) : (
         <div className="flex justify-end p-10 w-full">
           <Link
-            href={"/stk/login"}
+            href={"/login"}
             className="text-center text-pink-600 font-bold"
           >
             Kurum Girişi
