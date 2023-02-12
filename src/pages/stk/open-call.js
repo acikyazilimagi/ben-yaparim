@@ -13,7 +13,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 const auth = getAuth(app);
 
 export default function OpenCall() {
-  const { callInput, setCallInput, createNewCall, getCalls } = useContext(CallContext);
+  const { callInput, setCallInput, createNewCall, getCalls } =
+    useContext(CallContext);
 
   const handleInputChange = (e) => {
     setCallInput({ ...callInput, [e.target.name]: e.target.value });
@@ -38,7 +39,7 @@ export default function OpenCall() {
     createNewCall();
     setCallInput({});
     getCalls();
-    Router.push('/stk/profile')
+    Router.push("/stk/profile");
   };
 
   const { value, setValue } = useContext(UserContext);
@@ -72,21 +73,21 @@ export default function OpenCall() {
         variant="outlined"
         label="Başlık"
         name="title"
-        value={callInput.title}
+        value={callInput?.title}
         onChange={(e) => handleInputChange(e)}
       />
       <Textarea
         variant="outlined"
         label="Açıklama"
         name="description"
-        value={callInput.description}
+        value={callInput?.description}
         onChange={(e) => handleInputChange(e)}
       />
       <Textarea
         variant="outlined"
         label="Ön koşul ve beklenen çalışma frekansı"
         name="precondition"
-        value={callInput.precondition}
+        value={callInput?.precondition}
         onChange={(e) => handleInputChange(e)}
       />
       <div className="flex justify-start gap-x-10">
@@ -107,7 +108,7 @@ export default function OpenCall() {
             variant="outlined"
             label="Konum"
             name="location"
-            value={callInput.location}
+            value={callInput?.location}
             onChange={(e) => handleInputChange(e)}
           />
         </div>
@@ -125,7 +126,7 @@ export default function OpenCall() {
               />
               <label
                 for="checked-checkbox"
-                class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
               >
                 {skill}
               </label>
@@ -141,7 +142,7 @@ export default function OpenCall() {
           label="Gönüllü Sayısı"
           name="needOfVolunteer"
           type="number"
-          value={callInput.needOfVolunteer}
+          value={callInput?.needOfVolunteer}
           onChange={(e) => handleInputChange(e)}
         />
       </div>
@@ -150,7 +151,7 @@ export default function OpenCall() {
         variant="outlined"
         label="Notlar"
         name="notes"
-        value={callInput.notes}
+        value={callInput?.notes}
         onChange={(e) => handleInputChange(e)}
       />
 

@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import {
   Accordion,
   AccordionHeader,
@@ -24,7 +24,19 @@ function Icon({ id, open }) {
   );
 }
 
-export default function Collapse() {
+export default function Collapse({
+  name,
+  surname,
+  location,
+  phone,
+  email,
+  language,
+  scope,
+  licence,
+  approvalStatus,
+  id,
+  updateApprovalStatus
+}) {
   const [open, setOpen] = useState(0);
 
   const handleOpen = (value) => {
@@ -32,17 +44,17 @@ export default function Collapse() {
   };
 
   return (
-    <div className="w-96">
+    <div className="border border-gray-400 p-2">
       <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
         <AccordionHeader onClick={() => handleOpen(1)}>
-          Ad Soyad
+          {name} {surname}
         </AccordionHeader>
         <AccordionBody>
-          <p>Başvurduğu il: İstanbul</p>
+          <p>Başvurduğu il: {location}</p>
           <Chip color="indigo" value="x" />
           <Chip color="indigo" value="x" />
           <div className="flex justify-center">
-            <Button color="green" className="mx-2">
+            <Button color="green" className="mx-2" onClick={() => updateApprovalStatus(id)}>
               Ön Onay
             </Button>
             <Button color="red">Reddet</Button>

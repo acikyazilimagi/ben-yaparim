@@ -11,16 +11,19 @@ import {
   arrayUnion,
 } from "firebase/firestore";
 import { UserContext } from "@/src/context/UserContext";
-
+import { CallContext } from "@/src/context/CallContext";
 import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
 import Modal from "@/components/Modal";
 import toast from "react-hot-toast";
+import Collapse from "@/components/Collapse";
 
 export default function CallDetail({ details, call }) {
   const [showModal, toggleModal] = useState(false);
-
+  const [applicantModalStatus, setApplicantModalStatus] = useState(false);
   const { stkData } = useContext(UserContext);
+  const { calls } = useContext(CallContext);
+  const [allApplicants, setAllApplicants] = useState([]);
 
   const updateCall = async () => {
     const request = doc(db, "requests", call);
@@ -41,6 +44,11 @@ export default function CallDetail({ details, call }) {
     } else {
       Router.push("/stk/register");
     }
+  };
+
+  const seeAllApplicants = () => {
+    setAllApplicants(calls.find((item) => item.id === call)?.applicants);
+    setApplicantModalStatus(true);
   };
 
   return (
@@ -64,6 +72,26 @@ export default function CallDetail({ details, call }) {
             Lütfen E-posta kutunuzu (spam kutusunu da) sık sık kontrol edin.
           </p>
           <p className="text-2xl">Sağlıklı günler dileriz.</p>
+        </div>
+      </Modal>
+
+      <Modal
+        show={applicantModalStatus}
+        close={() => {
+          setApplicantModalStatus(false);
+        }}
+      >
+        <div className="w-96 h-96 z-30 mt-2 bg-background items-center text-center overflow-y-auto overflow-x-hidden">
+          {allApplicants?.map((m) => (
+            <Collapse
+              name={m.name}
+              surname={m.surname}
+              location="Ankara"
+              key={m.id}
+              updateApprovalStatus={updateApprovalStatus}
+              id={m.id}
+            />
+          ))}
         </div>
       </Modal>
 
@@ -146,7 +174,10 @@ export default function CallDetail({ details, call }) {
               </div>
             </li>
             <li className="flex w-full border-b-2 py-4">
-              <div className="flex min-w-full justify-between">
+              <div
+                className="flex min-w-full justify-between cursor-pointer"
+                onClick={seeAllApplicants}
+              >
                 <div className="flex space-x-2 text-l font-bold text-gray-600">
                   <p>H</p>
                   <p>Başvuran Gönüllü Sayısı</p>
@@ -214,7 +245,6 @@ export async function getStaticProps({ params }) {
 
     const call_details_full = call_details.data();
     delete call_details_full.date;
-
     const details = call_details_full;
 
     return details ? { props: { details, call } } : { notFound: true };
