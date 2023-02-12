@@ -1,10 +1,15 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import Head from "next/head";
 import { CallContext } from "src/context/CallContext";
 import Card from "@/components/Card";
+import { getAllCalls } from "@/src/firebase/calls";
 
 export default function Home() {
-  const { calls } = useContext(CallContext);
+  const [calls, setCalls] = useState([]);
+
+  useEffect(() => {
+    getAllCalls().then((data) => setCalls(data));
+  }, []);
 
   return (
     <div className="m-10 lg:mx-36 pb-10">

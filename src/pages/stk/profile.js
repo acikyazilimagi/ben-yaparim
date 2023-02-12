@@ -128,7 +128,7 @@ export default function Profile() {
 
   return (
     <div className="m-10 lg:mx-36 space-y-10">
-      {profileData?.role === "admin" ? (
+    
         <>
           <div className="flex items-center">
             <p className="text-5xl font-bold mr-10">Kurum Profili</p>
@@ -231,7 +231,6 @@ export default function Profile() {
             </div>
           </Modal>
         </>
-      ) : (
         <>
           <div className="flex items-center">
             <p className="text-5xl font-bold mr-10">Gönüllü Profilim</p>
@@ -322,7 +321,7 @@ export default function Profile() {
             </div>
           </Modal>
         </>
-      )}
+
     </div>
   );
 }

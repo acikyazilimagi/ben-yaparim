@@ -10,11 +10,8 @@ import {
 import { db } from "@/src/firebase-config";
 
 export const addCall = async (callData) => {
-  let response;
   try {
-    response = await addDoc(collection(db, "calls"), callData);
-    console.log("res", response);
-    return response;
+    await addDoc(collection(db, "calls"), callData);
   } catch (error) {
     console.log(error);
   }
@@ -27,7 +24,7 @@ export const getAllCalls = async () => {
     const querySnapshot = await getDocs(q);
     const data = [];
     querySnapshot.forEach((doc) => {
-      data.push(doc.data);
+      data.push({ ...doc.data(), id: doc.id });
     });
     return data;
   } catch (error) {

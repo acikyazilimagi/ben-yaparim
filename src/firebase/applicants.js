@@ -4,9 +4,13 @@ import {
   updateDoc,
   getDocs,
   getDoc,
-  collection,
+  setDoc,
+  doc,
   addDoc,
+  where,
 } from "firebase/firestore";
+import { auth, db } from "../firebase-config";
+import { getUser } from "./users";
 
 export const getApplicants = async () => {
   try {
@@ -15,9 +19,14 @@ export const getApplicants = async () => {
     const querySnapshot = await getDocs(q);
     const data = [];
     querySnapshot.forEach((doc) => {
-      data.push(doc.data);
+      data.push(doc.data());
     });
-    return data;
+    return await Promise.all(
+      data.map(async (applicant) => {
+        const user = await getUser(applicant.uid);
+        return { ...user, applicant };
+      })
+    );
   } catch (error) {
     console.log(error);
   }
@@ -38,21 +47,31 @@ export const getApplicant = async (id) => {
   }
 };
 
-export const addApplicant = async (applicantData) => {
+export const addApplicant = async (id) => {
   try {
-    await addDoc(collection(db, "applicants"), applicantData);
+    const { currentUser } = auth;
+    await addDoc(collection(db, "applicants"), {
+      callID: id,
+      uid: currentUser?.uid,
+      approvedStatus: false,
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
-export const updateApplicantApprovedStatus = async (applicantId, status) => {
+
+export const updateApplicantApprovedStatus = async (id) => {
   try {
-    const docRef = doc(db, "applicants", applicantId);
-    await updateDoc(docRef, {
-      approvedStatus: status,
+    const { currentUser } = auth;
+    const collectionRef = collection(db, "applicants");
+    const q = query(collectionRef, where("uid", "==", currentUser?.uid));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (document) => {
+      await updateDoc(doc(db, "applicants", document.id), {
+        approvedStatus: true,
+      });//update user applied call status
     });
-    return { approvedStatus };
   } catch (error) {
     console.log(error);
   }

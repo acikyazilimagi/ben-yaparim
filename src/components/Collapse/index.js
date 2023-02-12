@@ -6,6 +6,7 @@ import {
 } from "@material-tailwind/react";
 import { Button } from "@material-tailwind/react";
 import { Chip } from "@material-tailwind/react";
+import { updateApplicantApprovedStatus } from "@/src/firebase/applicants";
 
 function Icon({ id, open }) {
   return (
@@ -35,6 +36,7 @@ export default function Collapse({
   licence,
   approvalStatus,
   id,
+  callId
 }) {
   const [open, setOpen] = useState(0);
 
@@ -53,7 +55,13 @@ export default function Collapse({
           <Chip color="indigo" value="x" />
           <Chip color="indigo" value="x" />
           <div className="flex justify-center">
-            <Button color="green" className="mx-2">
+            <Button
+              color="green"
+              className="mx-2"
+              onClick={() => {
+                updateApplicantApprovedStatus(callId);
+              }}
+            >
               Ön Onay
             </Button>
             <Button color="red">Reddet</Button>

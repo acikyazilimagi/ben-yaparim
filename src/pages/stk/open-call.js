@@ -85,8 +85,8 @@ export default function OpenCall() {
   };
 
   const createCall = () => {
-    Router.push("/stk/profile");
     addCall(callInput)
+    Router.push("/stk/profile");
   };
 
   useEffect(() => {
