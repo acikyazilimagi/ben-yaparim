@@ -1,19 +1,23 @@
 import Router from "next/router";
-import { useEffect, useState } from "react";
+import { useState, useContext } from "react";
 
-import { UserContext } from "@/src/context/UserContext";
 import { app } from "@/src/firebase-config";
 import { getAuth, signOut } from "firebase/auth";
 
 import { db } from "@/src/firebase-config";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 
 import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
 import Modal from "@/components/Modal";
+import toast from "react-hot-toast";
 
-export default function CallDetail({ details }) {
-  console.log(details);
+export default function CallDetail({ details, call }) {
   const [showModal, toggleModal] = useState(false);
 
   const auth = getAuth(app);
@@ -194,7 +198,7 @@ export async function getStaticProps({ params }) {
 
     const details = call_details_full;
 
-    return details ? { props: { details } } : { notFound: true };
+    return details ? { props: { details, call } } : { notFound: true };
   } catch (error) {
     console.error(error);
     return { notFound: true };

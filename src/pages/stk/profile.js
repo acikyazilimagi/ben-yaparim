@@ -19,9 +19,10 @@ const renderOpenCallContent = (calls) => {
         title={call.title}
         description={call.description}
         startDate={call?.date?.startDate}
-        endDate={call.date.endDate}
+        endDate={call.date?.endDate}
         needOfVolunteer={call.needOfVolunteer}
         location=""
+        id={call.id}
       />
     );
   });

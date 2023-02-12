@@ -6,7 +6,6 @@ import { db } from "@/src/firebase-config";
 import { collection, addDoc } from "firebase/firestore";
 import { UserContext } from "@/src/context/UserContext";
 import toast from "react-hot-toast";
-
 import Router from "next/router";
 import Link from "next/link";
 
@@ -36,7 +35,6 @@ export default function Register() {
       toast.error(err.message);
     }
   };
-  console.log("info", info);
 
   const addUser = async (user) => {
     try {
@@ -118,29 +116,6 @@ export default function Register() {
         </div>
         <p className="text-xl">Yetkinlikler</p>
         <p className="text-xl">Acil Durum Kontak Bilgileri</p>
-        {/* <div className="flex justify-between space-x-2">
-          <Input
-            variant="outlined"
-            label="İsim"
-            name="contactName"
-            value={info?.contactName}
-            onChange={(e) => handleProfileInputChange(e.target.value)}
-          />
-          <Input
-            variant="outlined"
-            label="Soyisim"
-            name="contactSurname"
-            value={info?.contactSurname}
-            onChange={(e) => handleProfileInputChange(e.target.value)}
-          />
-          <Input
-            variant="outlined"
-            label="Telefon"
-            name="contactPhone"
-            value={info?.contactPhone}
-            onChange={(e) => handleProfileInputChange(e.target.value)}
-          />
-        </div> */}
 
         <Button color="gray" type="submit" disabled={!email || !password}>
           Kayıt ol
