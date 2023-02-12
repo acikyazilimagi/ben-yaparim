@@ -5,9 +5,16 @@ import { app } from "@/src/firebase-config";
 import { getAuth, signOut } from "firebase/auth";
 
 import toast from "react-hot-toast";
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "@/src/context/UserContext";
 
 export default function Navbar() {
-  const auth = getAuth(app);
+  const { stkProfile } = useContext(UserContext);
+  const [auth, setAuth] = useState(false);
+
+  useEffect(() => {
+    setAuth(getAuth(app));
+  }, [stkProfile]);
 
   const logoutSTK = async () => {
     try {
