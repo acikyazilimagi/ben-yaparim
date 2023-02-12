@@ -19,14 +19,10 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 const auth = getAuth(app);
 
 export default function OpenCall() {
-  const { callInput, setCallInput, createNewCall, getCalls } =
-    useContext(CallContext);
+  const [checkedSkills, setCheckedSkills] = useState([]);
+  const [checkedLanguages, setCheckedLanguage] = useState([]);
+  const [checkedCertificates, setCheckedCertificates] = useState([]);
 
-    const handleInputChange = (e) => {
-      setCallInput({ ...callInput, value: value });
-      console.log(callInput)
-    };
-    
   const [date, setDate] = useState([
     {
       startDate: new Date(),
@@ -35,6 +31,16 @@ export default function OpenCall() {
     },
   ]);
 
+  const { callInput, setCallInput, createNewCall, getCalls } =
+    useContext(CallContext);
+  const { stkProfile } = useContext(UserContext);
+
+  const handleInputChange = (e) => {
+    setCallInput({ ...callInput, [e.target.name]: e.target.value });
+  };
+
+  console.log("callInput", callInput);
+
   useEffect(() => {
     setCallInput({
       ...callInput,
@@ -42,14 +48,44 @@ export default function OpenCall() {
     });
   }, [date]);
 
-  const [checkedCertificates, setCheckedCertificates] = useState([]);
   useEffect(() => {
     setCallInput({
       ...callInput,
-      checkedCertificates: validateSkillSelection(),
+      checkedSkills: checkedSkills,
+      checkedLanguages: checkedLanguages,
+      checkedCertificates: checkedCertificates,
     });
-    console.log(callInput)
-  }, [checkedCertificates]);
+  }, [checkedSkills, checkedLanguages, checkedCertificates]);
+
+  const handleSkillCheck = (event) => {
+    let updatedList = [...checkedSkills];
+    if (event.target.checked) {
+      updatedList = [...checkedSkills, event.target.value];
+    } else {
+      updatedList.splice(checkedSkills.indexOf(event.target.value), 1);
+    }
+    setCheckedSkills(updatedList);
+  };
+
+  const handleLanguageCheck = (event) => {
+    let updatedList = [...checkedLanguages];
+    if (event.target.checked) {
+      updatedList = [...checkedLanguages, event.target.value];
+    } else {
+      updatedList.splice(checkedLanguages.indexOf(event.target.value), 1);
+    }
+    setCheckedLanguage(updatedList);
+  };
+
+  const handleCertificateCheck = (event) => {
+    let updatedList = [...checkedCertificates];
+    if (event.target.checked) {
+      updatedList = [...checkedCertificates, event.target.value];
+    } else {
+      updatedList.splice(checkedCertificates.indexOf(event.target.value), 1);
+    }
+    setCheckedCertificates(updatedList);
+  };
 
   const createCall = () => {
     createNewCall();
@@ -57,8 +93,6 @@ export default function OpenCall() {
     getCalls();
     Router.push("/stk/profile");
   };
-
-  const { value, setValue } = useContext(UserContext);
 
   useEffect(() => {
     onAuthStateChanged(auth, (value) => {
@@ -68,20 +102,20 @@ export default function OpenCall() {
         Router.push("/");
       }
     });
-  }, [value]);
+  }, [stkProfile]);
 
   const skills = [
-    ["ilk yardım", "#FFDCDC"],
-    ["yemek hazırlık", "#FFD66E"],
-    ["tamir", "#72DDC3"],
-    ["nakliye", "#CFDFFF"],
-    ["saha görevlisi", "#93E088"],
-    ["tercümanlık", "#9CC7FF"],
-    ["eğitim", "#FADCFF"],
-    ["psikolojik destek", "#C2F5E9"],
-    ["temizlik", "#D1F7C4"],
-    ["çadır kurulumu", "#FFC7BB"],
-    ["yazılım", "#E5DCF9"],
+    "ilk yardım",
+    "yemek hazırlık",
+    "tamir",
+    "nakliye",
+    "saha görevlisi",
+    "tercümanlık",
+    "eğitim",
+    "psikolojik destek",
+    "temizlik",
+    "çadır kurulumu",
+    "yazılım",
   ];
 
   const language_spoken = [
@@ -96,38 +130,6 @@ export default function OpenCall() {
   ];
   const certificates = ["Ehliyet", "İlk yardım eğitimi", "AKUT/AFAD eğitimi"];
   const facilities = ["Yol Masrafı", "Konaklama", "Yemek"];
-
-  function validateSkillSelection() {
-    const checked = []
-    var check_box = document.getElementsByName("skills");
-    for (var i = 0; i < check_box.length; i++) {
-      if (check_box[i].checked) {
-        checked.push(check_box[i].value);
-      }
-    }
-    return checked;
-  }
-
-  function validateLanguageSelection() {
-    var check_box = document.getElementsByName("languages");
-    for (var i = 0; i < check_box.length; i++) {
-      if (check_box[i].checked) CheckedItems++;
-    }
-  }
-
-  function validateCertificateSelection() {
-    var check_box = document.getElementsByName("certificates");
-    for (var i = 0; i < check_box.length; i++) {
-      if (check_box[i].checked) CheckedItems++;
-    }
-  }
-
-  function validateFacilitiesSelection() {
-    var check_box = document.getElementsByName("facilities");
-    for (var i = 0; i < check_box.length; i++) {
-      if (check_box[i].checked) CheckedItems++;
-    }
-  }
 
   return (
     <div className="border border-gray-200 mx-[6%] px-[2%] p-10 justify-start  bg-background space-y-3">
@@ -198,22 +200,21 @@ export default function OpenCall() {
 
       <p className="text-gray-400 font-bold my-3">Aranılan Yetenekler</p>
       <div className="grid grid-cols-4 gap-3 pb-3">
-        {skills.map((skill) => {
+        {skills.map((skill, index) => {
           return (
-            <div className="flex min-w-fit items-center">
+            <div className="flex min-w-fit items-center" key={index}>
               <input
                 name="skills"
                 type="checkbox"
                 value={skill}
                 className="w-5 h-5 text-blue-600 bg-gray-100 border-gray"
-                onClick={() => setCheckedCertificates(skill[0])}
+                onChange={handleSkillCheck}
               />
               <label
-                for="checked-checkbox"
+                htmlFor="checked-checkbox"
                 className="ml-2 p-1 text-sm font-medium w-28"
-                style={{ backgroundColor: skill[1] }}
               >
-                {skill[0]}
+                {skill}
               </label>
             </div>
           );
@@ -222,17 +223,18 @@ export default function OpenCall() {
 
       <p className="text-gray-400 font-bold pt-6">Konuşulan Diller</p>
       <div className="grid grid-cols-4 gap-3 pb-3">
-        {language_spoken.map((languages) => {
+        {language_spoken.map((languages, index) => {
           return (
-            <div className="flex min-w-fit items-center">
+            <div className="flex min-w-fit items-center" key={index}>
               <input
                 name="languages"
                 type="checkbox"
                 value={languages}
                 className="w-5 h-5 text-blue-600 bg-gray-100 border-gray"
+                onChange={handleLanguageCheck}
               />
               <label
-                for="checked-checkbox"
+                htmlFor="checked-checkbox"
                 className="ml-2 p-1 text-sm font-medium w-28"
               >
                 {languages}
@@ -242,19 +244,20 @@ export default function OpenCall() {
         })}
       </div>
 
-      <p className="text-gray-400 font-bold pt-6">Yetkinlikler</p>
+      <p className="text-gray-400 font-bold pt-6">Sertifikalar</p>
       <div className="grid grid-cols-1 gap-3 pb-3">
-        {certificates.map((certificate) => {
+        {certificates.map((certificate, index) => {
           return (
-            <div className="flex min-w-fit items-center">
+            <div className="flex min-w-fit items-center" key={index}>
               <input
                 name="certificates"
                 type="checkbox"
                 value={certificate}
                 className="w-5 h-5 text-blue-600 bg-gray-100 border-gray"
+                onChange={handleCertificateCheck}
               />
               <label
-                for="checked-checkbox"
+                htmlFor="checked-checkbox"
                 className="ml-2 p-1 text-sm font-medium w-full"
               >
                 {certificate}
@@ -266,9 +269,9 @@ export default function OpenCall() {
 
       <p className="text-gray-400 font-bold pt-6">Sağlanan İmkanlar</p>
       <div className="grid grid-cols-1 gap-3 pb-3">
-        {facilities.map((facility) => {
+        {facilities.map((facility, index) => {
           return (
-            <div className="flex min-w-fit items-center">
+            <div className="flex min-w-fit items-center" key={index}>
               <input
                 name="facilities"
                 type="checkbox"
@@ -276,7 +279,7 @@ export default function OpenCall() {
                 className="w-5 h-5 text-blue-600 bg-gray-100 border-gray"
               />
               <label
-                for="checked-checkbox"
+                htmlFor="checked-checkbox"
                 className="ml-2 p-1 text-sm font-medium w-full"
               >
                 {facility}

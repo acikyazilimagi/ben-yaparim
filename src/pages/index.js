@@ -60,8 +60,8 @@ export default function Home() {
                 key={i}
                 title={call.title}
                 description={call.description}
-                startDate={call.date.startDate}
-                endDate={call.date.endDate}
+                startDate={call.date?.startDate}
+                endDate={call.date?.endDate}
                 needOfVolunteer={call.needOfVolunteer}
                 location="İstanbul"
                 id={call.id}
