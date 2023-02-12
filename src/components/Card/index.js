@@ -11,6 +11,7 @@ import Check from "@/src/components/icons/Check";
 
 import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
+import { Status } from "@/src/utils/constants";
 
 export default function Card({
   title,
@@ -25,6 +26,7 @@ export default function Card({
   location,
   id,
   role = "volunteer",
+  status = "",
 }) {
   return (
     <div className="h-auto min-h-full border-2 border-gray-300 p-5">
@@ -51,6 +53,7 @@ export default function Card({
         <div className="flex justify-between">
           <p className="text-xl font-bold">{title}</p>
         </div>
+        <p className="text-sm font-bold my-2">{Status[status]}</p>
         <p className="my-2">{description}</p>
         <p className="text-sm font-bold my-2">Aranan Yetkinlikler</p>
         <div className="grid grid-cols-2 items-center gap-2">
@@ -72,9 +75,11 @@ export default function Card({
         <p className="text-xs text-blue-gray-500">
           {applicants && applicants.length} gönüllü başvurdu.
         </p>
-        <Button color="pink" onClick={() => Router.push(`/${id}`)}>
-          {role === "volunteer" ? "BEN YAPARIM!" : "DETAYA GİT"}
-        </Button>
+        {!status && (
+          <Button color="pink" onClick={() => Router.push(`/${id}`)}>
+            {role === "volunteer" ? "BEN YAPARIM!" : "DETAYA GİT"}
+          </Button>
+        )}
       </div>
     </div>
   );

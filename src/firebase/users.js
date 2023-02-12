@@ -51,13 +51,19 @@ export const updateUserAppliedCalls = async (id, callID, status) => {
   try {
     const userId = id ? id : auth?.currentUser?.uid;
 
-    const appliedCalls = (await getUser(userId).appliedCalls) || [];
-    if (appliedCalls?.find((call) => call.id === callID)) {
-      return;
-    }
+    const user = await getUser(userId);
+
+    const appliedCalls = user?.appliedCalls || [];
+    /////////TODO: REVIEW HERE
+    const updatedAppliedCalls = appliedCalls.map((call) => {
+      if (call.id === callID) {
+        return { ...call, status };
+      }
+      return call;
+    });
 
     await updateDoc(doc(db, "users", userId), {
-      appliedCalls: [...appliedCalls, { id: callID, status: status }],
+      appliedCalls: updatedAppliedCalls,
     });
   } catch (error) {
     console.log(error);
