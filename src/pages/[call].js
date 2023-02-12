@@ -1,17 +1,14 @@
 import Router from "next/router";
 import { useState, useContext } from "react";
 
+import { app } from "@/src/firebase-config";
+import { getAuth, signOut } from "firebase/auth";
+
 import { db } from "@/src/firebase-config";
-import {
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc,
-  arrayUnion,
-} from "firebase/firestore";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { UserContext } from "@/src/context/UserContext";
 import { CallContext } from "@/src/context/CallContext";
+
 import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
 import Modal from "@/components/Modal";
@@ -45,6 +42,8 @@ export default function CallDetail({ details, call }) {
       Router.push("/stk/register");
     }
   };
+
+  const auth = getAuth(app);
 
   const seeAllApplicants = () => {
     setAllApplicants(calls.find((item) => item.id === call)?.applicants);
@@ -88,7 +87,6 @@ export default function CallDetail({ details, call }) {
               surname={m.surname}
               location="Ankara"
               key={m.id}
-              updateApprovalStatus={updateApprovalStatus}
               id={m.id}
             />
           ))}
@@ -190,6 +188,8 @@ export default function CallDetail({ details, call }) {
           </ul>
           <button
             onClick={handleApplicationCall}
+            //!!auth.currentUser ? toggleModal(true) : Router.push("/register");
+
             className="bg-pink-600 text-white p-3 text-sm rounded-full my-5 font-bold"
           >
             BEN YAPARIM!
