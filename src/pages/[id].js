@@ -45,7 +45,7 @@ export default function CallDetail() {
 
   const handleApplicationCall = () => {
     addApplicant(id);
-    updateUserAppliedCalls(null, id)
+    updateUserAppliedCalls(null, id, "pending");
   };
 
   const seeAllApplicants = () => {
@@ -84,13 +84,13 @@ export default function CallDetail() {
         }}
       >
         <div className="w-96 h-96 z-30 mt-2 bg-background items-center text-center overflow-y-auto overflow-x-hidden">
-          {applicants?.map((m) => (
+          {applicants?.map((user) => (
             <Collapse
-              name={m.name}
-              surname={m.surname}
+              name={user.name}
+              surname={user.surname}
               location="Ankara"
-              key={m.id}
-              id={m.id}
+              key={user.uid}
+              id={user.uid}
               callId={id}
             />
           ))}

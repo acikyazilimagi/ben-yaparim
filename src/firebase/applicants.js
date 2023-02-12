@@ -10,7 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../firebase-config";
-import { getUser } from "./users";
+import { getUser, updateUserAppliedCalls } from "./users";
 
 export const getApplicants = async () => {
   try {
@@ -50,19 +50,23 @@ export const getApplicant = async (id) => {
 export const addApplicant = async (id) => {
   try {
     const { currentUser } = auth;
-    await addDoc(collection(db, "applicants"), {
-      callID: id,
-      uid: currentUser?.uid,
-      approvedStatus: false,
-    });
+    await setDoc(
+      doc(db, "applicants", id),
+      {
+        callID: id,
+        uid: currentUser?.uid,
+        approvedStatus: false,
+      },
+      { merge: true }
+    );
   } catch (error) {
     console.log(error);
   }
 };
 
-
-export const updateApplicantApprovedStatus = async (id) => {
+export const updateApplicantApprovedStatus = async (callID, userID) => {
   try {
+    //TODO: MOVE THIS INTO FIREBASE
     const { currentUser } = auth;
     const collectionRef = collection(db, "applicants");
     const q = query(collectionRef, where("uid", "==", currentUser?.uid));
@@ -70,8 +74,10 @@ export const updateApplicantApprovedStatus = async (id) => {
     querySnapshot.forEach(async (document) => {
       await updateDoc(doc(db, "applicants", document.id), {
         approvedStatus: true,
-      });//update user applied call status
+      });
     });
+
+    updateUserAppliedCalls(userID, callID, "approved");
   } catch (error) {
     console.log(error);
   }

@@ -45,16 +45,35 @@ export const getUser = async (id) => {
   }
 };
 
-export const updateUserAppliedCalls = async (id, callID) => {
+//BEN YAPARIM! buttonunda uid gonderilmiyor cunku user.uid var
+//Admin approve/reject ettiginde ise id gonderilmeli
+export const updateUserAppliedCalls = async (id, callID, status) => {
   try {
     const userId = id ? id : auth?.currentUser?.uid;
+
+    const appliedCalls = (await getUser(userId).appliedCalls) || [];
+    if (appliedCalls?.find((call) => call.id === callID)) {
+      return;
+    }
+
     await updateDoc(doc(db, "users", userId), {
-      appliedCalls: arrayUnion({ id: callID, status: "pending" }),
+      appliedCalls: [...appliedCalls, { id: callID, status: status }],
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-export const getUserAppliedCalls = () => {
+export const getUserAppliedCalls = async (uid) => {
   try {
-  } catch (error) {}
+    const userDoc = await getDoc(doc(db, "users", uid));
+
+    if (userDoc.exists()) {
+      return userDoc.data().appliedCalls;
+    } else {
+      console.log("No such document!");
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };

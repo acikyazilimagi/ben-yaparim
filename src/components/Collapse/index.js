@@ -36,7 +36,7 @@ export default function Collapse({
   licence,
   approvalStatus,
   id,
-  callId
+  callId,
 }) {
   const [open, setOpen] = useState(0);
 
@@ -59,7 +59,7 @@ export default function Collapse({
               color="green"
               className="mx-2"
               onClick={() => {
-                updateApplicantApprovedStatus(callId);
+                updateApplicantApprovedStatus(callId, id);
               }}
             >
               Ön Onay
