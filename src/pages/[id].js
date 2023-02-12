@@ -31,7 +31,7 @@ import Calendar from "@/src/components/icons/Calendar";
 import People from "@/src/components/icons/People";
 import Envelope from "@/src/components/icons/Envelope";
 
-export default function CallDetail({ details, call }) {
+export default function CallDetail() {
   const [showModal, toggleModal] = useState(false);
   const [applicantModalStatus, setApplicantModalStatus] = useState(false);
   const { profileData } = useContext(UserContext);
