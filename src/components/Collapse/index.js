@@ -35,7 +35,6 @@ export default function Collapse({
   licence,
   approvalStatus,
   id,
-  updateApprovalStatus
 }) {
   const [open, setOpen] = useState(0);
 
@@ -54,7 +53,7 @@ export default function Collapse({
           <Chip color="indigo" value="x" />
           <Chip color="indigo" value="x" />
           <div className="flex justify-center">
-            <Button color="green" className="mx-2" onClick={() => updateApprovalStatus(id)}>
+            <Button color="green" className="mx-2">
               Ön Onay
             </Button>
             <Button color="red">Reddet</Button>
