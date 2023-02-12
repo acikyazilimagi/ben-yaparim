@@ -78,6 +78,26 @@ const volunteerTabsData = [
 //     );
 //   });
 // };
+const renderOpenCallContent = (calls) => {
+  return calls?.map((call, i) => {
+    return (
+      <Card
+        key={i}
+        title={call?.title}
+        description={call?.description}
+        startDate={call?.date?.startDate}
+        endDate={call?.date?.endDate}
+        needOfVolunteer={call?.needOfVolunteer}
+        applicants={call?.applicants}
+        checkedCertificates={call?.checkedCertificates}
+        checkedLanguages={call?.checkedLanguages}
+        checkedSkills={call?.checkedSkills}
+        location=""
+        id={call.id}
+      />
+    );
+  });
+};
 
 export default function Profile() {
   const { currentUser } = auth;

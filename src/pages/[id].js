@@ -26,8 +26,12 @@ import {
   updateApplicantApprovedStatus,
 } from "../firebase/applicants";
 import { updateUserAppliedCalls } from "../firebase/users";
+import Location from "@/src/components/icons/Location";
+import Calendar from "@/src/components/icons/Calendar";
+import People from "@/src/components/icons/People";
+import Envelope from "@/src/components/icons/Envelope";
 
-export default function CallDetail() {
+export default function CallDetail({ details, call }) {
   const [showModal, toggleModal] = useState(false);
   const [applicantModalStatus, setApplicantModalStatus] = useState(false);
   const { profileData } = useContext(UserContext);
@@ -150,8 +154,8 @@ export default function CallDetail() {
           <ul className="w-full">
             <li className="flex w-full border-b-2 py-4">
               <div className="flex min-w-full justify-between">
-                <div className="flex space-x-2 text-l font-bold text-gray-600">
-                  <p>H</p>
+                <div className="flex items-center space-x-2 text-l font-bold text-gray-600">
+                  <Location className="w-6 h-6" />
                   <p>Faaliyet Lokasyonu</p>
                 </div>
                 <div className="flex space-x-2 text-l font-bold">
@@ -163,7 +167,7 @@ export default function CallDetail() {
             <li className="flex w-full border-b-2 py-4">
               <div className="flex min-w-full justify-between">
                 <div className="flex space-x-2 text-l font-bold text-gray-600">
-                  <p>H</p>
+                  <Calendar className="w-6 h-6" />
                   <p>Faaliyet Tarihi</p>
                 </div>
                 <div className="flex space-x-2 text-l font-bold">
@@ -174,7 +178,7 @@ export default function CallDetail() {
             <li className="flex w-full border-b-2 py-4">
               <div className="flex min-w-full justify-between">
                 <div className="flex space-x-2 text-l font-bold text-gray-600">
-                  <p>H</p>
+                  <People className="w-6 h-6" />
                   <p>Aranan Gönüllü Sayısı</p>
                 </div>
                 <div className="flex space-x-2 text-l font-bold">
@@ -188,7 +192,7 @@ export default function CallDetail() {
                 onClick={seeAllApplicants}
               >
                 <div className="flex space-x-2 text-l font-bold text-gray-600">
-                  <p>H</p>
+                  <Envelope className="w-6 h-6" />
                   <p>Başvuran Gönüllü Sayısı</p>
                 </div>
                 <div className="flex space-x-2 text-l font-bold">

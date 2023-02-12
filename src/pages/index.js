@@ -24,7 +24,7 @@ export default function Home() {
           <p className="text-6xl text-center text-pink-600 mt-10 font-bold">
             Kim yapar?
           </p>
-          <p className="text-6xl text-center text-pink-600 mt-4 font-bold">
+          <p className="text-6xl text-center text-pink-600 mt-4 font-bold font-marker">
             BEN YAPARIM
           </p>
           <p className="text-center max-w-xl w-1/2 m-auto my-20">
@@ -58,16 +58,20 @@ export default function Home() {
             />
           </svg>
         </div>
-        <div className="grid grid-cols-2 gap-4 xl:flex justify-center">
+        <div className="grid lg:grid-cols-2 gap-14 place-items-stretch items-center">
           {calls?.map((call, i) => {
             return (
               <Card
                 key={i}
-                title={call.title}
-                description={call.description}
-                startDate={call.date?.startDate}
-                endDate={call.date?.endDate}
-                needOfVolunteer={call.needOfVolunteer}
+                title={call?.title}
+                description={call?.description}
+                startDate={call?.date?.startDate}
+                endDate={call?.date?.endDate}
+                needOfVolunteer={call?.needOfVolunteer}
+                applicants={call?.applicants}
+                checkedCertificates={call?.checkedCertificates}
+                checkedLanguages={call?.checkedLanguages}
+                checkedSkills={call?.checkedSkills}
                 location="İstanbul"
                 id={call.id}
               />
