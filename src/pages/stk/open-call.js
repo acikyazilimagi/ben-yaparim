@@ -39,8 +39,6 @@ export default function OpenCall() {
     setCallInput({ ...callInput, [e.target.name]: e.target.value });
   };
 
-  console.log("callInput", callInput);
-
   useEffect(() => {
     setCallInput({
       ...callInput,
