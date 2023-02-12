@@ -1,11 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import Head from "next/head";
-import { CallContext } from "src/context/CallContext";
 import Card from "@/components/Card";
 import { getAllCalls } from "@/src/firebase/calls";
+import { UserContext } from "../context/UserContext";
 
 export default function Home() {
   const [calls, setCalls] = useState([]);
+
+  const { profileData } = useContext(UserContext);
 
   useEffect(() => {
     getAllCalls().then((data) => setCalls(data));
@@ -74,6 +76,7 @@ export default function Home() {
                 checkedSkills={call?.checkedSkills}
                 location="İstanbul"
                 id={call.id}
+                role={profileData?.role === "volunteer" ? "volunteer" : "stk"}
               />
             );
           })}
