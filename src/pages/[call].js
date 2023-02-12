@@ -12,6 +12,11 @@ import LanguageTag from "@/components/Tags/language-tag";
 import Modal from "@/components/Modal";
 import toast from "react-hot-toast";
 
+import Location from "@/src/components/icons/Location";
+import Calendar from "@/src/components/icons/Calendar";
+import People from "@/src/components/icons/People";
+import Envelope from "@/src/components/icons/Envelope";
+
 export default function CallDetail({ details, call }) {
   const [showModal, toggleModal] = useState(false);
 
@@ -53,7 +58,9 @@ export default function CallDetail({ details, call }) {
               Aranan Yekinlikler
             </p>
             <div className="mt-2 flex gap-x-2">
-              {details?.checkedSkills?.map((skill)=> <ColorTag text={skill} color="#FFDCDC" />)}
+              {details?.checkedSkills?.map((skill) => (
+                <ColorTag text={skill} color="#FFDCDC" />
+              ))}
             </div>
           </div>
 
@@ -72,7 +79,11 @@ export default function CallDetail({ details, call }) {
               <p className="text-xl mt-6 font-bold text-gray-600">
                 Ehliyet Bilgisi
               </p>
-              <p className="mt-2">{details?.checkedCertificates?.includes('Ehliyet') ? "Ehliyet gerekir." : "Ehliyet gerekmez."}</p>
+              <p className="mt-2">
+                {details?.checkedCertificates?.includes("Ehliyet")
+                  ? "Ehliyet gerekir."
+                  : "Ehliyet gerekmez."}
+              </p>
             </div>
           </div>
 
@@ -88,8 +99,8 @@ export default function CallDetail({ details, call }) {
           <ul className="w-full">
             <li className="flex w-full border-b-2 py-4">
               <div className="flex min-w-full justify-between">
-                <div className="flex space-x-2 text-l font-bold text-gray-600">
-                  <p>H</p>
+                <div className="flex items-center space-x-2 text-l font-bold text-gray-600">
+                  <Location className="w-6 h-6" />
                   <p>Faaliyet Lokasyonu</p>
                 </div>
                 <div className="flex space-x-2 text-l font-bold">
@@ -101,7 +112,7 @@ export default function CallDetail({ details, call }) {
             <li className="flex w-full border-b-2 py-4">
               <div className="flex min-w-full justify-between">
                 <div className="flex space-x-2 text-l font-bold text-gray-600">
-                  <p>H</p>
+                  <Calendar className="w-6 h-6" />
                   <p>Faaliyet Tarihi</p>
                 </div>
                 <div className="flex space-x-2 text-l font-bold">
@@ -112,7 +123,7 @@ export default function CallDetail({ details, call }) {
             <li className="flex w-full border-b-2 py-4">
               <div className="flex min-w-full justify-between">
                 <div className="flex space-x-2 text-l font-bold text-gray-600">
-                  <p>H</p>
+                  <People className="w-6 h-6" />
                   <p>Aranan Gönüllü Sayısı</p>
                 </div>
                 <div className="flex space-x-2 text-l font-bold">
@@ -123,11 +134,15 @@ export default function CallDetail({ details, call }) {
             <li className="flex w-full border-b-2 py-4">
               <div className="flex min-w-full justify-between">
                 <div className="flex space-x-2 text-l font-bold text-gray-600">
-                  <p>H</p>
+                  <Envelope className="w-6 h-6" />
                   <p>Başvuran Gönüllü Sayısı</p>
                 </div>
                 <div className="flex space-x-2 text-l font-bold">
-                  <p>{details?.applicants?.length > 0 ? details?.applicants?.length : 'İlk adımı sen at!'}</p>
+                  <p>
+                    {details?.applicants?.length > 0
+                      ? details?.applicants?.length
+                      : "İlk adımı sen at!"}
+                  </p>
                 </div>
               </div>
             </li>

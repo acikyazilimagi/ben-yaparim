@@ -53,16 +53,20 @@ export default function Home() {
             />
           </svg>
         </div>
-        <div className="grid lg:grid-cols-2 gap-3 2xl:flex justify-center">
+        <div className="grid lg:grid-cols-2 gap-14 place-items-stretch items-center">
           {calls?.map((call, i) => {
             return (
               <Card
                 key={i}
-                title={call.title}
-                description={call.description}
-                startDate={call.date?.startDate}
-                endDate={call.date?.endDate}
-                needOfVolunteer={call.needOfVolunteer}
+                title={call?.title}
+                description={call?.description}
+                startDate={call?.date?.startDate}
+                endDate={call?.date?.endDate}
+                needOfVolunteer={call?.needOfVolunteer}
+                applicants={call?.applicants}
+                checkedCertificates={call?.checkedCertificates}
+                checkedLanguages={call?.checkedLanguages}
+                checkedSkills={call?.checkedSkills}
                 location="İstanbul"
                 id={call.id}
               />
