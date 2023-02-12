@@ -15,12 +15,18 @@
     }
 }
 
+@font-face {
+    font-family: "PermanentMarker";
+    src: url("../../public/fonts/PermanentMarker.ttf");
+}
+
 .primary {
     padding: 0.5rem;
     border-width: 0.1rem;
     border-color: lightgrey;
     border-radius: 0.4rem;
     box-shadow: 2px 2px lightgray;
+    cursor: pointer;
 }
 
 .primary:hover {
