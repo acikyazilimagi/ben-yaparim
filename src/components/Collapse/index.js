@@ -7,6 +7,7 @@ import {
 import { Button } from "@material-tailwind/react";
 import { Chip } from "@material-tailwind/react";
 import { updateApplicantStatus } from "@/src/firebase/calls";
+import { sendMail } from "@/src/firebase/mail";
 
 function Icon({ id, open }) {
   return (
@@ -59,10 +60,13 @@ export default function Collapse({
               color="green"
               className="mx-2"
               onClick={() => {
-                updateApplicantStatus(callId, id, "approved");
+                updateApplicantStatus(callId, id, "approved").then((response) => {
+                  (response && !!email) && sendMail(email, "Test mail subject", "Test Mail Body");
+                });
+                
               }}
             >
-              Ön Onay
+              Onay
             </Button>
             <Button color="red">Reddet</Button>
           </div>
