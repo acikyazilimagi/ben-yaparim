@@ -11,7 +11,7 @@ import Check from "@/src/components/icons/Check";
 
 import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
-import {formatDate} from "@/src/helpers"
+import { formatDate } from "@/src/helpers";
 import { Status } from "@/src/utils/constants";
 
 export default function Card({
@@ -46,7 +46,7 @@ export default function Card({
         <div className="flex items-center space-x-1">
           <People className="w-6 h-6" />
           <p className="text-sm font-bold text-gray-500">
-            {applicants && applicants.length}+{" "}
+            {needOfVolunteer}
           </p>
         </div>
       </div>
@@ -76,7 +76,9 @@ export default function Card({
       </div>
       <div className="flex justify-end items-center space-x-2 my-2">
         <p className="text-xs text-blue-gray-500">
-          {applicants && applicants.length} gönüllü başvurdu.
+          {applicants?.length > 0
+            ? applicants?.length + " gönüllü başvurdu."
+            : "İlk adımı sen at!"}
         </p>
         {!status && (
           <Button color="pink" onClick={() => Router.push(`/${id}`)}>
