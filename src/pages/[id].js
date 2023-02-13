@@ -19,12 +19,12 @@ import LanguageTag from "@/components/Tags/language-tag";
 import Modal from "@/components/Modal";
 import toast from "react-hot-toast";
 import Collapse from "@/components/Collapse";
-import { getAllCalls, getCall } from "@/src/firebase/calls";
 import {
-  addApplicant,
-  getApplicants,
-  updateApplicantApprovedStatus,
-} from "../firebase/applicants";
+  addApplicantToCallDoc,
+  getApplicantsMetaData,
+  getCall,
+} from "@/src/firebase/calls";
+
 import { updateUserAppliedCalls } from "../firebase/users";
 import Location from "@/src/components/icons/Location";
 import Calendar from "@/src/components/icons/Calendar";
@@ -43,17 +43,22 @@ export default function CallDetail() {
 
   useEffect(() => {
     if (id) {
-      getCall(id).then((data) => setCall(data));
+      (async () => {
+        const data = await getCall(id);
+        setCall(data);
+
+        const applicants = await getApplicantsMetaData(data?.applicants);
+        setApplicants(applicants);
+      })();
     }
   }, [id]);
 
   const handleApplicationCall = () => {
-    addApplicant(id);
+    addApplicantToCallDoc(id, profileData?.uid);
     updateUserAppliedCalls(null, id, "pending");
   };
 
   const seeAllApplicants = () => {
-    getApplicants().then((data) => setApplicants(data));
     setApplicantModalStatus(true);
   };
 

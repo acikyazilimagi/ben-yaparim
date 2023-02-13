@@ -77,6 +77,10 @@ export default function Home() {
                 location="İstanbul"
                 id={call.id}
                 role={profileData?.role === "volunteer" ? "volunteer" : "stk"}
+                status={
+                  profileData?.appliedCalls?.find((c) => c.id === call.id)
+                    ?.status
+                }
               />
             );
           })}
