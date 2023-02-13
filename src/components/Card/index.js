@@ -13,6 +13,7 @@ import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
 import { formatDate } from "@/src/helpers";
 import { Status } from "@/src/utils/constants";
+import ShareOptions from "@/src/components/Share/share";
 
 export default function Card({
   title,
@@ -42,6 +43,8 @@ export default function Card({
             {formatDate(startDate)} - {formatDate(endDate)}
           </p>
         </div>
+
+    <ShareOptions id={id}></ShareOptions>
 
         <div className="flex items-center space-x-1">
           <People className="w-6 h-6" />
