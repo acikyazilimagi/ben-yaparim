@@ -30,7 +30,7 @@ export default function Login() {
     e.preventDefault();
     await loginSTK(email, password).then((e) => {
       if (e?.accessToken) {
-        Router.push("/stk/profile");
+        Router.push("/profile");
       }
     });
   };

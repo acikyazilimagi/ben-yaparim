@@ -71,17 +71,10 @@ export default function Navbar() {
           </div>
           <div className="flex justify-end p-10 w-full">
             <Link
-              href={"/login"}
-              className="text-center text-pink-600 font-bold"
-            >
-              Kurum Girişi
-            </Link>
-
-            <Link
               href={"/register"}
               className="text-center text-pink-600 font-bold ml-5"
             >
-              Gönüllü Girişi
+              Giriş
             </Link>
           </div>
         </div>

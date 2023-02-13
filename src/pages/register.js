@@ -123,7 +123,7 @@ export default function Register() {
     await registerSTK(email, password).then((e) => {
       if (e?.accessToken) {
         addUser(e);
-        Router.push("/stk/profile");
+        Router.push("/profile");
       }
     });
   };
@@ -162,6 +162,17 @@ export default function Register() {
   const consents = [
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla.",
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+  ];
+
+  const bloodTypes = [
+    "A Pozittif",
+    "A Negatif",
+    "B Pozittif",
+    "B Negatif",
+    "AB Pozittif",
+    "AB Negatif",
+    "0 Pozittif",
+    "O Negative",
   ];
 
   return (
@@ -239,32 +250,31 @@ export default function Register() {
             className="border-gray-400 rounded-md w-full mr-2"
             onChange={handleProfileInputChange}
           >
-            <option value="woman">Kadın</option>
-            <option value="man">Erkek</option>
-            <option value="not">Belirtmek istemiyorum</option>
+            <option value="woman" key="1">Kadın</option>
+            <option value="man" key="2">Erkek</option>
+            <option value="not" key="3">Belirtmek istemiyorum</option>
           </select>
           <select
             name="age"
             className="border-gray-400 rounded-md w-full mr-2"
             onChange={handleProfileInputChange}
           >
-            <option value="18 -25">18 -25</option>
-            <option value="25-45">25-45</option>
-            <option value="45 +">45 +</option>
+            <option value="18 -25" key="1">18 -25</option>
+            <option value="25-45" key="2">25-45</option>
+            <option value="45 +" key="3">45 +</option>
           </select>
           <select
             name="blood"
             className="border-gray-400 rounded-md w-full mr-2"
             onChange={handleProfileInputChange}
           >
-            <option value="A Pozittif">A Pozittif</option>
-            <option value="A Negatif">A Negatif</option>
-            <option value="B Pozittif">B Positive</option>
-            <option value="B Negatif">B Negative</option>
-            <option value="AB Pozittif">AB Positive</option>
-            <option value="AB Negatif">AB Negative</option>
-            <option value="0 Pozittif">O Positive</option>
-            <option value="0 Negatif">O Negative</option>
+            {bloodTypes.map((blood) => {
+              return (
+                <option key={blood} value={blood}>
+                  {blood}
+                </option>
+              );
+            })}
           </select>
         </div>
 
@@ -278,7 +288,7 @@ export default function Register() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <p className="text-xl">Yetkinlikler</p>
+        <p className="text-2xl text-gray-400 font-bold my-5">Yetkinlikler</p>
 
         <p className="text-gray-400 font-bold my-5">Aranılan Yetenekler</p>
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
@@ -310,7 +320,6 @@ export default function Register() {
             onChange={(e) => handleProfileInputChange(e)}
           />
         </div>
-        <p className="text-xl">Acil Durum Kontak Bilgileri</p>
 
         <p className="text-gray-400 font-bold my-5">Konuşulan Diller</p>
         <div className="grid grid-cols-3 gap-3 mb-10">
@@ -354,6 +363,28 @@ export default function Register() {
               </div>
             );
           })}
+        </div>
+
+        <div className="py-2">
+          <p className="text-2xl text-gray-400 font-bold my-5">
+            Acil Durum İletişim Bilgileri
+          </p>
+          <div className="flex justify-between space-x-2">
+            <Input
+              variant="outlined"
+              label="İsim Soyisim"
+              name="emercengyName"
+              value={info?.emercengyName}
+              onChange={(e) => handleProfileInputChange(e)}
+            />
+            <Input
+              variant="outlined"
+              label="Telefon"
+              name="emercengyPhone"
+              value={info?.emercengyPhone}
+              onChange={(e) => handleProfileInputChange(e)}
+            />
+          </div>
         </div>
 
         <div className="my-10">
