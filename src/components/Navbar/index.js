@@ -46,7 +46,7 @@ export default function Navbar() {
               href={"/stk/profile"}
               className="text-center text-pink-600 font-bold mr-10"
             >
-              Profilin
+              Profilim
             </Link>
 
             <button
@@ -58,17 +58,25 @@ export default function Navbar() {
           </div>
         </div>
       ) : (
-        <div className="flex justify-end p-10 w-full">
-          <Link href={"/login"} className="text-center text-pink-600 font-bold">
-            Kurum Girişi
-          </Link>
-
-          <Link
-            href={"/register"}
-            className="text-center text-pink-600 font-bold"
-          >
-            Gönüllü Girişi
-          </Link>
+        <div className="flex justify-between items-center px-[8%] py-10 w-full">
+          <div className="flex items-center">
+            <img
+              width={150}
+              height={100}
+              src={Logo.src}
+              alt="Kurum Logo"
+              className="cursor-pointer"
+              onClick={() => Router.push("/")}
+            />
+          </div>
+          <div className="flex justify-end p-10 w-full">
+            <Link
+              href={"/register"}
+              className="text-center text-pink-600 font-bold ml-5"
+            >
+              Giriş
+            </Link>
+          </div>
         </div>
       )}
     </div>
