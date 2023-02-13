@@ -30,6 +30,7 @@ export default function OpenCall() {
   const [checkedFacilities, setCheckedFacilities] = useState([]);
 
   const [cities, setCities] = useState([]);
+  const [towns, setTowns] = useState([]);
 
   useEffect(() => {
     setCities(places);
@@ -56,6 +57,13 @@ export default function OpenCall() {
       date: date[0],
     });
   }, [date]);
+
+  useEffect(() => {
+    cities &&
+      cities.find(
+        (city) => city.name === callInput?.location && setTowns(city.towns)
+      );
+  }, [callInput?.location]);
 
   useEffect(() => {
     setCallInput({
@@ -188,7 +196,28 @@ export default function OpenCall() {
                   <Location />
                   <p className="">Faliyet Lokasyonu</p>
                 </div>
-                ...
+                <div className="flex justify-between">
+                  <select name="location" onChange={handleInputChange} className="border-gray-400 rounded-md w-full mr-2">
+                    {places.map((city) => {
+                      return (
+                        <option key={city.index} value={city.name}>
+                          {city.name}
+                        </option>
+                      );
+                    })}
+                  </select>
+
+                  <select name="town" onChange={handleInputChange} className="border-gray-400 rounded-md w-full">
+                    {towns &&
+                      towns.map((town) => {
+                        return (
+                          <option key={town.index} value={town.name}>
+                            {town.name}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </div>
                 <div className="flex flex-start items-center space-x-3">
                   <Calendar />
                   <p className="">Faaliyet Tarihleri</p>
@@ -242,44 +271,10 @@ export default function OpenCall() {
               variant="outlined"
               label="Diğer"
               name="otherSkills"
-              className="max-w-xs"
               value={callInput.otherSkills}
               onChange={(e) => handleInputChange(e)}
             />
           </div>
-          {/*
-              <div className="flex gap-x-2"> 
-                <Select
-                  label="Şehir"
-                  name="location"
-                  value={callInput.location}
-                  onChange={(e) => handleInputChange(e)}
-                >
-                  {places.map((city) => {
-                    return (
-                      <Option name="location" key={city.index}>
-                        {city.name}
-                      </Option>
-                    );
-                  })}
-                </Select>
-                
-                <Select
-                  label="İlçe"
-                  name="location"
-                  value={callInput.location}
-                  onChange={(e) => handleInputChange(e)}
-                >
-                  {places.map((city) => {
-                    return (
-                      <Option name="location" key={city.index}>
-                        {city.name}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              </div>
-              */}
 
           <p className="text-gray-400 font-bold my-5">Konuşulan Diller</p>
           <div className="grid grid-cols-3 gap-3 mb-10">
