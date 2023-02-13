@@ -23,9 +23,6 @@ export default function Home() {
       </Head>
       <main>
         <div>
-          <p className="text-6xl text-center text-pink-600 mt-10 font-bold">
-            Kim yapar?
-          </p>
           <p className="text-6xl text-center text-pink-600 mt-4 font-bold font-marker">
             BEN YAPARIM
           </p>

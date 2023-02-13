@@ -52,9 +52,9 @@ export default function Collapse({
         </AccordionHeader>
         <AccordionBody>
           <p>Başvurduğu il: {location}</p>
-          <Chip color="indigo" value="x" />
-          <Chip color="indigo" value="x" />
-          <div className="flex justify-center">
+          <p>Email: {email}</p>
+          <p>Telefon: {phone}</p>
+          <div className="flex justify-center mt-3">
             <Button
               color="green"
               className="mx-2"

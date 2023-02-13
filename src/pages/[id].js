@@ -1,18 +1,5 @@
 import Router, { useRouter } from "next/router";
 import { useState, useContext, useEffect } from "react";
-
-import { app } from "@/src/firebase-config";
-import { getAuth } from "firebase/auth";
-
-import { db } from "@/src/firebase-config";
-import {
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-  updateDoc,
-  arrayUnion,
-} from "firebase/firestore";
 import { UserContext } from "@/src/context/UserContext";
 import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
@@ -30,6 +17,7 @@ import Location from "@/src/components/icons/Location";
 import Calendar from "@/src/components/icons/Calendar";
 import People from "@/src/components/icons/People";
 import Envelope from "@/src/components/icons/Envelope";
+import {formatDate} from "@/src/helpers"
 
 export default function CallDetail() {
   const [showModal, toggleModal] = useState(false);
@@ -109,19 +97,19 @@ export default function CallDetail() {
       <div className="border border-gray-200 m-[6%] px-[2%] pb-10 xl:flex justify-start">
         <div className="w-1/2 mr-[5%]">
           <div className="my-5 flex justify-between">
-            {/* <h1 className="text-4xl mt-4 font-bold">{details?.title}</h1> */}
+            <h1 className="text-4xl mt-4 font-bold">{call?.title}</h1>
           </div>
-          {/* <p className="max-w-xl w-1/2 my-10">{details?.description}</p>
-          <p className="max-w-xl w-1/2 my-8">{details?.precondition}</p> */}
+          <p className="max-w-xl w-1/2 my-10">{call?.description}</p>
+          <p className="max-w-xl w-1/2 my-8">{call?.precondition}</p>
           <div className="my-2">
             <p className="text-xl mt-4 font-bold text-gray-600">
               Aranan Yekinlikler
             </p>
-            {/* <div className="mt-2 flex gap-x-2">
-              {details?.checkedSkills?.map((skill) => (
+            <div className="mt-2 flex gap-x-2">
+              {call?.checkedSkills?.map((skill) => (
                 <ColorTag text={skill} color="#FFDCDC" />
               ))}
-            </div> */}
+            </div>
           </div>
 
           <div className="my-2 flex justify-between">
@@ -129,20 +117,20 @@ export default function CallDetail() {
               <p className="text-xl mt-6 font-bold text-gray-600">
                 Dil Bilgisi
               </p>
-              {/* <div className="mt-2 flex gap-x-2">
-                {details?.checkedLanguages?.map((language) => (
+              <div className="mt-2 flex gap-x-2">
+                {call?.checkedLanguages?.map((language) => (
                   <LanguageTag text={language} />
                 ))}
-              </div> */}
+              </div>
             </div>
             <div>
               <p className="text-xl mt-6 font-bold text-gray-600">
                 Ehliyet Bilgisi
               </p>
               <p className="mt-2">
-                {/* {details?.checkedCertificates?.includes("Ehliyet")
+                {call?.checkedCertificates?.includes("Ehliyet")
                   ? "Ehliyet gerekir."
-                  : "Ehliyet gerekmez."} */}
+                  : "Ehliyet gerekmez."}
               </p>
             </div>
           </div>
@@ -151,7 +139,7 @@ export default function CallDetail() {
             <p className="text-xl mt-6 font-bold text-gray-600">
               Önemli Bilgiler
             </p>
-            {/* <p className="max-w-xl w-1/2 my-3">{details?.notes}</p> */}
+            <p className="max-w-xl w-1/2 my-3">{call?.notes}</p>
           </div>
         </div>
 
@@ -176,7 +164,7 @@ export default function CallDetail() {
                   <p>Faaliyet Tarihi</p>
                 </div>
                 <div className="flex space-x-2 text-l font-bold">
-                  <p>DD/MM - DD/MM/YY</p>
+                {formatDate(call?.date?.startDate)} - {formatDate(call?.date?.endDate)}
                 </div>
               </div>
             </li>

@@ -7,6 +7,7 @@ import { getAuth, signOut } from "firebase/auth";
 import toast from "react-hot-toast";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "@/src/context/UserContext";
+import Logo from "@/images/logo.png";
 
 export default function Navbar() {
   const { stkProfile } = useContext(UserContext);
@@ -31,13 +32,13 @@ export default function Navbar() {
         <div className="flex justify-between items-center px-[8%] py-10 w-full">
           <div className="flex items-center">
             <img
-              width={100}
+              width={150}
               height={100}
-              src="https://avatars.githubusercontent.com/u/16260732?s=200&v=4"
+              src={Logo.src}
               alt="Kurum Logo"
+              className="cursor-pointer"
               onClick={() => Router.push("/")}
             />
-            <p className="text-xl font-bold mx-10">Açık kaynak</p>
           </div>
 
           <div>

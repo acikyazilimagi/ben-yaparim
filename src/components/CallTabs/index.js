@@ -21,7 +21,9 @@ export default function CallTabs({ data }) {
           <TabsBody>
             {data.map(({ value, content }) => (
               <TabPanel key={value} value={value} className="my-5">
-                <div className="flex justify-center space-x-10">{content}</div>
+                <div className="grid lg:grid-cols-2 gap-14 place-items-stretch items-center">
+                  {content}
+                </div>
               </TabPanel>
             ))}
           </TabsBody>

@@ -173,6 +173,7 @@ export default function Profile() {
           <Button color="pink" onClick={() => Router.push("/stk/open-call")}>
             + Yeni Çağrı Oluştur
           </Button>
+
           <CallTabs data={stkTabsData} />
 
           <Modal
