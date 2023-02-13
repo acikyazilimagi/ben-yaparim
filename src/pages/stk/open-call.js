@@ -19,6 +19,8 @@ import Calendar from "@/components/icons/Calendar";
 import People from "@/components/icons/People";
 import { Checkbox } from "@material-tailwind/react";
 
+import places from "../places" assert { type: "json" };
+
 const auth = getAuth(app);
 
 export default function OpenCall() {
@@ -26,6 +28,12 @@ export default function OpenCall() {
   const [checkedLanguages, setCheckedLanguage] = useState([]);
   const [checkedCertificates, setCheckedCertificates] = useState([]);
   const [checkedFacilities, setCheckedFacilities] = useState([]);
+
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    setCities(places);
+  }, []);
 
   const [date, setDate] = useState([
     {
@@ -239,6 +247,39 @@ export default function OpenCall() {
               onChange={(e) => handleInputChange(e)}
             />
           </div>
+          {/*
+              <div className="flex gap-x-2"> 
+                <Select
+                  label="Şehir"
+                  name="location"
+                  value={callInput.location}
+                  onChange={(e) => handleInputChange(e)}
+                >
+                  {places.map((city) => {
+                    return (
+                      <Option name="location" key={city.index}>
+                        {city.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+                
+                <Select
+                  label="İlçe"
+                  name="location"
+                  value={callInput.location}
+                  onChange={(e) => handleInputChange(e)}
+                >
+                  {places.map((city) => {
+                    return (
+                      <Option name="location" key={city.index}>
+                        {city.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </div>
+              */}
 
           <p className="text-gray-400 font-bold my-5">Konuşulan Diller</p>
           <div className="grid grid-cols-3 gap-3 mb-10">

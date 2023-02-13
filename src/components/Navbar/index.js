@@ -65,7 +65,7 @@ export default function Navbar() {
 
           <Link
             href={"/register"}
-            className="text-center text-pink-600 font-bold"
+            className="text-center text-pink-600 font-bold ml-5"
           >
             Gönüllü Girişi
           </Link>
