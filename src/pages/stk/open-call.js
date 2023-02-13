@@ -5,8 +5,6 @@ import {
   Button,
   Textarea,
   Input,
-  Select,
-  Option,
 } from "@material-tailwind/react";
 import { addCall } from "@/src/firebase/calls";
 import { CallContext } from "src/context/CallContext";
@@ -271,6 +269,7 @@ export default function OpenCall() {
               variant="outlined"
               label="Diğer"
               name="otherSkills"
+              className="max-w-xs"
               value={callInput.otherSkills}
               onChange={(e) => handleInputChange(e)}
             />
