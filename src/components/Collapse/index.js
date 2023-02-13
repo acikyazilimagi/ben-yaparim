@@ -66,8 +66,8 @@ export default function Collapse({
                       !!email &&
                       sendMail(
                         email,
-                        "Test mail subject",
-                        "Test Mail Body"
+                        "Çağrı Başvurunuz Onaylandı!",
+                        "<p><b>Ben yaparım!</b> diyen sevgili gönüllümüz,</p><p>Çağrımıza yaptığınız başvuru için çok teşekkür ederiz. Başvurunuz değerlendirilmiş ve olumlu karşılanmıştır. Gönüllü hareketinin başlaması için planlamalar ve detaylar için sizinle en kısa sürede iletişime geçeceğiz. Telefonunuzu ve e-postalarınızı (spam kutusu dahil) sık sık kontrol etmeyi unutmayın.</p><p>Sağlıklı günler dileriz.</p>"
                       ).then((mailResp) => {
                         mailResp
                           ? toast.success("Gönüllümüze onay emaili gönderildi.")
