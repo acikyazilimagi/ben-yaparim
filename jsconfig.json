@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/images/*": ["public/assets/images/*"],
+      "@/images/*": ["public/images/*"],
       "@/icons/*": ["src/components/icons/*"],
       "@/api/*": ["src/pages/api/*"],
       "@/components/*": ["src/components/*"],
