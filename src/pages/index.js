@@ -61,7 +61,6 @@ export default function Home() {
           </svg>
         </div>
         <div className="grid lg:grid-cols-2 gap-14 place-items-stretch items-center">
-          {console.log("bet", calls)}
           {calls?.map((call, i) => {
             return (
               <Card
