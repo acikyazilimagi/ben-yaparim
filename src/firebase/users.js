@@ -53,17 +53,13 @@ export const updateUserAppliedCalls = async (id, callID, status) => {
 
     const user = await getUser(userId);
 
-    const appliedCalls = user?.appliedCalls || [];
-    /////////TODO: REVIEW HERE
-    const updatedAppliedCalls = appliedCalls.map((call) => {
-      if (call.id === callID) {
-        return { ...call, status };
-      }
-      return call;
-    });
+    const appliedCalls = (await getUser(userId).appliedCalls) || [];
+    if (appliedCalls?.find((call) => call.id === callID)) {
+      return;
+    }
 
     await updateDoc(doc(db, "users", userId), {
-      appliedCalls: updatedAppliedCalls,
+      appliedCalls: [...appliedCalls, { id: callID, status: status }],
     });
   } catch (error) {
     console.log(error);
@@ -75,6 +71,7 @@ export const getUserAppliedCalls = async (uid) => {
     const userDoc = await getDoc(doc(db, "users", uid));
 
     if (userDoc.exists()) {
+        console.log("hello",  userDoc.data())
       return userDoc.data().appliedCalls;
     } else {
       console.log("No such document!");
