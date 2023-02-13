@@ -44,8 +44,6 @@ export default function Card({
           </p>
         </div>
 
-    <ShareOptions id={id}></ShareOptions>
-
         <div className="flex items-center space-x-1">
           <People className="w-6 h-6" />
           <p className="text-sm font-bold text-gray-500">
@@ -58,6 +56,7 @@ export default function Card({
       <div className="my-3">
         <div className="flex justify-between">
           <p className="text-xl font-bold">{title}</p>
+          <div className="mt-3"> <ShareOptions id={id} /></div>
         </div>
         <p className="text-sm font-bold my-2">{Status[status]}</p>
         <p className="my-2">{description}</p>
