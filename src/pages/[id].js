@@ -98,6 +98,7 @@ export default function CallDetail() {
               location="Ankara"
               key={user.uid}
               id={user.uid}
+              email={user.email}
               callId={id}
             />
           ))}

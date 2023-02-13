@@ -15,12 +15,20 @@ import { UserContext } from "@/src/context/UserContext";
 import { app } from "@/src/firebase-config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
+import places from "../places" assert { type: "json" };
+
 const auth = getAuth(app);
 
 export default function OpenCall() {
   const [checkedSkills, setCheckedSkills] = useState([]);
   const [checkedLanguages, setCheckedLanguage] = useState([]);
   const [checkedCertificates, setCheckedCertificates] = useState([]);
+
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    setCities(places);
+  }, []);
 
   const [date, setDate] = useState([
     {
@@ -30,8 +38,7 @@ export default function OpenCall() {
     },
   ]);
 
-  const { callInput, setCallInput } =
-    useContext(CallContext);
+  const { callInput, setCallInput } = useContext(CallContext);
   const { autProfileData } = useContext(UserContext);
 
   const handleInputChange = (e) => {
@@ -85,7 +92,7 @@ export default function OpenCall() {
   };
 
   const createCall = () => {
-    addCall(callInput)
+    addCall(callInput);
     Router.push("/stk/profile");
   };
 
@@ -158,18 +165,39 @@ export default function OpenCall() {
           </div>
           <div className="w-1/2">
             <div className="grid gap-y-3">
-              <Select
-                label="Konum"
-                name="location"
-                value={callInput.location}
-                onChange={(e) => handleInputChange(e)}
-              >
-                <Option>Material Tailwind HTML</Option>
-                <Option>Material Tailwind React</Option>
-                <Option>Material Tailwind Vue</Option>
-                <Option>Material Tailwind Angular</Option>
-                <Option>Material Tailwind Svelte</Option>
-              </Select>
+              {/*
+              <div className="flex gap-x-2"> 
+                <Select
+                  label="Şehir"
+                  name="location"
+                  value={callInput.location}
+                  onChange={(e) => handleInputChange(e)}
+                >
+                  {places.map((city) => {
+                    return (
+                      <Option name="location" key={city.index}>
+                        {city.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+                
+                <Select
+                  label="İlçe"
+                  name="location"
+                  value={callInput.location}
+                  onChange={(e) => handleInputChange(e)}
+                >
+                  {places.map((city) => {
+                    return (
+                      <Option name="location" key={city.index}>
+                        {city.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </div>
+              */}
 
               <label>Faaliyet Tarihleri</label>
               <DateRange

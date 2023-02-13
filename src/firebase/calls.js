@@ -100,13 +100,14 @@ export const updateApplicantStatus = async (callID, applicantID, status) => {
 
     await Promise.all(
       callApplicants.map(async (applicant) => {
-        console.log("aloooooo");
         updateUserAppliedCalls(applicant.uid, callID, status);
       })
     );
 
     await setDoc(callDoc, { applicants: updatedApplicants }, { merge: true });
+    return true
   } catch (error) {
     console.log(error);
+    return false
   }
 };
