@@ -18,7 +18,7 @@ const UserProvider = (props) => {
   const [profileData, setProfileData] = useState(null);
 
   const [updatedField, setUpdatedFields] = useState({});
-
+  console.log("dummy");
   const auth = getAuth(app);
   const requestRef = collection(db, "users");
 
