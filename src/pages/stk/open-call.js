@@ -165,7 +165,8 @@ export default function OpenCall() {
           </div>
           <div className="w-1/2">
             <div className="grid gap-y-3">
-              <div className="flex gap-x-2">
+              {/*
+              <div className="flex gap-x-2"> 
                 <Select
                   label="Şehir"
                   name="location"
@@ -181,7 +182,6 @@ export default function OpenCall() {
                   })}
                 </Select>
                 
-                {/*TODO this shoul map selected_place*/} 
                 <Select
                   label="İlçe"
                   name="location"
@@ -197,6 +197,8 @@ export default function OpenCall() {
                   })}
                 </Select>
               </div>
+              */}
+
               <label>Faaliyet Tarihleri</label>
               <DateRange
                 className="min-w-full"
