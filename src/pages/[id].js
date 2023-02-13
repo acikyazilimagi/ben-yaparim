@@ -17,6 +17,7 @@ import Location from "@/src/components/icons/Location";
 import Calendar from "@/src/components/icons/Calendar";
 import People from "@/src/components/icons/People";
 import Envelope from "@/src/components/icons/Envelope";
+import ShareOptions from "@/src/components/Share/share";
 import {formatDate} from "@/src/helpers"
 
 export default function CallDetail() {
@@ -210,8 +211,9 @@ export default function CallDetail() {
             >
               BEN YAPARIM!
             </button>
-          )}
+          )} 
         </div>
+        <div><ShareOptions id={id}></ShareOptions></div>       
       </div>
       <p className="text-xs mx-[6%] my-3">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
