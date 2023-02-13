@@ -17,12 +17,16 @@ import Location from "@/src/components/icons/Location";
 import Calendar from "@/src/components/icons/Calendar";
 import People from "@/src/components/icons/People";
 import Envelope from "@/src/components/icons/Envelope";
-import {formatDate} from "@/src/helpers"
+
+import { formatDate } from "@/src/helpers";
+import { auth } from "../firebase-config";
 
 export default function CallDetail() {
   const [showModal, toggleModal] = useState(false);
   const [applicantModalStatus, setApplicantModalStatus] = useState(false);
   const { profileData } = useContext(UserContext);
+
+  const { currentUser } = auth;
 
   const router = useRouter();
   const { id } = router.query;
@@ -42,8 +46,14 @@ export default function CallDetail() {
   }, [id]);
 
   const handleApplicationCall = () => {
-    addApplicantToCallDoc(id, profileData?.uid);
-    updateUserAppliedCalls(null, id, "pending");
+    if (!!currentUser) {
+      addApplicantToCallDoc(id, profileData?.uid).then((res) => {
+        res ? toggleModal(true) : toast.error(err.message);
+      });
+      updateUserAppliedCalls(null, id, "pending");
+    } else {
+      Router.push("/register");
+    }
   };
 
   const seeAllApplicants = () => {
@@ -165,7 +175,7 @@ export default function CallDetail() {
                   <p>Faaliyet Tarihi</p>
                 </div>
                 <div className="flex space-x-2 text-l font-bold">
-                {formatDate(call?.date?.startDate)} - {formatDate(call?.date?.endDate)}
+                  {formatDate(call?.date?.startDate)} - {formatDate(call?.date?.endDate)}
                 </div>
               </div>
             </li>
@@ -192,11 +202,11 @@ export default function CallDetail() {
                   <p>Başvuran Gönüllü Sayısı</p>
                 </div>
                 <div className="flex space-x-2 text-l font-bold">
-                  {/* <p>
-                    {details?.applicants?.length > 0
-                      ? details?.applicants?.length
+                  <p>
+                    {call?.applicants?.length > 0
+                      ? call?.applicants?.length
                       : "İlk adımı sen at!"}
-                  </p> */}
+                  </p>
                 </div>
               </div>
             </li>
@@ -204,8 +214,6 @@ export default function CallDetail() {
           {profileData?.role === "volunteer" && (
             <button
               onClick={handleApplicationCall}
-              //!!auth.currentUser ? toggleModal(true) : Router.push("/register");
-
               className="bg-pink-600 text-white p-3 text-sm rounded-full my-5 font-bold"
             >
               BEN YAPARIM!

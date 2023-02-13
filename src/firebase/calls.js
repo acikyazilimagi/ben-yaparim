@@ -78,8 +78,10 @@ export const addApplicantToCallDoc = async (callID, applicantID) => {
       },
       { merge: true }
     );
+    return true;
   } catch (error) {
     console.log(error);
+    return false;
   }
 };
 
