@@ -10,7 +10,9 @@ export async function sendMail (recipient, mailSubject, mailBody){
         html: mailBody,
       },
     });
+    return true
   } catch (error) {
     console.log(error);
+    return false
   }
 }
