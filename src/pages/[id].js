@@ -17,6 +17,7 @@ import Location from "@/src/components/icons/Location";
 import Calendar from "@/src/components/icons/Calendar";
 import People from "@/src/components/icons/People";
 import Envelope from "@/src/components/icons/Envelope";
+import ShareOptions from "@/src/components/Share/share";
 
 import { formatDate } from "@/src/helpers";
 import { auth } from "../firebase-config";
@@ -106,7 +107,7 @@ export default function CallDetail() {
           </div>
         </Modal>
 
-        {console.log("call", call)}
+        <div className="flex justify-end mx-24"><ShareOptions id={id}/></div>
 
         <div className="border border-gray-200 m-[6%] px-[2%] pb-10 xl:flex justify-start">
           <div className="w-1/2 mr-[5%]">
@@ -165,12 +166,12 @@ export default function CallDetail() {
                   </div>
                   <div className="flex space-x-2 text-l font-bold">
                     <p>
-                      {call.location}, {call.town}{" "}
+                      {call.location} {call.town}{" "}
                     </p>
                   </div>
                 </div>
               </li>
-              {console.log(call)}
+
               <li className="flex w-full border-b-2 py-4">
                 <div className="flex min-w-full justify-between">
                   <div className="flex space-x-2 text-l font-bold text-gray-600">
