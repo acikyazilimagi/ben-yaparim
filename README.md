@@ -18,6 +18,35 @@ You can start editing the page by modifying `pages/index.js`. The page auto-upda
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
+### Docker
+
+To build container:
+```bash
+docker compose build
+```
+or
+```bash
+docker compose build --no-cahce
+```
+
+To run containers:
+
+```bash
+docker compose up
+```
+
+To start with deamon mode add "-d" flag:
+
+```bash
+docker compose up -d
+```
+
+To stop containers:
+
+```bash
+docker compose down
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

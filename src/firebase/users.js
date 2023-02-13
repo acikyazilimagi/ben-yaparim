@@ -51,6 +51,8 @@ export const updateUserAppliedCalls = async (id, callID, status) => {
   try {
     const userId = id ? id : auth?.currentUser?.uid;
 
+    const user = await getUser(userId);
+
     const appliedCalls = (await getUser(userId).appliedCalls) || [];
     if (appliedCalls?.find((call) => call.id === callID)) {
       return;
@@ -69,6 +71,7 @@ export const getUserAppliedCalls = async (uid) => {
     const userDoc = await getDoc(doc(db, "users", uid));
 
     if (userDoc.exists()) {
+        console.log("hello",  userDoc.data())
       return userDoc.data().appliedCalls;
     } else {
       console.log("No such document!");

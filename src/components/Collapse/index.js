@@ -6,7 +6,7 @@ import {
 } from "@material-tailwind/react";
 import { Button } from "@material-tailwind/react";
 import { Chip } from "@material-tailwind/react";
-import { updateApplicantApprovedStatus } from "@/src/firebase/applicants";
+import { updateApplicantStatus } from "@/src/firebase/calls";
 
 function Icon({ id, open }) {
   return (
@@ -59,7 +59,7 @@ export default function Collapse({
               color="green"
               className="mx-2"
               onClick={() => {
-                updateApplicantApprovedStatus(callId, id);
+                updateApplicantStatus(callId, id, "approved");
               }}
             >
               Ön Onay

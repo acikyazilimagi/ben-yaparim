@@ -23,6 +23,7 @@ const renderAppliedCallContent = (calls, id) => {
         needOfVolunteer={call.needOfVolunteer}
         location=""
         id={call.id}
+        status={call.status}
       />
     );
   });
@@ -53,9 +54,11 @@ export default function Profile() {
           data?.map(async (call) => {
             const callData = await getCall(call.id);
             const mergedData = { ...callData, ...call };
-            setAppliedCalls([...appliedCalls, { ...mergedData }]);
+            return mergedData;
           })
-        );
+        ).then((data) => {
+          setAppliedCalls(data);
+        });
       })();
     }
   }, [currentUser]);
