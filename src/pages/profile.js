@@ -8,31 +8,28 @@ import { Button, Textarea, Input } from "@material-tailwind/react";
 import CallTabs from "@/components/CallTabs";
 import Modal from "@/components/Modal";
 import Card from "@/components/Card";
-import { getAllCalls } from "@/src/firebase/calls";
+import { getUserAppliedCalls } from "@/src/firebase/users";
+import { getCall } from "@/src/firebase/calls";
 
-const renderOpenCallContent = (calls) => {
+const renderAppliedCallContent = (calls, id) => {
   return calls?.map((call, i) => {
     return (
       <Card
         key={i}
-        title={call?.title}
-        description={call?.description}
+        title={call.title}
+        description={call.description}
         startDate={call?.date?.startDate}
-        endDate={call?.date?.endDate}
-        needOfVolunteer={call?.needOfVolunteer}
-        applicants={call?.applicants}
-        checkedCertificates={call?.checkedCertificates}
-        checkedLanguages={call?.checkedLanguages}
-        checkedSkills={call?.checkedSkills}
+        endDate={call.date?.endDate}
+        needOfVolunteer={call.needOfVolunteer}
         location=""
         id={call.id}
-        role="stk"
       />
     );
   });
 };
 
 export default function Profile() {
+  const { currentUser } = auth;
   const {
     profileData,
     updateStkInfo,
@@ -43,32 +40,38 @@ export default function Profile() {
   const { callInput, setCallInput, createNewCall } = useContext(CallContext);
   const [profileModalStatus, toggleProfileModal] = useState(false);
 
-  const [calls, setCalls] = useState([]);
+  const [appliedCalls, setAppliedCalls] = useState([]);
 
-  const stkTabsData = [
+  console.log("appliedCalls", appliedCalls);
+
+  useEffect(() => {
+    if (currentUser?.uid) {
+      (async () => {
+        const data = await getUserAppliedCalls(currentUser?.uid);
+
+        await Promise.all(
+          data?.map(async (call) => {
+            const callData = await getCall(call.id);
+            const mergedData = { ...callData, ...call };
+            setAppliedCalls([...appliedCalls, { ...mergedData }]);
+          })
+        );
+      })();
+    }
+  }, [currentUser]);
+
+  const volunteerTabsData = [
     {
-      label: "Açık Çağrılar",
-      value: "acik",
-      content: renderOpenCallContent(calls),
+      label: "Aktif Başvurularım",
+      value: "aktif",
+      content: renderAppliedCallContent(appliedCalls, profileData?.id),
     },
     {
-      label: "Kapalı Çağrılar",
+      label: "Kapanmış Başvurularım",
       value: "kapali",
       content: "",
     },
-    {
-      label: "Taslaklar",
-      value: "taslaklar",
-      content: "",
-    },
   ];
-
-  useEffect(() => {
-    (async () => {
-      const data = await getAllCalls();
-      setCalls(data);
-    })();
-  }, []);
 
   const handleProfileInputChange = (e) => {
     setUpdatedFields({ ...updatedField, [e.target.name]: e.target.value });
@@ -108,16 +111,16 @@ export default function Profile() {
   //TAILWIND LOADING
   if (!profileData) return <div></div>;
 
-  if (profileData?.role === "volunteer") {
-    Router.push("/profile");
+  if (profileData?.role === "admin") {
+    Router.push("/stk/profile");
   }
 
-  if (profileData?.role === "admin") {
+  if (profileData?.role === "volunteer") {
     return (
       <div className="m-10 lg:mx-36 space-y-10">
-        <>
+        <div>
           <div className="flex items-center">
-            <p className="text-5xl font-bold mr-10">Kurum Profili</p>
+            <p className="text-5xl font-bold mr-10">Gönüllü Profilim</p>
             <svg
               width="24"
               height="24"
@@ -143,37 +146,39 @@ export default function Profile() {
           <div className="flex lg:flex-row justify-between max-w-2xl">
             <div className="flex flex-col space-y-5">
               <div className="flex space-x-5">
-                <p className="font-bold">Kurum İsmi </p>
-                <p>{profileData?.displayName}</p>
+                <p className="font-bold">İsim - Soyisim </p>
+                <p>
+                  {profileData?.name} {profileData?.surname}
+                </p>
               </div>
               <div className="flex space-x-5">
-                <p className="font-bold">Website</p>
-                <p>{profileData?.website}</p>
+                <p className="font-bold">Telefon</p>
+                <p>{profileData?.phone}</p>
               </div>
               <div className="flex space-x-5">
                 <p className="font-bold">E-mail </p>
                 <p>{profileData?.email}</p>
               </div>
+              <div className="flex space-x-5">
+                <p className="font-bold">Lokasyon </p>
+                <p></p>
+              </div>
+              <div className="flex space-x-5">
+                <p className="font-bold">Cinsiyet </p>
+                <p></p>
+              </div>
+              <div className="flex space-x-5">
+                <p className="font-bold">Yaş Grubu</p>
+                <p></p>
+              </div>
+              <div className="flex space-x-5">
+                <p className="font-bold">Kan Grubu</p>
+                <p></p>
+              </div>
             </div>
-            <div className="flex flex-col space-y-5">
-              <div className="flex space-x-5">
-                <p className="font-bold">Adres </p>
-                <p>{profileData?.address}</p>
-              </div>
-              <div className="flex space-x-5">
-                <p className="font-bold">Telefon </p>
-                <p>{profileData?.phone}</p>
-              </div>
-              <div className="flex space-x-5">
-                <p className="font-bold">Faaliyet Alanları</p>
-                <p>faaliyet alanları</p>
-              </div>
-            </div>
+            <div className="flex flex-col space-y-5"></div>
           </div>
-          <Button color="pink" onClick={() => Router.push("/stk/open-call")}>
-            + Yeni Çağrı Oluştur
-          </Button>
-          <CallTabs data={stkTabsData} />
+          <CallTabs data={volunteerTabsData} />
 
           <Modal
             show={profileModalStatus}
@@ -184,30 +189,16 @@ export default function Profile() {
             <div className="w-fit z-30 mt-2 bg-background space-y-3">
               <Input
                 variant="outlined"
-                label="Kurum İsmi"
-                name="displayName"
-                value={updatedField?.displayName}
+                label="İsim"
+                name="name"
+                value={updatedField?.name}
                 onChange={(e) => handleProfileInputChange(e)}
               />
               <Input
                 variant="outlined"
-                label="Website"
-                name="website"
-                value={updatedField?.website}
-                onChange={(e) => handleProfileInputChange(e)}
-              />
-              <Textarea
-                variant="outlined"
-                label="Adres"
-                name="address"
-                value={updatedField?.address}
-                onChange={(e) => handleProfileInputChange(e)}
-              />
-              <Input
-                variant="outlined"
-                label="Telefon"
-                name="phone"
-                value={updatedField?.phone}
+                label="Soyisim"
+                name="surname"
+                value={updatedField?.surname}
                 onChange={(e) => handleProfileInputChange(e)}
               />
 
@@ -216,7 +207,7 @@ export default function Profile() {
               </Button>
             </div>
           </Modal>
-        </>
+        </div>
       </div>
     );
   }

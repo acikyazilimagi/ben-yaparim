@@ -8,11 +8,10 @@ import {
   Select,
   Option,
 } from "@material-tailwind/react";
-
+import { addCall } from "@/src/firebase/calls";
 import { CallContext } from "src/context/CallContext";
 import { DateRange } from "react-date-range";
 import { UserContext } from "@/src/context/UserContext";
-
 import { app } from "@/src/firebase-config";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -31,9 +30,9 @@ export default function OpenCall() {
     },
   ]);
 
-  const { callInput, setCallInput, createNewCall, getCalls } =
+  const { callInput, setCallInput } =
     useContext(CallContext);
-  const { stkProfile } = useContext(UserContext);
+  const { autProfileData } = useContext(UserContext);
 
   const handleInputChange = (e) => {
     setCallInput({ ...callInput, [e.target.name]: e.target.value });
@@ -86,9 +85,7 @@ export default function OpenCall() {
   };
 
   const createCall = () => {
-    createNewCall();
-    setCallInput({});
-    getCalls();
+    addCall(callInput)
     Router.push("/stk/profile");
   };
 
@@ -100,7 +97,7 @@ export default function OpenCall() {
         Router.push("/");
       }
     });
-  }, [stkProfile]);
+  }, [autProfileData]);
 
   const skills = [
     "ilk yardım",
@@ -291,7 +288,7 @@ export default function OpenCall() {
         variant="outlined"
         label="Notlar"
         name="notes"
-        value={callInput.notes}
+        value={callInput?.notes}
         onChange={(e) => handleInputChange(e)}
       />
 

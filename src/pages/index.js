@@ -1,10 +1,17 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import Head from "next/head";
-import { CallContext } from "src/context/CallContext";
 import Card from "@/components/Card";
+import { getAllCalls } from "@/src/firebase/calls";
+import { UserContext } from "../context/UserContext";
 
 export default function Home() {
-  const { calls } = useContext(CallContext);
+  const [calls, setCalls] = useState([]);
+
+  const { profileData } = useContext(UserContext);
+
+  useEffect(() => {
+    getAllCalls().then((data) => setCalls(data));
+  }, []);
 
   return (
     <div className="m-10 lg:mx-36 pb-10">
@@ -53,18 +60,23 @@ export default function Home() {
             />
           </svg>
         </div>
-        <div className="grid lg:grid-cols-2 gap-3 2xl:flex justify-center">
+        <div className="grid lg:grid-cols-2 gap-14 place-items-stretch items-center">
           {calls?.map((call, i) => {
             return (
               <Card
                 key={i}
-                title={call.title}
-                description={call.description}
-                startDate={call.date?.startDate}
-                endDate={call.date?.endDate}
-                needOfVolunteer={call.needOfVolunteer}
+                title={call?.title}
+                description={call?.description}
+                startDate={call?.date?.startDate}
+                endDate={call?.date?.endDate}
+                needOfVolunteer={call?.needOfVolunteer}
+                applicants={call?.applicants}
+                checkedCertificates={call?.checkedCertificates}
+                checkedLanguages={call?.checkedLanguages}
+                checkedSkills={call?.checkedSkills}
                 location="İstanbul"
                 id={call.id}
+                role={profileData?.role === "volunteer" ? "volunteer" : "stk"}
               />
             );
           })}

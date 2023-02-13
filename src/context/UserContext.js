@@ -14,8 +14,8 @@ import { getAuth } from "firebase/auth";
 export const UserContext = createContext(null);
 
 const UserProvider = (props) => {
-  const [stkProfile, setSdkProfile] = useState(null);
-  const [stkData, setSdkData] = useState(null);
+  const [autProfileData, setAuthProfileData] = useState(null);
+  const [profileData, setProfileData] = useState(null);
 
   const [updatedField, setUpdatedFields] = useState({});
 
@@ -27,8 +27,8 @@ const UserProvider = (props) => {
   }, []);
 
   useEffect(() => {
-    setUpdatedFields(stkData);
-  }, [stkData]);
+    setUpdatedFields(profileData);
+  }, [profileData]);
 
   const getStkInfo = async () => {
     let response;
@@ -37,7 +37,7 @@ const UserProvider = (props) => {
       response.docs.map(
         (req) =>
           req.data().uid === auth.currentUser?.uid &&
-          setSdkData({ ...req.data(), id: req.id })
+          setProfileData({ ...req.data(), id: req.id })
       );
     } catch (err) {
       if (err.response) {
@@ -58,7 +58,7 @@ const UserProvider = (props) => {
   const updateStkInfo = async () => {
     let response;
 
-    const request = doc(db, "users", stkData?.id);
+    const request = doc(db, "users", profileData?.id);
 
     try {
       response = await updateDoc(request, updatedField);
@@ -81,10 +81,10 @@ const UserProvider = (props) => {
   return (
     <UserContext.Provider
       value={{
-        stkProfile,
-        setSdkProfile,
-        stkData,
-        setSdkData,
+        autProfileData,
+        setAuthProfileData,
+        profileData,
+        setProfileData,
         getStkInfo,
         updateStkInfo,
         updatedField,

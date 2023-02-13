@@ -3,7 +3,7 @@ import { app } from "@/src/firebase-config";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { Button, Textarea, Input } from "@material-tailwind/react";
 import { db } from "@/src/firebase-config";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { UserContext } from "@/src/context/UserContext";
 import toast from "react-hot-toast";
 import Router from "next/router";
@@ -20,7 +20,7 @@ export default function Register() {
   });
 
   const userRef = collection(db, "users");
-  const { stkProfile, setSdkProfile } = useContext(UserContext);
+  const { setAuthProfileData } = useContext(UserContext);
 
   const registerSTK = async (email, password) => {
     try {
@@ -29,7 +29,7 @@ export default function Register() {
         email,
         password
       );
-      setSdkProfile(user);
+      setAuthProfileData(user);
       return user;
     } catch (err) {
       toast.error(err.message);
@@ -38,7 +38,11 @@ export default function Register() {
 
   const addUser = async (user) => {
     try {
-      await addDoc(userRef, { ...info, uid: user.uid, email: user.email });
+      await setDoc(
+        doc(db, "users", user.uid),
+        { ...info, uid: user.uid, email: user.email, appliedCalls: [] },
+        { merge: true }
+      );
     } catch (err) {
       toast.error(err.message);
     }
