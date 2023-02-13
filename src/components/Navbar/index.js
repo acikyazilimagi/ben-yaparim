@@ -46,7 +46,7 @@ export default function Navbar() {
               href={"/stk/profile"}
               className="text-center text-pink-600 font-bold mr-10"
             >
-              Profilin
+              Profilim
             </Link>
 
             <button

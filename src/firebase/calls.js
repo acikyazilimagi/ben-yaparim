@@ -51,7 +51,7 @@ export const getCall = async (id) => {
 export const getApplicantsMetaData = async (applicants) => {
   try {
     return await Promise.all(
-      applicants.map(async (applicant) => {
+      applicants?.map(async (applicant) => {
         const user = await getUser(applicant.uid);
         return { ...user, applicant };
       })
