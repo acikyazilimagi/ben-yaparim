@@ -198,7 +198,7 @@ export default function OpenCall() {
                   <select name="location" onChange={handleInputChange} className="border-gray-400 rounded-md w-full mr-2">
                     {places.map((city) => {
                       return (
-                        <option key={city.index} value={city.name}>
+                        <option key={city.name} value={city.name}>
                           {city.name}
                         </option>
                       );
@@ -209,7 +209,7 @@ export default function OpenCall() {
                     {towns &&
                       towns.map((town) => {
                         return (
-                          <option key={town.index} value={town.name}>
+                          <option key={town.name} value={town.name}>
                             {town.name}
                           </option>
                         );

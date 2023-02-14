@@ -11,9 +11,6 @@ export default function Modal({ title, children, show, close }) {
       >
         <div
           className="p-5 rounded-md bg-blue-gray-50"
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
         >
           <div className="flex flex-wrap justify-between items-center ">
             <p className="text-xl font-bold">{title}</p>

@@ -41,10 +41,10 @@ export default function Navbar() {
             />
           </div>
 
-          <div>
+          <div className="flex space-x-2 items-center">
             <Link
               href={"/stk/profile"}
-              className="text-center text-pink-600 font-bold mr-10"
+              className="text-center text-pink-600 font-bold"
             >
               Profilim
             </Link>
@@ -69,7 +69,7 @@ export default function Navbar() {
               onClick={() => Router.push("/")}
             />
           </div>
-          <div className="flex justify-end p-10 w-full">
+          <div className="flex justify-end w-full">
             <Link
               href={"/register"}
               className="text-center text-pink-600 font-bold ml-5"
