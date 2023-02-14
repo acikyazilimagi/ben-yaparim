@@ -1,6 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { auth } from "@/src/firebase-config";
-import { onAuthStateChanged } from "firebase/auth";
 import { UserContext } from "@/src/context/UserContext";
 import { CallContext } from "src/context/CallContext";
 import Router from "next/router";
@@ -92,16 +90,6 @@ export default function Profile() {
       date: date[0],
     });
   }, [date]);
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (profileData) => {
-      if (profileData) {
-        console.log(auth.currentUser);
-      } else {
-        Router.push("/");
-      }
-    });
-  }, [profileData]);
 
   //TAILWIND LOADING
   if (!profileData) return <div></div>;
