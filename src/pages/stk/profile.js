@@ -1,6 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { auth } from "@/src/firebase-config";
-import { onAuthStateChanged } from "firebase/auth";
 import { UserContext } from "@/src/context/UserContext";
 import { CallContext } from "src/context/CallContext";
 import Router from "next/router";
@@ -11,6 +9,7 @@ import Card from "@/components/Card";
 import Edit from "@/components/icons/Edit";
 import Spinner from "@/components/icons/Spinner";
 import { getAllCalls } from "@/src/firebase/calls";
+import { updateUser } from "@/src/firebase/users";
 
 const renderOpenCallContent = (calls) => {
   return calls?.map((call, i) => {
@@ -35,13 +34,8 @@ const renderOpenCallContent = (calls) => {
 };
 
 export default function Profile() {
-  const {
-    profileData,
-    updateStkInfo,
-    updatedField,
-    setUpdatedFields,
-    getStkInfo,
-  } = useContext(UserContext);
+  const { profileData, updatedField, setUpdatedFields, setProfileData } =
+    useContext(UserContext);
   const { callInput, setCallInput } = useContext(CallContext);
   const [profileModalStatus, toggleProfileModal] = useState(false);
 
@@ -77,9 +71,9 @@ export default function Profile() {
   };
 
   const update = () => {
-    updateStkInfo();
     toggleProfileModal(false);
-    getStkInfo();
+    updateUser(profileData?.id, updatedField);
+    setProfileData({ ...profileData, ...updatedField });
   };
 
   const [date, setDate] = useState([
@@ -96,16 +90,6 @@ export default function Profile() {
       date: date[0],
     });
   }, [date]);
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (profileData) => {
-      if (profileData) {
-        console.log(auth.currentUser);
-      } else {
-        Router.push("/");
-      }
-    });
-  }, [profileData]);
 
   //TAILWIND LOADING
   if (!profileData) return <div></div>;
