@@ -14,6 +14,7 @@ import LanguageTag from "@/components/Tags/language-tag";
 import { formatDate } from "@/src/helpers";
 import { Status } from "@/src/utils/constants";
 import ShareOptions from "@/src/components/Share/share";
+import Badge from "../Badge/Badge";
 
 export default function Card({
   title,
@@ -46,9 +47,7 @@ export default function Card({
 
         <div className="flex items-center space-x-1">
           <People className="w-6 h-6" />
-          <p className="text-sm font-bold text-gray-500">
-            {needOfVolunteer}
-          </p>
+          <p className="text-sm font-bold text-gray-500">{needOfVolunteer}</p>
         </div>
       </div>
       <hr />
@@ -56,24 +55,36 @@ export default function Card({
       <div className="my-3">
         <div className="flex justify-between">
           <p className="text-xl font-bold">{title}</p>
-          <div className="mt-3"> <ShareOptions id={id} /></div>
+          <div className="mt-3">
+            {" "}
+            <ShareOptions id={id} />
+          </div>
         </div>
-        <p className="text-sm font-bold my-2">{Status[status]}</p>
+        <Badge
+          status={
+            status === "approved"
+              ? "success"
+              : status === "pending"
+              ? "info"
+              : "danger"
+          }
+          text={Status[status]}
+        />
         <p className="my-2">{description}</p>
         <p className="text-sm font-bold my-2">Aranan Yetkinlikler</p>
         <div className="grid grid-cols-4 items-center gap-1 space-y-3">
           {checkedSkills?.map((skill) => (
             <ColorTag text={skill} color="#FFDCDC" />
           ))}
-          <br/>
+          <br />
           {checkedLanguages?.map((language) => (
             <LanguageTag text={language} />
           ))}
-          <br/>
+          <br />
           {checkedCertificates?.includes("Ehliyet") && (
             <div className="flex items-center">
               <p>Ehliyet</p>
-              <Check className="w-6 h-6 mx-2"/>
+              <Check className="w-6 h-6 mx-2" />
             </div>
           )}
         </div>
