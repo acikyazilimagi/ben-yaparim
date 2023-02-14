@@ -1,6 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { auth } from "@/src/firebase-config";
-import { onAuthStateChanged } from "firebase/auth";
 import { UserContext } from "@/src/context/UserContext";
 import { CallContext } from "src/context/CallContext";
 import Router from "next/router";
@@ -8,13 +6,15 @@ import { Button, Textarea, Input, Checkbox } from "@material-tailwind/react";
 import CallTabs from "@/components/CallTabs";
 import Modal from "@/components/Modal";
 import Card from "@/components/Card";
-import { getUserAppliedCalls } from "@/src/firebase/users";
+import { getUserAppliedCalls, updateUser } from "@/src/firebase/users";
 import { getCall } from "@/src/firebase/calls";
 import Edit from "@/components/icons/Edit";
 import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
 import Check from "@/src/components/icons/Check";
 import places from "./places.json" assert { type: "json" };
+
+import { auth } from "@/src/firebase-config";
 
 const renderAppliedCallContent = (calls, id) => {
   return calls?.map((call, i) => {
@@ -34,21 +34,14 @@ const renderAppliedCallContent = (calls, id) => {
   });
 };
 
-export default function Profile() {
+const Profile = () => {
   const { currentUser } = auth;
-  const {
-    profileData,
-    updateStkInfo,
-    updatedField,
-    setUpdatedFields,
-    getStkInfo,
-  } = useContext(UserContext);
+  const { updatedField, setUpdatedFields, profileData, setProfileData } =
+    useContext(UserContext);
   const { callInput, setCallInput } = useContext(CallContext);
   const [profileModalStatus, toggleProfileModal] = useState(false);
 
   const [appliedCalls, setAppliedCalls] = useState([]);
-
-  console.log("appliedCalls", appliedCalls);
   const [cities, setCities] = useState([]);
   const [towns, setTowns] = useState([]);
 
@@ -58,6 +51,7 @@ export default function Profile() {
 
   useEffect(() => {
     if (currentUser?.uid) {
+      //TODO: MOVE THIS INTO FIREBASE FOLDER
       (async () => {
         const data = await getUserAppliedCalls(currentUser?.uid);
 
@@ -92,9 +86,9 @@ export default function Profile() {
   };
 
   const update = () => {
-    updateStkInfo();
     toggleProfileModal(false);
-    getStkInfo();
+    updateUser(profileData?.uid, updatedField);
+    setProfileData({ ...profileData, ...updatedField });
   };
 
   useEffect(() => {
@@ -184,16 +178,6 @@ export default function Profile() {
   ];
 
   const certificates = ["Ehliyet", "İlk yardım eğitimi", "AKUT/AFAD eğitimi"];
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (profileData) => {
-      if (profileData) {
-        console.log(auth.currentUser);
-      } else {
-        Router.push("/");
-      }
-    });
-  }, [profileData]);
 
   //TAILWIND LOADING
   if (!profileData) return <div></div>;
@@ -420,4 +404,6 @@ export default function Profile() {
       </div>
     );
   }
-}
+};
+
+export default Profile;
