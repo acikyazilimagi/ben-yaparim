@@ -16,7 +16,7 @@ export default function ShareOptions({id}) {
       {showModal ? (
         <div
           aria-hidden="true"
-          className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full bg-white bg-opacity-80"
+          className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full bg-black bg-opacity-80"
         >
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none h-4/5">
             <div className="relative w-auto mx-auto max-w-3xl">

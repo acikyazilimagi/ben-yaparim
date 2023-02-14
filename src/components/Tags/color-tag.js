@@ -1,6 +1,6 @@
 export default function ColorTag({ text, color }) {
     return (
-      <div className="p-3 max-w-xs min-w-fit" style={{backgroundColor: color}}>
+      <div className="py-1 px-5 max-w-xs w-fit h-7" style={{backgroundColor: color}}>
         {text}
       </div>
     );

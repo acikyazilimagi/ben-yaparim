@@ -3,6 +3,7 @@ import Head from "next/head";
 import Card from "@/components/Card";
 import { getAllCalls } from "@/src/firebase/calls";
 import { UserContext } from "../context/UserContext";
+import CircleDown from "@/src/components/icons/CircleDown";
 
 export default function Home() {
   const [calls, setCalls] = useState([]);
@@ -35,27 +36,7 @@ export default function Home() {
           <p className="text-xl text-center text-pink-600  font-bold">
             Aktif çağrıları incele
           </p>
-          <svg
-            width="74"
-            height="74"
-            viewBox="0 0 74 74"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-1/2 m-auto mb-10"
-          >
-            <circle
-              cx="37.0006"
-              cy="36.9999"
-              r="14.4167"
-              stroke="#FB3968"
-              strokeWidth="2"
-            />
-            <path
-              d="M43.1673 33.9167L37.0007 40.0834L30.834 33.9167"
-              stroke="#FB3968"
-              strokeWidth="2"
-            />
-          </svg>
+          <CircleDown className="w-10 h-10 m-auto mb-10"/>
         </div>
         <div className="grid lg:grid-cols-2 gap-14 place-items-stretch items-center">
           {calls?.map((call, i) => {
@@ -71,7 +52,7 @@ export default function Home() {
                 checkedCertificates={call?.checkedCertificates}
                 checkedLanguages={call?.checkedLanguages}
                 checkedSkills={call?.checkedSkills}
-                location="İstanbul"
+                location={call?.location}
                 id={call.id}
                 role={profileData?.role === "volunteer" ? "volunteer" : "stk"}
                 status={
