@@ -52,7 +52,7 @@ export default function Home() {
                 checkedCertificates={call?.checkedCertificates}
                 checkedLanguages={call?.checkedLanguages}
                 checkedSkills={call?.checkedSkills}
-                location="İstanbul"
+                location={call?.location}
                 id={call.id}
                 role={profileData?.role === "volunteer" ? "volunteer" : "stk"}
                 status={
