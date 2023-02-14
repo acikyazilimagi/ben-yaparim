@@ -1,4 +1,3 @@
-import { async } from "@firebase/util";
 import {
   collection,
   query,
@@ -31,15 +30,24 @@ export const getAllUsers = async () => {
   }
 };
 
-export const getUser = async (id) => {
+export const getUser = async (uid) => {
   try {
-    const docSnap = await getDoc(doc(db, "users", id));
+    const docSnap = await getDoc(doc(db, "users", uid));
     if (docSnap.exists()) {
       return docSnap.data();
     } else {
       // doc.data() will be undefined in this case
       console.log("No such document!");
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateUser = async (uid, data) => {
+  try {
+    const user = await updateDoc(doc(db, "users", uid), data);
+    return user;
   } catch (error) {
     console.log(error);
   }
@@ -53,7 +61,7 @@ export const updateUserAppliedCalls = async (id, callID, status) => {
 
     const user = await getUser(userId);
 
-    const appliedCalls = (await getUser(userId).appliedCalls) || [];
+    const appliedCalls = user?.appliedCalls || [];
     if (appliedCalls?.find((call) => call.id === callID)) {
       return;
     }
@@ -71,7 +79,6 @@ export const getUserAppliedCalls = async (uid) => {
     const userDoc = await getDoc(doc(db, "users", uid));
 
     if (userDoc.exists()) {
-        console.log("hello",  userDoc.data())
       return userDoc.data().appliedCalls;
     } else {
       console.log("No such document!");

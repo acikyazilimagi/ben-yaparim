@@ -1,25 +1,17 @@
 import React, { useState, useContext, useEffect } from "react";
 import Router from "next/router";
 
-import {
-  Button,
-  Textarea,
-  Input,
-} from "@material-tailwind/react";
+import { Button, Textarea, Input } from "@material-tailwind/react";
 import { addCall } from "@/src/firebase/calls";
 import { CallContext } from "src/context/CallContext";
 import { DateRange } from "react-date-range";
 import { UserContext } from "@/src/context/UserContext";
-import { app } from "@/src/firebase-config";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Location from "@/components/icons/Location";
 import Calendar from "@/components/icons/Calendar";
 import People from "@/components/icons/People";
 import { Checkbox } from "@material-tailwind/react";
 
 import places from "../places" assert { type: "json" };
-
-const auth = getAuth(app);
 
 export default function OpenCall() {
   const [checkedSkills, setCheckedSkills] = useState([]);
@@ -43,7 +35,6 @@ export default function OpenCall() {
   ]);
 
   const { callInput, setCallInput } = useContext(CallContext);
-  const { autProfileData } = useContext(UserContext);
 
   const handleInputChange = (e) => {
     setCallInput({ ...callInput, [e.target.name]: e.target.value });
@@ -119,16 +110,6 @@ export default function OpenCall() {
     Router.push("/stk/profile");
   };
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (value) => {
-      if (value) {
-        //console.log(auth.currentUser);
-      } else {
-        Router.push("/");
-      }
-    });
-  }, [autProfileData]);
-
   const skills = [
     "ilk yardım",
     "nakliye",
@@ -195,7 +176,11 @@ export default function OpenCall() {
                   <p className="">Faliyet Lokasyonu</p>
                 </div>
                 <div className="flex justify-between">
-                  <select name="location" onChange={handleInputChange} className="border-gray-400 rounded-md w-full mr-2">
+                  <select
+                    name="location"
+                    onChange={handleInputChange}
+                    className="border-gray-400 rounded-md w-full mr-2"
+                  >
                     {places.map((city) => {
                       return (
                         <option key={city.name} value={city.name}>
@@ -205,7 +190,11 @@ export default function OpenCall() {
                     })}
                   </select>
 
-                  <select name="town" onChange={handleInputChange} className="border-gray-400 rounded-md w-full">
+                  <select
+                    name="town"
+                    onChange={handleInputChange}
+                    className="border-gray-400 rounded-md w-full"
+                  >
                     {towns &&
                       towns.map((town) => {
                         return (
