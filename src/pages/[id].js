@@ -107,10 +107,10 @@ export default function CallDetail() {
           </div>
         </Modal>
 
-        <div className="flex justify-end mx-24"><ShareOptions id={id}/></div>
+        <div className="flex justify-end mr-[7%]"><ShareOptions id={id}/></div>
 
-        <div className="border border-gray-200 m-[6%] px-[2%] pb-10 xl:flex justify-start">
-          <div className="w-1/2 mr-[5%]">
+        <div className="border border-gray-200 m-[6%] p-[5%] xl:flex justify-start">
+          <div className="mr-5">
             <div className="my-5 flex justify-between">
               <h1 className="text-4xl mt-4 font-bold">{call?.title}</h1>
             </div>
@@ -118,19 +118,19 @@ export default function CallDetail() {
             <p className="max-w-xl my-8">{call?.precondition}</p>
             <div className="my-10">
               <p className="mt-4 font-bold">Aranan Yekinlikler</p>
-              <div className="mt-2 flex gap-x-2">
+              <div className="mt-2 grid grid-cols-2 gap-3">
                 {call?.checkedSkills?.map((skill) => (
                   <ColorTag text={skill} color="#FFDCDC" />
                 ))}
               </div>
             </div>
 
-            <div className="my-20 flex justify-between">
+            <div className="my-20 flex flex-col lg:flex-row justify-between">
               <div>
                 <p className="text-xl mt-6 font-bold text-gray-600">
                   Dil Bilgisi
                 </p>
-                <div className="mt-2 flex gap-x-2">
+                <div className="mt-2 grid grid-cols-2 gap-3">
                   {call?.checkedLanguages?.map((language) => (
                     <LanguageTag text={language} />
                   ))}
