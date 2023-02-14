@@ -60,16 +60,18 @@ export default function Card({
             <ShareOptions id={id} />
           </div>
         </div>
-        <Badge
-          status={
-            status === "approved"
-              ? "success"
-              : status === "pending"
-              ? "info"
-              : "danger"
-          }
-          text={Status[status]}
-        />
+        {status && (
+          <Badge
+            status={
+              status === "approved"
+                ? "success"
+                : status === "pending"
+                ? "info"
+                : "danger"
+            }
+            text={Status[status]}
+          />
+        )}
         <p className="my-2">{description}</p>
         <p className="text-sm font-bold my-2">Aranan Yetkinlikler</p>
         <div className="grid grid-cols-4 items-center gap-1 space-y-3">

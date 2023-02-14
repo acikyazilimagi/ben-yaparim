@@ -4,7 +4,6 @@ import cs from "classnames";
 import PropTypes from "prop-types";
 
 const Badge = ({ text, status = "success" }) => {
-  console.log(status);
   return <div className={cs(style.badge, style[status])}>{text}</div>;
 };
 
