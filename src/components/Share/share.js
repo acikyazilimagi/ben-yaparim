@@ -73,7 +73,7 @@ export default function ShareOptions({id}) {
                         type="button"
                         onClick={() =>
                           window.open(
-                            `https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`,
+                            `https://www.facebook.com/sharer/sharer.php?u=${window.location.href}${id}`,
                             '_blank'
                           )
                         }
@@ -95,7 +95,7 @@ export default function ShareOptions({id}) {
                     <li className="inline-block">
                       <button
                         onClick={() => {
-                          navigator.clipboard.writeText(window.location.href);
+                          navigator.clipboard.writeText(`${window.location.href}${id}`);
                           changeText('Copied!');
                         }}
                         className="p-2 hover:bg-hover"
