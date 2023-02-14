@@ -4,7 +4,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { UserContext } from "@/src/context/UserContext";
 import { CallContext } from "src/context/CallContext";
 import Router from "next/router";
-import { Button, Textarea, Input } from "@material-tailwind/react";
+import { Button, Textarea, Input, Checkbox } from "@material-tailwind/react";
 import CallTabs from "@/components/CallTabs";
 import Modal from "@/components/Modal";
 import Card from "@/components/Card";
@@ -14,6 +14,7 @@ import Edit from "@/components/icons/Edit";
 import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
 import Check from "@/src/components/icons/Check";
+import places from "./places.json" assert { type: "json" };
 
 const renderAppliedCallContent = (calls, id) => {
   return calls?.map((call, i) => {
@@ -48,6 +49,12 @@ export default function Profile() {
   const [appliedCalls, setAppliedCalls] = useState([]);
 
   console.log("appliedCalls", appliedCalls);
+  const [cities, setCities] = useState([]);
+  const [towns, setTowns] = useState([]);
+
+  const [checkedSkills, setCheckedSkills] = useState([]);
+  const [checkedLanguages, setCheckedLanguage] = useState([]);
+  const [checkedCertificates, setCheckedCertificates] = useState([]);
 
   useEffect(() => {
     if (currentUser?.uid) {
@@ -90,6 +97,13 @@ export default function Profile() {
     getStkInfo();
   };
 
+  useEffect(() => {
+    cities &&
+      cities.find(
+        (city) => city.name === updatedField?.location && setTowns(city.towns)
+      );
+  }, [updatedField?.location]);
+
   const [date, setDate] = useState([
     {
       startDate: new Date(),
@@ -104,6 +118,72 @@ export default function Profile() {
       date: date[0],
     });
   }, [date]);
+
+  useEffect(() => {
+    setUpdatedFields({
+      ...updatedField,
+      checkedSkills: checkedSkills,
+      checkedLanguages: checkedLanguages,
+      checkedCertificates: checkedCertificates,
+    });
+  }, [checkedSkills, checkedLanguages, checkedCertificates]);
+
+  const handleSkillCheck = (event) => {
+    let updatedList = [...checkedSkills];
+    if (event.target.checked) {
+      updatedList = [...checkedSkills, event.target.value];
+    } else {
+      updatedList.splice(checkedSkills.indexOf(event.target.value), 1);
+    }
+    setCheckedSkills(updatedList);
+  };
+
+  const handleLanguageCheck = (event) => {
+    let updatedList = [...checkedLanguages];
+    if (event.target.checked) {
+      updatedList = [...checkedLanguages, event.target.value];
+    } else {
+      updatedList?.splice(checkedLanguages.indexOf(event.target.value), 1);
+    }
+    setCheckedLanguage(updatedList);
+  };
+
+  const handleCertificateCheck = (event) => {
+    let updatedList = [...checkedCertificates];
+    if (event.target.checked) {
+      updatedList = [...checkedCertificates, event.target.value];
+    } else {
+      updatedList?.splice(checkedCertificates.indexOf(event.target.value), 1);
+    }
+    setCheckedCertificates(updatedList);
+  };
+
+  const skills = [
+    "ilk yardım",
+    "nakliye",
+    "eğitim",
+    "çadır kurulumu",
+    "yemek hazırlık",
+    "saha görevlisi",
+    "psikolojik destek",
+    "yazılım",
+    "tamir",
+    "tercümanlık",
+    "temizlik",
+  ];
+
+  const language_spoken = [
+    "Türkçe",
+    "İngilizce",
+    "Arapça",
+    "İspanyola",
+    "Fransızca",
+    "Japonca",
+    "Portekizce",
+    "Rusça",
+  ];
+
+  const certificates = ["Ehliyet", "İlk yardım eğitimi", "AKUT/AFAD eğitimi"];
 
   useEffect(() => {
     onAuthStateChanged(auth, (profileData) => {
@@ -154,7 +234,9 @@ export default function Profile() {
             </div>
             <div className="flex space-x-5">
               <p className="font-bold">Lokasyon </p>
-              <p>{profileData?.location}, {profileData?.town}</p>
+              <p>
+                {profileData?.location}, {profileData?.town}
+              </p>
             </div>
             <div className="flex space-x-5">
               <p className="font-bold">Cinsiyet </p>
@@ -198,8 +280,9 @@ export default function Profile() {
           close={() => {
             toggleProfileModal(false);
           }}
+          title="Profili Düzenle"
         >
-          <div className="w-fit z-30 mt-2 bg-background space-y-3">
+          <div className="w-fit z-30 mt-2 bg-background space-y-10 m-auto">
             <Input
               variant="outlined"
               label="İsim"
@@ -214,10 +297,124 @@ export default function Profile() {
               value={updatedField?.surname}
               onChange={(e) => handleProfileInputChange(e)}
             />
+            <div className="flex justify-between space-x-2">
+              <select
+                name="location"
+                onChange={handleProfileInputChange}
+                className="border-gray-400 rounded-md w-full mr-2"
+              >
+                {places.map((city) => {
+                  return (
+                    <option key={city.name} value={city.name}>
+                      {city.name}
+                    </option>
+                  );
+                })}
+              </select>
+              <select
+                name="town"
+                onChange={handleProfileInputChange}
+                className="border-gray-400 rounded-md w-full"
+              >
+                {towns &&
+                  towns.map((town) => {
+                    return (
+                      <option key={town.name} value={town.name}>
+                        {town.name}
+                      </option>
+                    );
+                  })}
+              </select>
+            </div>
+            <Input
+              variant="outlined"
+              label="Telefon"
+              name="phone"
+              value={updatedField?.phone}
+              onChange={(e) => handleProfileInputChange(e)}
+            />
+            <p className="text-gray-400 font-bold my-5">Aranılan Yetenekler</p>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
+              {skills.map((skill, index) => {
+                return (
+                  <div className="flex min-w-fit items-center" key={index}>
+                    <Checkbox
+                      name="skills"
+                      type="checkbox"
+                      value={skill}
+                      onChange={handleSkillCheck}
+                    />
+                    <label
+                      htmlFor="checked-checkbox"
+                      className="text-sm font-medium w-28"
+                    >
+                      {skill}
+                    </label>
+                  </div>
+                );
+              })}
 
-            <Button variant="outlined" onClick={update}>
-              Profili Güncelle
-            </Button>
+              <Input
+                variant="outlined"
+                label="Diğer"
+                name="otherSkills"
+                className="max-w-xs"
+                value={updatedField?.otherSkills}
+                onChange={(e) => handleProfileInputChange(e)}
+              />
+            </div>
+
+            <p className="text-gray-400 font-bold my-5">Konuşulan Diller</p>
+            <div className="grid grid-cols-3 gap-3 mb-10">
+              {language_spoken.map((languages, index) => {
+                return (
+                  <div className="flex min-w-fit items-center" key={index}>
+                    <Checkbox
+                      name="languages"
+                      type="checkbox"
+                      value={languages}
+                      onChange={handleLanguageCheck}
+                    />
+                    <label
+                      htmlFor="checked-checkbox"
+                      className="text-sm font-medium w-28"
+                    >
+                      {languages}
+                    </label>
+                  </div>
+                );
+              })}
+            </div>
+
+            <p className="text-gray-400 font-bold my-5">Sertifikalar</p>
+            <div className="grid grid-cols-3 gap-3 mb-10">
+              {certificates.map((certificate, index) => {
+                return (
+                  <div
+                    className="flex flex-row min-w-fit items-center"
+                    key={index}
+                  >
+                    <Checkbox
+                      name="certificates"
+                      type="checkbox"
+                      value={certificate}
+                      onChange={handleCertificateCheck}
+                    />
+                    <label
+                      htmlFor="checked-checkbox"
+                      className="text-sm font-medium w-full"
+                    >
+                      {certificate}
+                    </label>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="flex justify-center">
+              <Button color="pink" onClick={update}>
+                Profili Güncelle
+              </Button>
+            </div>
           </div>
         </Modal>
       </div>

@@ -11,6 +11,7 @@ import Card from "@/components/Card";
 import Edit from "@/components/icons/Edit";
 import Spinner from "@/components/icons/Spinner";
 import { getAllCalls } from "@/src/firebase/calls";
+import places from "../places.json" assert { type: "json" };
 
 const renderOpenCallContent = (calls) => {
   return calls?.map((call, i) => {
@@ -46,6 +47,8 @@ export default function Profile() {
   const [profileModalStatus, toggleProfileModal] = useState(false);
 
   const [calls, setCalls] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [towns, setTowns] = useState([]);
 
   const stkTabsData = [
     {
@@ -82,6 +85,13 @@ export default function Profile() {
     getStkInfo();
   };
 
+  useEffect(() => {
+    cities &&
+      cities.find(
+        (city) => city.name === updatedField?.location && setTowns(city.towns)
+      );
+  }, [updatedField?.location]);
+
   const [date, setDate] = useState([
     {
       startDate: new Date(),
@@ -113,6 +123,8 @@ export default function Profile() {
   if (profileData?.role === "volunteer") {
     Router.push("/profile");
   }
+
+  console.log("profileData", profileData);
 
   if (profileData?.role === "admin") {
     return (
@@ -171,8 +183,9 @@ export default function Profile() {
           close={() => {
             toggleProfileModal(false);
           }}
+          title="Profili Düzenle"
         >
-          <div className="w-fit z-30 mt-2 bg-background space-y-3">
+          <div className="w-fit z-30 mt-10 bg-background space-y-10 m-auto overflow-y-auto overflow-x-hidden">
             <Input
               variant="outlined"
               label="Kurum İsmi"
@@ -187,13 +200,35 @@ export default function Profile() {
               value={updatedField?.website}
               onChange={(e) => handleProfileInputChange(e)}
             />
-            <Textarea
-              variant="outlined"
-              label="Adres"
-              name="address"
-              value={updatedField?.address}
-              onChange={(e) => handleProfileInputChange(e)}
-            />
+            <div className="flex justify-between space-x-2">
+              <select
+                name="location"
+                onChange={handleProfileInputChange}
+                className="border-gray-400 rounded-md w-full mr-2"
+              >
+                {places.map((city) => {
+                  return (
+                    <option key={city.name} value={city.name}>
+                      {city.name}
+                    </option>
+                  );
+                })}
+              </select>
+              <select
+                name="town"
+                onChange={handleProfileInputChange}
+                className="border-gray-400 rounded-md w-full"
+              >
+                {towns &&
+                  towns.map((town) => {
+                    return (
+                      <option key={town.name} value={town.name}>
+                        {town.name}
+                      </option>
+                    );
+                  })}
+              </select>
+            </div>
             <Input
               variant="outlined"
               label="Telefon"
@@ -202,9 +237,11 @@ export default function Profile() {
               onChange={(e) => handleProfileInputChange(e)}
             />
 
-            <Button variant="outlined" onClick={update}>
-              Profili Güncelle
-            </Button>
+            <div className="flex justify-center">
+              <Button color="pink" className="mt-5" onClick={update}>
+                Profili Güncelle
+              </Button>
+            </div>
           </div>
         </Modal>
       </div>
