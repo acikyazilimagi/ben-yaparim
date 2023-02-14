@@ -231,7 +231,7 @@ export default function CallDetail() {
                 </div>
               </li>
             </ul>
-            {profileData?.role === "volunteer" && (
+            {profileData?.role !== "admin" && (
               <button
                 onClick={handleApplicationCall}
                 className="bg-pink-600 text-white p-3 text-sm rounded-full my-5 font-bold"
