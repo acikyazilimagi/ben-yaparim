@@ -3,17 +3,15 @@ import React from "react";
 export default function Modal({ title, children, show, close }) {
   return (
     show && (
-      <div
-        className="flex bottom-0 top-0 left-0 right-0 justify-center items-center fixed z-50 shadow-md hover:shadow-xl p-8"
-        onClick={() => {
-          close();
-        }}
-      >
+      <div className="flex bottom-0 top-0 left-0 right-0 justify-center items-center fixed z-50 shadow-md hover:shadow-xl p-8 bg-black bg-opacity-80">
         <div
-          className="p-5 rounded-md bg-blue-gray-50"
+          className="p-5 rounded-md bg-white w-[50%] h-[100%]"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
         >
-          <div className="flex flex-wrap justify-between items-center ">
-            <p className="text-xl font-bold">{title}</p>
+          <div className="flex justify-between items-center ">
+            <p className="text-3xl font-bold my-5">{title}</p>
             <button
               onClick={() => close()}
               className="h-8 w-8 fill-transparent hover:bg-hover focus:outline-none"

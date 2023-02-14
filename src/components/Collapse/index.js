@@ -8,20 +8,22 @@ import { Button } from "@material-tailwind/react";
 import toast from "react-hot-toast";
 import { updateApplicantStatus } from "@/src/firebase/calls";
 import { sendMail } from "@/src/firebase/mail";
+import ColorTag from "@/components/Tags/color-tag";
+import LanguageTag from "@/components/Tags/language-tag";
 
 function Icon({ id, open }) {
   return (
     <svg
-      xmlns='http://www.w3.org/2000/svg'
+      xmlns="http://www.w3.org/2000/svg"
       className={`${
         id === open ? "rotate-180" : ""
       } h-5 w-5 transition-transform`}
-      fill='none'
-      viewBox='0 0 24 24'
-      stroke='currentColor'
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
       strokeWidth={2}
     >
-      <path strokeLinecap='round' strokeLinejoin='round' d='M19 9l-7 7-7-7' />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
     </svg>
   );
 }
@@ -30,14 +32,16 @@ export default function Collapse({
   name,
   surname,
   location,
-  phone,
-  email,
-  language,
-  scope,
-  licence,
-  approvalStatus,
+  town,
+  key,
+  otherSkills,
   id,
+  email,
+  phone,
   callId,
+  certificates,
+  languages,
+  skills,
 }) {
   const [open, setOpen] = useState(0);
 
@@ -46,19 +50,39 @@ export default function Collapse({
   };
 
   return (
-    <div className='border border-gray-400 p-2'>
+    <div className="border border-gray-300 px-5 py-1">
       <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
         <AccordionHeader onClick={() => handleOpen(1)}>
           {name} {surname}
         </AccordionHeader>
         <AccordionBody>
-          <p>Başvurduğu il: {location}</p>
-          <p>Email: {email}</p>
-          <p>Telefon: {phone}</p>
-          <div className='flex justify-center mt-3'>
+          <div className="flex space-x-10">
+            <p>
+              <span className="font-bold">Lokasyon: </span> {location}, {town}
+            </p>
+            <p>
+              <span className="font-bold">Telefon:</span> {phone}
+            </p>
+            <p>
+              <span className="font-bold"> Email: </span> {email}
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-3 my-5">
+            {skills?.map((skill) => (
+              <ColorTag text={skill} color="#FFDCDC" />
+            ))}
+          </div>
+          <div className="mt-2 grid grid-cols-3 gap-3">
+            {languages?.map((language) => (
+              <LanguageTag text={language} />
+            ))}
+          </div>
+          <hr className="my-10"/>
+
+          <div className="flex justify-center mt-3">
             <Button
-              color='green'
-              className='mx-2'
+              color="green"
+              className="mx-2"
               onClick={() => {
                 updateApplicantStatus(callId, id, "approved").then(
                   (updateResp) => {
@@ -81,7 +105,7 @@ export default function Collapse({
             >
               Onay
             </Button>
-            <Button color='red'>Reddet</Button>
+            <Button color="red">Reddet</Button>
           </div>
         </AccordionBody>
       </Accordion>

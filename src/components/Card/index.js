@@ -61,17 +61,19 @@ export default function Card({
         <p className="text-sm font-bold my-2">{Status[status]}</p>
         <p className="my-2">{description}</p>
         <p className="text-sm font-bold my-2">Aranan Yetkinlikler</p>
-        <div className="grid grid-cols-2 items-center gap-2">
+        <div className="grid grid-cols-4 items-center gap-1 space-y-3">
           {checkedSkills?.map((skill) => (
             <ColorTag text={skill} color="#FFDCDC" />
           ))}
+          <br/>
           {checkedLanguages?.map((language) => (
             <LanguageTag text={language} />
           ))}
+          <br/>
           {checkedCertificates?.includes("Ehliyet") && (
             <div className="flex items-center">
               <p>Ehliyet</p>
-              <Check />
+              <Check className="w-6 h-6 mx-2"/>
             </div>
           )}
         </div>
