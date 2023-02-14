@@ -9,6 +9,7 @@ import CallTabs from "@/components/CallTabs";
 import Modal from "@/components/Modal";
 import Card from "@/components/Card";
 import { getAllCalls } from "@/src/firebase/calls";
+import { updateUser } from "@/src/firebase/users";
 
 const renderOpenCallContent = (calls) => {
   return calls?.map((call, i) => {
@@ -33,14 +34,9 @@ const renderOpenCallContent = (calls) => {
 };
 
 export default function Profile() {
-  const {
-    profileData,
-    updateStkInfo,
-    updatedField,
-    setUpdatedFields,
-    getStkInfo,
-  } = useContext(UserContext);
-  const { callInput, setCallInput, createNewCall } = useContext(CallContext);
+  const { profileData, updatedField, setUpdatedFields, setProfileData } =
+    useContext(UserContext);
+  const { callInput, setCallInput } = useContext(CallContext);
   const [profileModalStatus, toggleProfileModal] = useState(false);
 
   const [calls, setCalls] = useState([]);
@@ -75,9 +71,9 @@ export default function Profile() {
   };
 
   const update = () => {
-    updateStkInfo();
     toggleProfileModal(false);
-    getStkInfo();
+    updateUser(profileData?.id, updatedField);
+    setProfileData({ ...profileData, ...updatedField });
   };
 
   const [date, setDate] = useState([
