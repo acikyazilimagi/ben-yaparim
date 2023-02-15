@@ -41,7 +41,7 @@ export default function CallDetail() {
     setApplicationStatus(
       profileData?.appliedCalls?.find((call) => call.id === id)?.status
     );
-  }, []);
+  }, [profileData]);
 
   useEffect(() => {
     if (id) {
@@ -189,7 +189,7 @@ export default function CallDetail() {
                   </div>
                   <div className="flex space-x-2 text-l font-bold">
                     <p>
-                      {call.location} {call.town}{" "}
+                      {call?.location} {call?.town}{" "}
                     </p>
                   </div>
                 </div>
