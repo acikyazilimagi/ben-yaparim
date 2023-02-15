@@ -73,7 +73,7 @@ export const addApplicantToCallDoc = async (callID, applicantID) => {
       {
         applicants: [
           ...callApplicants,
-          { uid: applicantID, approvedStatus: false },
+          { uid: applicantID, approvedStatus: "pending" },
         ],
       },
       { merge: true }
@@ -97,17 +97,12 @@ export const updateApplicantStatus = async (callID, applicantID, status) => {
       }
       return applicant;
     });
-
-    await Promise.all(
-      callApplicants.map(async (applicant) => {
-        updateUserAppliedCalls(applicant.uid, callID, status);
-      })
-    );
+    await updateUserAppliedCalls(applicantID, callID, status);
 
     await setDoc(callDoc, { applicants: updatedApplicants }, { merge: true });
-    return true
+    return true;
   } catch (error) {
     console.log(error);
-    return false
+    return false;
   }
 };

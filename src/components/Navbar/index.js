@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "@/src/context/UserContext";
 import Logo from "@/images/logo.png";
+import { Button } from "@material-tailwind/react";
 
 export default function Navbar() {
   const { stkProfile } = useContext(UserContext);
@@ -20,6 +21,7 @@ export default function Navbar() {
   const logoutSTK = async () => {
     try {
       await signOut(auth);
+      Router.push("/");
       return true;
     } catch (err) {
       toast.error(err.message);
@@ -41,20 +43,17 @@ export default function Navbar() {
             />
           </div>
 
-          <div>
+          <div className="flex space-x-2 items-center">
             <Link
               href={"/stk/profile"}
-              className="text-center text-pink-600 font-bold mr-10"
+              className="text-center text-pink-600 font-bold"
             >
               Profilim
             </Link>
 
-            <button
-              className="primary bg-pink-600 hover:bg-purple-600 text-white"
-              onClick={() => logoutSTK()}
-            >
+            <Button color="pink" onClick={() => logoutSTK()}>
               Çıkış yap
-            </button>
+            </Button>
           </div>
         </div>
       ) : (
@@ -69,7 +68,7 @@ export default function Navbar() {
               onClick={() => Router.push("/")}
             />
           </div>
-          <div className="flex justify-end p-10 w-full">
+          <div className="flex justify-end w-full">
             <Link
               href={"/register"}
               className="text-center text-pink-600 font-bold ml-5"
