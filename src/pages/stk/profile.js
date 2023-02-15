@@ -113,7 +113,7 @@ export default function Profile() {
       updatedList = [...checkedSkills, event.target.value];
     } else {
       updatedList.splice(checkedSkills.indexOf(event.target.value), 1);
-    }console.log
+    }
     setCheckedSkills(updatedList);
   };
 
