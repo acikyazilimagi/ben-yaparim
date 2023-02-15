@@ -2,11 +2,6 @@
 
 ![Ben Yaparım Logo](/public/images/logo.png)
 
-## *Ben Yaparım! Afet zamanlarında belli yetkinliklere sahip acil gönüllü ihtiyacı duyan kurumlarla, bu ihtiyacı karşılayabilecek gönüllü uzmanları bir araya getiren platformdur.* 
-<br>
-
-## *Ben Yaparım! is a platform that brings together institutions that need urgent volunteers with certain competencies in times of disaster and volunteer experts who can meet this need.*
-
 </div>
 
 ---
