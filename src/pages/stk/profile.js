@@ -113,7 +113,7 @@ export default function Profile() {
       updatedList = [...checkedSkills, event.target.value];
     } else {
       updatedList.splice(checkedSkills.indexOf(event.target.value), 1);
-    }
+    }console.log
     setCheckedSkills(updatedList);
   };
 
@@ -130,8 +130,6 @@ export default function Profile() {
   if (profileData?.role === "volunteer") {
     Router.push("/profile");
   }
-
-  console.log("profileData", profileData);
 
   if (profileData?.role === "admin") {
     return (

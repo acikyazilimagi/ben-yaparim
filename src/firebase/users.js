@@ -110,22 +110,22 @@ export const checkUserAppliedCallDates = async (applicantID, proposedCall) => {
       }
     );
 
-    const userAppliedCalls = await getUserAppliedCallsData(userAppliedCallsRef);
-
     //Overlapping time intervals are calculated by the following clause
     //(start1 < end2 && start1 > start2) || (start2 < end1 && start2 > start1);
-    const result = userAppliedCalls.filter(function (call) {
+    const userBlockingAppliedCalls = (
+      await getUserAppliedCallsData(userAppliedCallsRef)
+    ).filter(function (call) {
       return (
-        (call.date.startDate < proposedCall.date.endDate &&
-          call.date.startDate > proposedCall.date.startDate) ||
-        (proposedCall.date.startDate < call.date.endDate &&
-          proposedCall.date.startDate > call.date.startDate)
+        (call.date.startDate <= proposedCall.date.endDate &&
+          call.date.startDate >= proposedCall.date.startDate) ||
+        (proposedCall.date.startDate <= call.date.endDate &&
+          proposedCall.date.startDate >= call.date.startDate)
       );
     });
-    return result.length > 0 ? false : false;
+    console.log(userBlockingAppliedCalls);
+    return userBlockingAppliedCalls.length > 0 ? false : true;
   } catch (error) {
     console.log(error);
     return false;
   }
-  result;
 };
