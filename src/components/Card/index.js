@@ -84,11 +84,9 @@ export default function Card({
             ? applicants?.length + " gönüllü başvurdu."
             : "İlk adımı sen at!"}
         </p>
-        {!status && (
-          <Button color="pink" onClick={() => Router.push(`/${id}`)}>
-            {role === "volunteer" ? "BEN YAPARIM!" : "DETAYA GİT"}
-          </Button>
-        )}
+        <Button color="pink" onClick={() => Router.push(`/${id}`)}>
+          {role === "volunteer" && !status ? "BEN YAPARIM!" : "DETAYA GİT"}
+        </Button>
       </div>
     </div>
   );
