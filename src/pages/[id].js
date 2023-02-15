@@ -18,7 +18,8 @@ import Calendar from "@/src/components/icons/Calendar";
 import People from "@/src/components/icons/People";
 import Envelope from "@/src/components/icons/Envelope";
 import ShareOptions from "@/src/components/Share/share";
-
+import Badge from "@/components/Badge/Badge";
+import { Status } from "@/src/utils/constants";
 import { formatDate } from "@/src/helpers";
 import { auth } from "../firebase-config";
 import { Button } from "@material-tailwind/react";
@@ -34,6 +35,13 @@ export default function CallDetail() {
   const { id } = router.query;
   const [call, setCall] = useState([]);
   const [applicants, setApplicants] = useState();
+  const [applicationStatus, setApplicationStatus] = useState();
+
+  useEffect(() => {
+    setApplicationStatus(
+      profileData?.appliedCalls?.find((call) => call.id === id)?.status
+    );
+  }, [profileData]);
 
   useEffect(() => {
     if (id) {
@@ -181,7 +189,7 @@ export default function CallDetail() {
                   </div>
                   <div className="flex space-x-2 text-l font-bold">
                     <p>
-                      {call.location} {call.town}{" "}
+                      {call?.location} {call?.town}{" "}
                     </p>
                   </div>
                 </div>
@@ -189,11 +197,11 @@ export default function CallDetail() {
 
               <li className="flex w-full border-b-2 py-4">
                 <div className="flex min-w-full justify-between">
-                  <div className="flex space-x-2 text-l font-bold text-gray-600">
+                  <div className="flex space-x-2 font-bold text-gray-600">
                     <Calendar className="w-6 h-6" />
                     <p>Faaliyet Tarihi</p>
                   </div>
-                  <div className="flex space-x-2 text-l font-bold">
+                  <div className="flex space-x-2 font-bold">
                     {formatDate(call?.date?.startDate)} -{" "}
                     {formatDate(call?.date?.endDate)}
                   </div>
@@ -201,22 +209,22 @@ export default function CallDetail() {
               </li>
               <li className="flex w-full border-b-2 py-4">
                 <div className="flex min-w-full justify-between">
-                  <div className="flex space-x-2 text-l font-bold text-gray-600">
+                  <div className="flex space-x-2 font-bold text-gray-600">
                     <People className="w-6 h-6" />
                     <p>Aranan Gönüllü Sayısı</p>
                   </div>
-                  <div className="flex space-x-2 text-l font-bold">
+                  <div className="flex space-x-2 font-bold">
                     <p>{call?.needOfVolunteer}</p>
                   </div>
                 </div>
               </li>
               <li className="flex w-full border-b-2 py-4">
                 <div className="flex min-w-full justify-between items-center">
-                  <div className="flex space-x-2 text-l font-bold text-gray-600">
+                  <div className="flex space-x-2 text- font-bold text-gray-600">
                     <Envelope className="w-6 h-6" />
                     <p>Başvuran Gönüllü Sayısı</p>
                   </div>
-                  <div className="flex space-x-2 text-l font-bold">
+                  <div className="flex space-x-2 font-bold">
                     <p>
                       {call?.applicants?.length > 0
                         ? call?.applicants?.length
@@ -231,13 +239,29 @@ export default function CallDetail() {
                 </div>
               </li>
             </ul>
-            {profileData?.role !== "admin" && (
+            {profileData?.role !== "admin" && !applicationStatus && (
               <button
                 onClick={handleApplicationCall}
                 className="bg-pink-600 text-white p-3 text-sm rounded-full my-5 font-bold"
               >
                 BEN YAPARIM!
               </button>
+            )}
+
+            {applicationStatus && (
+              <div className="flex my-10 items-center">
+                <p className="text-gray-600 font-bold mr-5">Başvuru durumu</p>
+                <Badge
+                  status={
+                    applicationStatus === "approved"
+                      ? "success"
+                      : applicationStatus === "pending"
+                      ? "info"
+                      : "danger"
+                  }
+                  text={Status[applicationStatus]}
+                />
+              </div>
             )}
           </div>
         </div>
