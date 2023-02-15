@@ -12,7 +12,7 @@ Ben Yaparım! Afet zamanlarında belli yetkinliklere sahip acil gönüllü ihtiy
 
 <h2>
 <em>
-Ben Yaoarım! is a platform that brings together institutions that need urgent volunteers with certain competencies in times of disaster and volunteer experts who can meet this need.
+Ben Yaparım! is a platform that brings together institutions that need urgent volunteers with certain competencies in times of disaster and volunteer experts who can meet this need.
 </em>
 <h2>
 
