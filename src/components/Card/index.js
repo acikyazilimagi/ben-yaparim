@@ -14,6 +14,7 @@ import LanguageTag from "@/components/Tags/language-tag";
 import { formatDate } from "@/src/helpers";
 import { Status } from "@/src/utils/constants";
 import ShareOptions from "@/src/components/Share/share";
+import Badge from "../Badge/Badge";
 
 export default function Card({
   title,
@@ -57,7 +58,18 @@ export default function Card({
             <ShareOptions id={id} />
           </div>
         </div>
-        <p className="text-sm font-bold my-2">{Status[status]}</p>
+        {status && (
+          <Badge
+            status={
+              status === "approved"
+                ? "success"
+                : status === "pending"
+                ? "info"
+                : "danger"
+            }
+            text={Status[status]}
+          />
+        )}
         <p className="my-2">{description}</p>
         <p className="text-sm font-bold my-5">Aranan Yetkinlikler</p>
     

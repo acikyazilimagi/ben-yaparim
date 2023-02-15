@@ -107,6 +107,7 @@ export default function OpenCall() {
   const createCall = (event) => {
     event.preventDefault();
     addCall(callInput);
+    setCallInput({});
     Router.push("/stk/profile");
   };
 
