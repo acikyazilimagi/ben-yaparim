@@ -98,7 +98,7 @@ export default function CallDetail() {
         >
           <p className="text-lg my-5">{call?.title}</p>
 
-          <div className="max-h-[80%] z-30 mt-2 bg-background items-center text-center overflow-y-auto overflow-x-hidden">
+          <div className="max-h-[80%] z-30 mt-2 bg-background items-center text-center overflow-y-auto overflow-x-hidden no-scrollbar">
             {applicants?.map((user) => (
               <Collapse
                 name={user.name}

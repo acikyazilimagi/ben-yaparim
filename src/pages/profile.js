@@ -114,6 +114,10 @@ const Profile = () => {
   }, [date]);
 
   useEffect(() => {
+    setCities(places);
+  }, []);
+
+  useEffect(() => {
     setUpdatedFields({
       ...updatedField,
       checkedSkills: checkedSkills,
@@ -188,7 +192,7 @@ const Profile = () => {
 
   if (profileData?.role === "volunteer") {
     return (
-      <div className="m-10 lg:mx-36 space-y-16">
+      <div className="m-10 lg:mx-36">
         <div className="flex items-center">
           <p className="text-5xl font-bold mr-10">Gönüllü Profilim</p>
           <Edit className="w-6 h-6" />
@@ -199,9 +203,9 @@ const Profile = () => {
             Düzenle
           </button>
         </div>
-        <p className="text-xl font-bold text-gray-600">Genel Bilgiler</p>
+        <p className="text-xl font-bold text-gray-600 my-16">Genel Bilgiler</p>
         <div className="flex flex-col lg:flex-row justify-between max-w-4xl py-5l">
-          <div className="flex flex-col space-y-10">
+          <div className="flex flex-col space-y-10 mb-10">
             <div className="flex space-x-5">
               <p className="font-bold">İsim - Soyisim </p>
               <p>
@@ -266,7 +270,7 @@ const Profile = () => {
           }}
           title="Profili Düzenle"
         >
-          <div className="w-fit z-30 mt-2 bg-background space-y-10 m-auto">
+          <div className="max-h-[80%] w-fit items-center text-center z-30 mt-2 space-y-10 m-auto overflow-y-auto overflow-x-hidden p-10 no-scrollbar">
             <Input
               variant="outlined"
               label="İsim"

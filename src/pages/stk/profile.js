@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/src/context/UserContext";
 import { CallContext } from "src/context/CallContext";
 import Router from "next/router";
-import { Button, Textarea, Input } from "@material-tailwind/react";
+import { Button, Textarea, Input, Checkbox } from "@material-tailwind/react";
 import CallTabs from "@/components/CallTabs";
 import Modal from "@/components/Modal";
 import Card from "@/components/Card";
@@ -43,6 +43,7 @@ export default function Profile() {
   const [calls, setCalls] = useState([]);
   const [cities, setCities] = useState([]);
   const [towns, setTowns] = useState([]);
+  const [checkedSkills, setCheckedSkills] = useState([]);
 
   const stkTabsData = [
     {
@@ -95,11 +96,46 @@ export default function Profile() {
   ]);
 
   useEffect(() => {
+    setCities(places);
+  }, []);
+
+  useEffect(() => {
+    setUpdatedFields({
+      ...updatedField,
+      checkedSkills: checkedSkills,
+    });
+  }, [checkedSkills]);
+
+  const handleSkillCheck = (event) => {
+    let updatedList = [...checkedSkills];
+    if (event.target.checked) {
+      updatedList = [...checkedSkills, event.target.value];
+    } else {
+      updatedList.splice(checkedSkills.indexOf(event.target.value), 1);
+    }
+    setCheckedSkills(updatedList);
+  };
+
+  useEffect(() => {
     setCallInput({
       ...callInput,
       date: date[0],
     });
   }, [date]);
+
+  const skills = [
+    "ilk yardım",
+    "nakliye",
+    "eğitim",
+    "çadır kurulumu",
+    "yemek hazırlık",
+    "saha görevlisi",
+    "psikolojik destek",
+    "yazılım",
+    "tamir",
+    "tercümanlık",
+    "temizlik",
+  ];
 
   //TAILWIND LOADING
   if (!profileData) return <div></div>;
@@ -112,7 +148,7 @@ export default function Profile() {
 
   if (profileData?.role === "admin") {
     return (
-      <div className="m-10 lg:mx-36 space-y-16">
+      <div className="m-10 lg:mx-36">
         <div className="flex items-center">
           <p className="text-5xl font-bold mr-10">Kurum Profili</p>
           <Edit className="w-6 h-6" />
@@ -123,7 +159,7 @@ export default function Profile() {
             Düzenle
           </button>
         </div>
-        <p className="text-xl font-bold text-gray-600">Genel Bilgiler</p>
+        <p className="text-xl font-bold text-gray-600 my-16">Genel Bilgiler</p>
         <div className="flex flex-col lg:flex-row justify-between max-w-4xl py-5">
           <div className="flex flex-col space-y-10">
             <div className="flex space-x-5">
@@ -156,7 +192,7 @@ export default function Profile() {
             </div>
           </div>
         </div>
-        <Button color="pink" onClick={() => Router.push("/stk/open-call")}>
+        <Button color="pink" className="my-10" onClick={() => Router.push("/stk/open-call")}>
           + Yeni Çağrı Oluştur
         </Button>
 
@@ -169,7 +205,7 @@ export default function Profile() {
           }}
           title="Profili Düzenle"
         >
-          <div className="w-fit z-30 mt-10 bg-background space-y-10 m-auto overflow-y-auto overflow-x-hidden">
+          <div className="max-h-[80%] w-fit items-center text-center z-30 mt-2 space-y-10 m-auto overflow-y-auto overflow-x-hidden p-10 no-scrollbar">
             <Input
               variant="outlined"
               label="Kurum İsmi"
@@ -220,6 +256,36 @@ export default function Profile() {
               value={updatedField?.phone}
               onChange={(e) => handleProfileInputChange(e)}
             />
+            <p className="text-gray-400 font-bold my-5">Faaliyet Alanları</p>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
+              {skills.map((skill, index) => {
+                return (
+                  <div className="flex min-w-fit items-center" key={index}>
+                    <Checkbox
+                      name="skills"
+                      type="checkbox"
+                      value={skill}
+                      onChange={handleSkillCheck}
+                    />
+                    <label
+                      htmlFor="checked-checkbox"
+                      className="text-sm font-medium w-28"
+                    >
+                      {skill}
+                    </label>
+                  </div>
+                );
+              })}
+
+              <Input
+                variant="outlined"
+                label="Diğer"
+                name="otherSkills"
+                className="max-w-xs"
+                value={updatedField?.otherSkills}
+                onChange={(e) => handleProfileInputChange(e)}
+              />
+            </div>
 
             <div className="flex justify-center">
               <Button color="pink" className="mt-5" onClick={update}>
