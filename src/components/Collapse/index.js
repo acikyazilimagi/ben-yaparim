@@ -77,7 +77,7 @@ export default function Collapse({
               <LanguageTag text={language} />
             ))}
           </div>
-          <hr className="my-10"/>
+          <hr className="my-10" />
 
           <div className="flex justify-center mt-3">
             <Button
@@ -105,7 +105,16 @@ export default function Collapse({
             >
               Onay
             </Button>
-            <Button color="red">Reddet</Button>
+            <Button
+              onClick={() => {
+                updateApplicantStatus(callId, id, "rejected").then(() => {
+                  toast.error("Çağrı Başvurunuz Reddedildi.");
+                });
+              }}
+              color="red"
+            >
+              Reddet
+            </Button>
           </div>
         </AccordionBody>
       </Accordion>

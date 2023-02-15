@@ -20,7 +20,7 @@ const renderAppliedCallContent = (calls, id) => {
   return calls?.map((call, i) => {
     return (
       <Card
-        key={i}
+        key={call.id}
         title={call.title}
         description={call.description}
         startDate={call?.date?.startDate}
