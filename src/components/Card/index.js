@@ -46,37 +46,37 @@ export default function Card({
 
         <div className="flex items-center space-x-1">
           <People className="w-6 h-6" />
-          <p className="text-sm font-bold text-gray-500">
-            {needOfVolunteer}
-          </p>
+          <p className="text-sm font-bold text-gray-500">{needOfVolunteer}</p>
         </div>
       </div>
       <hr />
-
       <div className="my-3">
         <div className="flex justify-between">
-          <p className="text-xl font-bold">{title}</p>
-          <div className="mt-3"> <ShareOptions id={id} /></div>
+          <p className="text-xl font-bold my-10">{title}</p>
+          <div className="mt-3">
+            <ShareOptions id={id} />
+          </div>
         </div>
         <p className="text-sm font-bold my-2">{Status[status]}</p>
         <p className="my-2">{description}</p>
-        <p className="text-sm font-bold my-2">Aranan Yetkinlikler</p>
-        <div className="grid grid-cols-4 items-center gap-1 space-y-3">
-          {checkedSkills?.map((skill) => (
-            <ColorTag text={skill} color="#FFDCDC" />
-          ))}
-          <br/>
-          {checkedLanguages?.map((language) => (
-            <LanguageTag text={language} />
-          ))}
-          <br/>
+        <p className="text-sm font-bold my-5">Aranan Yetkinlikler</p>
+    
+          <div className="my-5 flex flex-col space-y-1 lg:flex-row justify-between items-center">
+            {checkedSkills?.map((skill) => (
+              <ColorTag text={skill} color="#FFDCDC" />
+            ))}
+          </div>
+          <div className="my-5 flex flex-col space-y-1 lg:flex-row justify-between items-center">
+            {checkedLanguages?.map((language) => (
+              <LanguageTag text={language} />
+            ))}
+          </div>
           {checkedCertificates?.includes("Ehliyet") && (
-            <div className="flex items-center">
+            <div className="flex items-center my-5">
               <p>Ehliyet</p>
-              <Check className="w-6 h-6 mx-2"/>
+              <Check className="w-6 h-6 mx-2" />
             </div>
           )}
-        </div>
       </div>
       <div className="flex justify-end items-center space-x-2 my-2">
         <p className="text-xs text-blue-gray-500">

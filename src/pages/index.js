@@ -38,7 +38,7 @@ export default function Home() {
           </p>
           <CircleDown className="w-10 h-10 m-auto mb-10"/>
         </div>
-        <div className="grid lg:grid-cols-2 gap-14 place-items-stretch items-center">
+        <div className="grid lg:grid-cols-2 gap-14 m-auto p-24 justify-center">
           {calls?.map((call, i) => {
             return (
               <Card
