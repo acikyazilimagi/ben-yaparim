@@ -67,13 +67,14 @@ export default function Login() {
           >
             <p className="text-4xl font-bold">Kurum Girişi</p>
             <p className="text-gray-500 text-xs py-2">
-              Tüm alanlar doldurulmalıdır.
+              *Tüm alanlar doldurulmalıdır.
             </p>
             {errors.email && touched.email && errors.email}
             <Input
               label="E-mail"
               name="email"
               type="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -82,6 +83,7 @@ export default function Login() {
               type="password"
               label="Şifre"
               name="password"
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
