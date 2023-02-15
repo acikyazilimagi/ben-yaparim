@@ -103,10 +103,16 @@ export const getUserAppliedCallsData = async (appliedCalls) => {
 
 export const checkUserAppliedCallDates = async (applicantID, proposedCall) => {
   try {
-    const userAppliedCallsRef = await getUserAppliedCalls(applicantID);
+    //We do not need to consider rejected applications
+    const userAppliedCallsRef = (await getUserAppliedCalls(applicantID)).filter(
+      function (call) {
+        return call.status !== "rejected";
+      }
+    );
+
     const userAppliedCalls = await getUserAppliedCallsData(userAppliedCallsRef);
 
-    //tarih aralıkları bu formulle kontrol ediliyor
+    //Overlapping time intervals are calculated by the following clause
     //(start1 < end2 && start1 > start2) || (start2 < end1 && start2 > start1);
     const result = userAppliedCalls.filter(function (call) {
       return (
@@ -116,7 +122,7 @@ export const checkUserAppliedCallDates = async (applicantID, proposedCall) => {
           proposedCall.date.startDate > call.date.startDate)
       );
     });
-    return result.length > 0 ? false : true;
+    return result.length > 0 ? false : false;
   } catch (error) {
     console.log(error);
     return false;
