@@ -182,6 +182,9 @@ export default function OpenCall() {
                     onChange={handleInputChange}
                     className="border-gray-400 rounded-md w-full mr-2"
                   >
+                    <option value="" selected disabled hidden>
+                      İl Seçiniz
+                    </option>
                     {places.map((city) => {
                       return (
                         <option key={city.name} value={city.name}>
@@ -196,6 +199,9 @@ export default function OpenCall() {
                     onChange={handleInputChange}
                     className="border-gray-400 rounded-md w-full"
                   >
+                    <option value="" selected disabled hidden>
+                      İlçe Seçiniz
+                    </option>
                     {towns &&
                       towns.map((town) => {
                         return (
