@@ -26,6 +26,7 @@ export default function Card({
   checkedCertificates,
   checkedLanguages,
   checkedSkills,
+  otherSkills,
   location,
   id,
   role = "volunteer",
@@ -72,23 +73,24 @@ export default function Card({
         )}
         <p className="my-2">{description}</p>
         <p className="text-sm font-bold my-5">Aranan Yetkinlikler</p>
-    
-          <div className="my-5 flex flex-col space-y-1 lg:flex-row justify-between items-center">
-            {checkedSkills?.map((skill) => (
-              <ColorTag text={skill} color="#FFDCDC" />
-            ))}
+
+        <div className="my-5 flex flex-col space-y-1 lg:flex-row justify-between items-center">
+          {checkedSkills?.map((skill) => (
+            <ColorTag text={skill} color="#FFDCDC" />
+          ))}
+          {otherSkills && <ColorTag text={otherSkills} color="#FFDCDC" />}
+        </div>
+        <div className="my-5 flex flex-col space-y-1 lg:flex-row justify-between items-center">
+          {checkedLanguages?.map((language) => (
+            <LanguageTag text={language} />
+          ))}
+        </div>
+        {checkedCertificates?.includes("Ehliyet") && (
+          <div className="flex items-center my-5">
+            <p>Ehliyet</p>
+            <Check className="w-6 h-6 mx-2" />
           </div>
-          <div className="my-5 flex flex-col space-y-1 lg:flex-row justify-between items-center">
-            {checkedLanguages?.map((language) => (
-              <LanguageTag text={language} />
-            ))}
-          </div>
-          {checkedCertificates?.includes("Ehliyet") && (
-            <div className="flex items-center my-5">
-              <p>Ehliyet</p>
-              <Check className="w-6 h-6 mx-2" />
-            </div>
-          )}
+        )}
       </div>
       <div className="flex justify-end items-center space-x-2 my-2">
         <p className="text-xs text-blue-gray-500">

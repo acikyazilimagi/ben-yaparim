@@ -13,6 +13,9 @@ import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
 import Check from "@/src/components/icons/Check";
 import places from "./places.json" assert { type: "json" };
+import skills from "./skills.json" assert { type: "json" };
+import spokenLanguages from "./spokenLanguages.json" assert { type: "json" };
+import certificates from "./certificates.json" assert { type: "json" };
 
 import { auth } from "@/src/firebase-config";
 
@@ -156,33 +159,6 @@ const Profile = () => {
     setCheckedCertificates(updatedList);
   };
 
-  const skills = [
-    "ilk yardım",
-    "nakliye",
-    "eğitim",
-    "çadır kurulumu",
-    "yemek hazırlık",
-    "saha görevlisi",
-    "psikolojik destek",
-    "yazılım",
-    "tamir",
-    "tercümanlık",
-    "temizlik",
-  ];
-
-  const language_spoken = [
-    "Türkçe",
-    "İngilizce",
-    "Arapça",
-    "İspanyola",
-    "Fransızca",
-    "Japonca",
-    "Portekizce",
-    "Rusça",
-  ];
-
-  const certificates = ["Ehliyet", "İlk yardım eğitimi", "AKUT/AFAD eğitimi"];
-
   //TAILWIND LOADING
   if (!profileData) return <div></div>;
 
@@ -245,6 +221,9 @@ const Profile = () => {
               {profileData?.checkedSkills?.map((skill) => (
                 <ColorTag text={skill} color="#FFDCDC" />
               ))}
+              {profileData?.otherSkills && (
+                <ColorTag text={profileData?.otherSkills} color="#FFDCDC" />
+              )}
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
               {profileData?.checkedLanguages?.map((language) => (
@@ -354,7 +333,7 @@ const Profile = () => {
 
             <p className="text-gray-400 font-bold my-5">Konuşulan Diller</p>
             <div className="grid grid-cols-3 gap-3 mb-10">
-              {language_spoken.map((languages, index) => {
+              {spokenLanguages.map((languages, index) => {
                 return (
                   <div className="flex min-w-fit items-center" key={index}>
                     <Checkbox

@@ -9,6 +9,10 @@ import toast from "react-hot-toast";
 import Router from "next/router";
 import Link from "next/link";
 import places from "./places.json" assert { type: "json" };
+import skills from "./skills.json" assert { type: "json" };
+import spokenLanguages from "./spokenLanguages.json" assert { type: "json" };
+import consents from "./consents.json" assert { type: "json" };
+import certificates from "./certificates.json" assert { type: "json" };
 
 const auth = getAuth(app);
 
@@ -131,38 +135,6 @@ export default function Register() {
   const handleProfileInputChange = (e) => {
     setUserInfo({ ...info, [e.target.name]: e.target.value });
   };
-
-  const skills = [
-    "ilk yardım",
-    "nakliye",
-    "eğitim",
-    "çadır kurulumu",
-    "yemek hazırlık",
-    "saha görevlisi",
-    "psikolojik destek",
-    "yazılım",
-    "tamir",
-    "tercümanlık",
-    "temizlik",
-  ];
-
-  const language_spoken = [
-    "Türkçe",
-    "İngilizce",
-    "Arapça",
-    "İspanyola",
-    "Fransızca",
-    "Japonca",
-    "Portekizce",
-    "Rusça",
-  ];
-
-  const certificates = ["Ehliyet", "İlk yardım eğitimi", "AKUT/AFAD eğitimi"];
-
-  const consents = [
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla.",
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-  ];
 
   const bloodTypes = [
     "A Pozittif",
@@ -338,7 +310,7 @@ export default function Register() {
 
           <p className="text-gray-400 font-bold my-5">Konuşulan Diller</p>
           <div className="grid grid-cols-3 gap-3 mb-10">
-            {language_spoken.map((languages, index) => {
+            {spokenLanguages.map((languages, index) => {
               return (
                 <div className="flex min-w-fit items-center" key={index}>
                   <Checkbox
