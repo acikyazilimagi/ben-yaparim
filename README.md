@@ -1,4 +1,27 @@
-## This project uses the tech stack below: 
+<div align="center">
+
+![Ben Yaparım Logo](/public/images/logo.png)
+
+<h2>
+<em>
+Ben Yaparım! Afet zamanlarında belli yetkinliklere sahip acil gönüllü ihtiyacı duyan kurumlarla, bu ihtiyacı karşılayabilecek gönüllü uzmanları bir araya getiren platformdur.
+</em>
+<h2>
+
+<br>
+
+<h2>
+<em>
+Ben Yaoarım! is a platform that brings together institutions that need urgent volunteers with certain competencies in times of disaster and volunteer experts who can meet this need.
+</em>
+<h2>
+
+</div>
+
+<br>
+<br>
+
+## The project uses the tech stack below: 
 
 ![Next.js](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 
