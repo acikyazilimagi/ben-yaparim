@@ -1,3 +1,4 @@
+import { async } from "@firebase/util";
 import {
   collection,
   query,
@@ -7,6 +8,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { auth, db } from "../firebase-config";
+import { getCall } from "./calls";
 export const addUser = async (userData) => {
   try {
     await addDoc(collection(db, "users"), userData);
@@ -87,4 +89,37 @@ export const getUserAppliedCalls = async (uid) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const getUserAppliedCallsData = async (appliedCalls) => {
+  return await Promise.all(
+    appliedCalls?.map(async (call) => {
+      const callData = await getCall(call.id);
+      const mergedCalls = { ...callData, ...call };
+      return mergedCalls;
+    })
+  );
+};
+
+export const checkUserAppliedCallDates = async (applicantID, proposedCall) => {
+  try {
+    const userAppliedCallsRef = await getUserAppliedCalls(applicantID);
+    const userAppliedCalls = await getUserAppliedCallsData(userAppliedCallsRef);
+
+    //tarih aralıkları bu formulle kontrol ediliyor
+    //(start1 < end2 && start1 > start2) || (start2 < end1 && start2 > start1);
+    const result = userAppliedCalls.filter(function (call) {
+      return (
+        (call.date.startDate < proposedCall.date.endDate &&
+          call.date.startDate > proposedCall.date.startDate) ||
+        (proposedCall.date.startDate < call.date.endDate &&
+          proposedCall.date.startDate > call.date.startDate)
+      );
+    });
+    return result.length > 0 ? false : true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+  result;
 };

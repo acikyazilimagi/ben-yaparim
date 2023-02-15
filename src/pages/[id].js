@@ -12,7 +12,7 @@ import {
   getCall,
 } from "@/src/firebase/calls";
 
-import { updateUserAppliedCalls } from "../firebase/users";
+import { updateUserAppliedCalls, checkUserAppliedCallDates } from "../firebase/users";
 import Location from "@/src/components/icons/Location";
 import Calendar from "@/src/components/icons/Calendar";
 import People from "@/src/components/icons/People";
@@ -57,10 +57,14 @@ export default function CallDetail() {
 
   const handleApplicationCall = () => {
     if (!!currentUser) {
-      addApplicantToCallDoc(id, profileData?.uid).then((res) => {
-        res ? toggleModal(true) : toast.error(err.message);
+      checkUserAppliedCallDates(profileData?.uid, call).then((dateCheck) => {
+        !dateCheck
+          ? toast.error("Tarihleri çakışan başvurular yapamazsınız! Bu faaliyet tarihlerinde başka aktif bir başvurun var.")
+          : (addApplicantToCallDoc(id, profileData?.uid).then((res) => {
+              res ? toggleModal(true) : toast.error(err.message);
+            }),
+            updateUserAppliedCalls(null, id, "pending"));
       });
-      updateUserAppliedCalls(null, id, "pending");
     } else {
       Router.push("/register");
     }
