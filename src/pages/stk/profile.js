@@ -10,6 +10,7 @@ import Edit from "@/components/icons/Edit";
 import Spinner from "@/components/icons/Spinner";
 import { getAllCalls } from "@/src/firebase/calls";
 import places from "../places.json" assert { type: "json" };
+import skills from "../skills.json" assert { type: "json" };
 import { updateUser } from "@/src/firebase/users";
 
 const renderOpenCallContent = (calls) => {
@@ -123,20 +124,6 @@ export default function Profile() {
     });
   }, [date]);
 
-  const skills = [
-    "ilk yardım",
-    "nakliye",
-    "eğitim",
-    "çadır kurulumu",
-    "yemek hazırlık",
-    "saha görevlisi",
-    "psikolojik destek",
-    "yazılım",
-    "tamir",
-    "tercümanlık",
-    "temizlik",
-  ];
-
   //TAILWIND LOADING
   if (!profileData) return <div></div>;
 
@@ -188,11 +175,19 @@ export default function Profile() {
             </div>
             <div className="flex space-x-5">
               <p className="font-bold">Faaliyet Alanları</p>
-              <p>{profileData?.checkedSkills?.join(", ")}</p>
+              <div>
+                {profileData?.checkedSkills?.join(", ")}
+                {", "}
+                {profileData?.otherSkills && profileData?.otherSkills}
+              </div>
             </div>
           </div>
         </div>
-        <Button color="pink" className="my-10" onClick={() => Router.push("/stk/open-call")}>
+        <Button
+          color="pink"
+          className="my-10"
+          onClick={() => Router.push("/stk/open-call")}
+        >
           + Yeni Çağrı Oluştur
         </Button>
 

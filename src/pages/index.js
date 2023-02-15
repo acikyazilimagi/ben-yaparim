@@ -52,6 +52,7 @@ export default function Home() {
                 checkedCertificates={call?.checkedCertificates}
                 checkedLanguages={call?.checkedLanguages}
                 checkedSkills={call?.checkedSkills}
+                otherSkills={call?.otherSkills}
                 location={call?.location}
                 id={call.id}
                 role={profileData?.role === "volunteer" ? "volunteer" : "stk"}

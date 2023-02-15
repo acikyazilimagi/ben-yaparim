@@ -145,6 +145,9 @@ export default function CallDetail() {
                 {call?.checkedSkills?.map((skill) => (
                   <ColorTag text={skill} color="#FFDCDC" />
                 ))}
+                {call?.otherSkills && (
+                <ColorTag text={call?.otherSkills} color="#FFDCDC" />
+              )}
               </div>
             </div>
 
