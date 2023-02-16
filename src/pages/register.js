@@ -1,27 +1,28 @@
 import { useState, useEffect, useContext } from "react";
-import { app } from "@/src/firebase-config";
+import { app, db } from "@/src/firebase-config";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { Button, Textarea, Input, Checkbox } from "@material-tailwind/react";
-import { db } from "@/src/firebase-config";
-import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+
+import { collection, setDoc, doc } from "firebase/firestore";
 import { UserContext } from "@/src/context/UserContext";
-import toast from "react-hot-toast";
+
 import Router from "next/router";
 import Link from "next/link";
+
 import places from "./places.json" assert { type: "json" };
 import skills from "./skills.json" assert { type: "json" };
 import spokenLanguages from "./spokenLanguages.json" assert { type: "json" };
 import consents from "./consents.json" assert { type: "json" };
 import certificates from "./certificates.json" assert { type: "json" };
 
+import { Button, Input, Checkbox } from "@material-tailwind/react";
+import toast from "react-hot-toast";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
 const auth = getAuth(app);
 
 export default function Register() {
-  const userRef = collection(db, "users");
   const { setAuthProfileData } = useContext(UserContext);
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
   const [cities, setCities] = useState([]);
   const [towns, setTowns] = useState([]);
@@ -31,8 +32,69 @@ export default function Register() {
   const [checkedCertificates, setCheckedCertificates] = useState([]);
   const [checkedConsent, setCheckedConsents] = useState([]);
 
-  const [info, setUserInfo] = useState({
-    role: "volunteer",
+  const [info, setUserInfo] = useState({});
+
+  const formik = useFormik({
+    initialValues: {
+      role: "volunteer",
+      name: "",
+      surname: "",
+      phone: "",
+      email: "",
+      location: "",
+      town: "",
+      gender: "",
+      age: "",
+      blood: "",
+      skills: [],
+      languages: [],
+      password: "",
+      emergencycontactname: "",
+      emergencycontactphone: "",
+      consents: [],
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Lütfen adınızı giriniz."),
+      surname: Yup.string().required("Lütfen soyadınızı giriniz."),
+      phone: Yup.string()
+        .required("Lütfen cep telefon numaranızı giriniz.")
+        .min(
+          10,
+          "Cep telefon numaranızı doğru formatta girdiğinizden emin olun."
+        ),
+      email: Yup.string()
+        .email("Geçersiz bir e-mail girdiniz.")
+        .required("Lütfen e-mailinizi giriniz."),
+      location: Yup.string().required("Lütfen ilinizi seçiniz."),
+      town: Yup.string().required("Lütfen ilçenizi seçiniz."),
+      gender: Yup.string().required("Lütfen seçiniz."),
+      age: Yup.string().required("Lütfen seçiniz."),
+      blood: Yup.string().required("Lütfen seçiniz."),
+      password: Yup.string()
+        .required("Lütfen şifre giriniz.")
+        .min(6, "Şifreniz minimum 6 karakterden oluşmalıdır."),
+      skills: Yup.array()
+        .min(1, "En az bir yetenek seçmeniz gerekmektedir.")
+        .required(),
+      languages: Yup.array().min(1, "En az bir dil seçilmelidir.").required(),
+      emergencycontactname: Yup.string().required(
+        "Lütfen acil durumda ulaşılacak kişi bilgisi girin."
+      ),
+      emergencycontactphone: Yup.string().required(
+        "Lütfen acil durumda ulaşılacak kişi telefon bilgisi girin."
+      ),
+      consents: Yup.array()
+        .min(2, "Tüm şart ve koşullara onay vermeniz gerekmektedir.")
+        .required(),
+    }),
+    onSubmit: async function (values) {
+      await registerUser(values.email, values.password).then((e) => {
+        if (e?.accessToken) {
+          addUser(e);
+          Router.push("/profile");
+        }
+      });
+    },
   });
 
   useEffect(() => {
@@ -42,13 +104,13 @@ export default function Register() {
   useEffect(() => {
     cities &&
       cities.find(
-        (city) => city.name === info?.location && setTowns(city.towns)
+        (city) => city.name === formik?.values?.location && setTowns(city.towns)
       );
-  }, [info?.location]);
+  }, [formik?.values.location]);
 
   useEffect(() => {
     setUserInfo({
-      ...info,
+      ...formik.values,
       checkedSkills: checkedSkills,
       checkedLanguages: checkedLanguages,
       checkedCertificates: checkedCertificates,
@@ -63,6 +125,7 @@ export default function Register() {
     } else {
       updatedList.splice(checkedSkills.indexOf(event.target.value), 1);
     }
+    formik.values.skills = updatedList;
     setCheckedSkills(updatedList);
   };
 
@@ -74,6 +137,7 @@ export default function Register() {
       updatedList?.splice(checkedLanguages.indexOf(event.target.value), 1);
     }
     setCheckedLanguage(updatedList);
+    formik.values.languages = updatedList;
   };
 
   const handleCertificateCheck = (event) => {
@@ -94,9 +158,10 @@ export default function Register() {
       updatedList?.splice(checkedConsent.indexOf(event.target.value), 1);
     }
     setCheckedConsents(updatedList);
+    formik.values.consents = updatedList;
   };
 
-  const registerSTK = async (email, password) => {
+  const registerUser = async (email, password) => {
     try {
       const { user } = await createUserWithEmailAndPassword(
         auth,
@@ -114,26 +179,17 @@ export default function Register() {
     try {
       await setDoc(
         doc(db, "users", user.uid),
-        { ...info, uid: user.uid, email: user.email, appliedCalls: [] },
+        {
+          ...formik.values,
+          uid: user.uid,
+          email: user.email,
+          appliedCalls: [],
+        },
         { merge: true }
       );
     } catch (err) {
       toast.error(err.message);
     }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await registerSTK(email, password).then((e) => {
-      if (e?.accessToken) {
-        addUser(e);
-        Router.push("/profile");
-      }
-    });
-  };
-
-  const handleProfileInputChange = (e) => {
-    setUserInfo({ ...info, [e.target.name]: e.target.value });
   };
 
   const bloodTypes = [
@@ -155,153 +211,244 @@ export default function Register() {
           Tüm alanlar doldurulmalıdır.
         </p>
         <p className="text-2xl text-gray-400 font-bold my-5">Genel Bilgiler</p>
-        <form className="max-w-xl grid gap-y-4" onSubmit={handleSubmit}>
+        <form className="max-w-xl grid gap-y-4" onSubmit={formik.handleSubmit}>
           <div className="flex justify-between space-x-2">
-            <Input
-              variant="outlined"
-              label="İsim"
-              name="name"
-              value={info?.name}
-              onChange={(e) => handleProfileInputChange(e)}
-            />
-            <Input
-              variant="outlined"
-              label="Soyisim"
-              name="surname"
-              value={info?.surname}
-              onChange={(e) => handleProfileInputChange(e)}
-            />
-          </div>
-          <div className="flex justify-between space-x-2">
-            <Input
-              variant="outlined"
-              label="Telefon"
-              name="phone"
-              value={info?.phone}
-              onChange={(e) => handleProfileInputChange(e)}
-            />
-            <Input
-              variant="outlined"
-              label="E-mail"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <div className="w-full">
+              <Input
+                variant="outlined"
+                label="İsim*"
+                name="name"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.name && formik.errors.name && (
+                <span className="text-red-400 text-sm">
+                  {formik.errors.name}
+                </span>
+              )}
+            </div>
+            <div className="w-full">
+              <Input
+                variant="outlined"
+                label="Soyisminiz*"
+                name="surname"
+                value={formik.values.surname}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.surname && formik.errors.surname && (
+                <span className="text-red-400 text-sm">
+                  {formik.errors.surname}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="flex justify-between space-x-2">
-            <select
-              name="location"
-              onChange={handleProfileInputChange}
-              className="border-gray-400 rounded-md w-full mr-2"
-            >
-              <option value="" selected disabled hidden>
-                  İl Seçiniz
+            <div className="w-full">
+              <Input
+                variant="outlined"
+                label="Telefon numaranız*"
+                name="phone"
+                value={formik.values.phone}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.phone && formik.errors.phone && (
+                <span className="text-red-400 text-sm">
+                  {formik.errors.phone}
+                </span>
+              )}
+            </div>
+            <div className="w-full">
+              <Input
+                variant="outlined"
+                label="E-mail adresiniz*"
+                name="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.email && formik.errors.email && (
+                <span className="text-red-400 text-sm">
+                  {formik.errors.email}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="flex justify-between space-x-2">
+            <div className="w-full">
+              <select
+                name="location"
+                value={formik.values.location}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="border-gray-400 rounded-md w-full mr-2"
+              >
+                <option value="" selected disabled hidden>
+                  İl Seçiniz*
                 </option>
-              {places.map((city) => {
-                return (
-                  <option key={city.name} value={city.name}>
-                    {city.name}
-                  </option>
-                );
-              })}
-            </select>
-            <select
-              name="town"
-              onChange={handleProfileInputChange}
-              className="border-gray-400 rounded-md w-full"
-            >
-              <option value="" selected disabled hidden>
-                  İlçe Seçiniz
-                </option>
-              {towns &&
-                towns.map((town) => {
+                {places.map((city) => {
                   return (
-                    <option key={town.name} value={town.name}>
-                      {town.name}
+                    <option key={city.name} value={city.name}>
+                      {city.name}
                     </option>
                   );
                 })}
-            </select>
+              </select>
+              {formik.touched.location && formik.errors.location && (
+                <span className="text-red-400 text-sm">
+                  {formik.errors.location}
+                </span>
+              )}
+            </div>
+
+            <div className="w-full">
+              <select
+                name="town"
+                value={formik.values.town}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="border-gray-400 rounded-md w-full mr-2"
+              >
+                <option value="" selected disabled hidden>
+                  İlçe Seçiniz*
+                </option>
+                {towns &&
+                  towns.map((town) => {
+                    return (
+                      <option key={town.name} value={town.name}>
+                        {town.name}
+                      </option>
+                    );
+                  })}
+              </select>
+              {formik.touched.town && formik.errors.town && (
+                <span className="text-red-400 text-sm">
+                  {formik.errors.town}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="flex justify-between space-x-2">
-            <select
-              name="gender"
-              className="border-gray-400 rounded-md w-full mr-2"
-              onChange={handleProfileInputChange}
-            >
-              <option value="" selected disabled hidden>
-                  Seçiniz
+            <div className="w-full">
+              <select
+                name="gender"
+                value={formik.values.gender}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="border-gray-400 rounded-md w-full mr-2"
+              >
+                <option value="" selected disabled hidden>
+                  Cinsiyet*
                 </option>
-              <option value="woman" key="1">
-                Kadın
-              </option>
-              <option value="man" key="2">
-                Erkek
-              </option>
-              <option value="not" key="3">
-                Belirtmek istemiyorum
-              </option>
-            </select>
-            <select
-              name="age"
-              className="border-gray-400 rounded-md w-full mr-2"
-              onChange={handleProfileInputChange}
-            >
-              <option value="" selected disabled hidden>
-                  Seçiniz
+                <option value="woman" key="1">
+                  Kadın
                 </option>
-              <option value="18 -25" key="1">
-                18 -25
-              </option>
-              <option value="25-45" key="2">
-                25-45
-              </option>
-              <option value="45 +" key="3">
-                45 +
-              </option>
-            </select>
-            <select
-              name="blood"
-              className="border-gray-400 rounded-md w-full mr-2"
-              onChange={handleProfileInputChange}
-            >
-              <option value="" selected disabled hidden>
-                  Seçiniz
+                <option value="man" key="2">
+                  Erkek
                 </option>
-              {bloodTypes.map((blood) => {
-                return (
-                  <option key={blood} value={blood}>
-                    {blood}
-                  </option>
-                );
-              })}
-            </select>
+                <option value="not" key="3">
+                  Belirtmek istemiyorum
+                </option>
+              </select>
+              {formik.touched.gender && formik.errors.gender && (
+                <span className="text-red-400 text-sm">
+                  {formik.errors.gender}
+                </span>
+              )}
+            </div>
+
+            <div className="w-full">
+              <select
+                name="age"
+                className="border-gray-400 rounded-md w-full mr-2"
+                value={formik.values.age}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              >
+                <option value="" selected disabled hidden>
+                  Yaş aralığı*
+                </option>
+                <option value="18 -25" key="1">
+                  18 -25
+                </option>
+                <option value="25-45" key="2">
+                  25-45
+                </option>
+                <option value="45 +" key="3">
+                  45 +
+                </option>
+              </select>
+              {formik.touched.age && formik.errors.age && (
+                <span className="text-red-400 text-sm">
+                  {formik.errors.age}
+                </span>
+              )}
+            </div>
+
+            <div className="w-full">
+              <select
+                name="blood"
+                className="border-gray-400 rounded-md w-full mr-2"
+                value={formik.values.blood}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              >
+                <option value="" selected disabled hidden>
+                  Kan Grubu*
+                </option>
+                {bloodTypes.map((blood) => {
+                  return (
+                    <option key={blood} value={blood}>
+                      {blood}
+                    </option>
+                  );
+                })}
+              </select>
+              {formik.touched.blood && formik.errors.blood && (
+                <span className="text-red-400 text-sm">
+                  {formik.errors.blood}
+                </span>
+              )}
+            </div>
           </div>
 
-          <div className="flex justify-between space-x-2">
+          <div className="w-full">
             <Input
               variant="outlined"
-              label="Şifre"
+              label="Şifre*"
               name="password"
-              value={password}
               type="password"
-              onChange={(e) => setPassword(e.target.value)}
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
+            {formik.touched.password && formik.errors.password && (
+              <span className="text-red-400 text-sm">
+                {formik.errors.password}
+              </span>
+            )}
           </div>
+
           <p className="text-2xl text-gray-400 font-bold my-5">Yetkinlikler</p>
 
-          <p className="text-gray-400 font-bold my-5">Aranılan Yetenekler</p>
+          <p className="text-gray-400 font-bold my-5">Aranılan Yetenekler*</p>
+          {formik.touched.skills && formik.errors.skills && (
+            <span className="text-red-400 text-sm">{formik.errors.skills}</span>
+          )}
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
             {skills.map((skill, index) => {
               return (
                 <div className="flex min-w-fit items-center" key={index}>
                   <Checkbox
-                    name="skills"
-                    type="checkbox"
                     value={skill}
                     onChange={handleSkillCheck}
+                    name="skills"
+                    type="checkbox"
                   />
                   <label
                     htmlFor="checked-checkbox"
@@ -322,8 +469,12 @@ export default function Register() {
               onChange={(e) => handleProfileInputChange(e)}
             />
           </div>
-
-          <p className="text-gray-400 font-bold my-5">Konuşulan Diller</p>
+          <p className="text-gray-400 font-bold my-5">Konuşulan Diller*</p>
+          {formik.touched.languages && formik.errors.languages && (
+            <span className="text-red-400 text-sm">
+              {formik.errors.languages}
+            </span>
+          )}
           <div className="grid grid-cols-3 gap-3 mb-10">
             {spokenLanguages.map((languages, index) => {
               return (
@@ -372,23 +523,38 @@ export default function Register() {
 
           <div className="py-2">
             <p className="text-2xl text-gray-400 font-bold my-5">
-              Acil Durum İletişim Bilgileri
+              Acil Durum İletişim Bilgileri*
             </p>
-            <div className="flex justify-between space-x-2">
+            <div className="w-full space-y-4">
               <Input
                 variant="outlined"
                 label="İsim Soyisim"
-                name="emercengyName"
-                value={info?.emercengyName}
-                onChange={(e) => handleProfileInputChange(e)}
+                name="emergencycontactname"
+                value={formik.values.emergencycontactname}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
+              {formik.touched.emergencycontactname &&
+                formik.errors.emergencycontactname && (
+                  <span className="text-red-400 text-sm">
+                    {formik.errors.emergencycontactname}
+                  </span>
+                )}
+
               <Input
                 variant="outlined"
                 label="Telefon"
-                name="emercengyPhone"
-                value={info?.emercengyPhone}
-                onChange={(e) => handleProfileInputChange(e)}
+                name="emergencycontactphone"
+                value={formik.values.emergencycontactphone}
+                onChange={formik.handleChange}
               />
+
+              {formik.touched.emergencycontactphone &&
+                formik.errors.emergencycontactphone && (
+                  <span className="text-red-400 text-sm">
+                    {formik.errors.emergencycontactphone}
+                  </span>
+                )}
             </div>
           </div>
 
@@ -414,14 +580,14 @@ export default function Register() {
                 </div>
               );
             })}
+            {formik.touched.consents && formik.errors.consents && (
+              <span className="text-red-400 text-sm">
+                {formik.errors.consents}
+              </span>
+            )}
           </div>
           <div className="mb-10 flex flex-col justify-center items-center space-y-5">
-            <Button
-              color="gray"
-              type="submit"
-              disabled={!email || !password}
-              className="w-36"
-            >
+            <Button color="gray" type="submit" className="w-36">
               Kayıt ol
             </Button>
 

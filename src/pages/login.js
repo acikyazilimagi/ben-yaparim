@@ -13,9 +13,6 @@ import * as Yup from "yup";
 const auth = getAuth(app);
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const { authProfileData, setAuthProfileData } = useContext(UserContext);
 
   const formik = useFormik({
@@ -30,7 +27,7 @@ export default function Login() {
         .min(6, "Şifreniz minimum 6 karakterden oluşmalıdır.")
     }),
     onSubmit: async function (values) {
-      await loginSTK(values.email, values.password).then((e) => {
+      await loginUser(values.email, values.password).then((e) => {
         if (e?.accessToken) {
           Router.push("/profile");
         }
@@ -38,7 +35,7 @@ export default function Login() {
     },
   });
 
-  const loginSTK = async (email, password) => {
+  const loginUser = async (email, password) => {
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
       setAuthProfileData(user);
@@ -61,7 +58,7 @@ export default function Login() {
         </p>
         <div>
           <Input
-            label="E-mail"
+            label="E-mail*"
             type="email"
             name="email"
             id="email"
@@ -81,7 +78,7 @@ export default function Login() {
         <div>
           <Input
             type="password"
-            label="Şifre"
+            label="Şifre*"
             name="password"
             id="password"
             className={`block w-full rounded border py-1 px-2 ${
