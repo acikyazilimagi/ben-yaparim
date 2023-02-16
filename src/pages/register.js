@@ -195,6 +195,9 @@ export default function Register() {
               onChange={handleProfileInputChange}
               className="border-gray-400 rounded-md w-full mr-2"
             >
+              <option value="" selected disabled hidden>
+                  İl Seçiniz
+                </option>
               {places.map((city) => {
                 return (
                   <option key={city.name} value={city.name}>
@@ -208,6 +211,9 @@ export default function Register() {
               onChange={handleProfileInputChange}
               className="border-gray-400 rounded-md w-full"
             >
+              <option value="" selected disabled hidden>
+                  İlçe Seçiniz
+                </option>
               {towns &&
                 towns.map((town) => {
                   return (
@@ -225,6 +231,9 @@ export default function Register() {
               className="border-gray-400 rounded-md w-full mr-2"
               onChange={handleProfileInputChange}
             >
+              <option value="" selected disabled hidden>
+                  Seçiniz
+                </option>
               <option value="woman" key="1">
                 Kadın
               </option>
@@ -240,6 +249,9 @@ export default function Register() {
               className="border-gray-400 rounded-md w-full mr-2"
               onChange={handleProfileInputChange}
             >
+              <option value="" selected disabled hidden>
+                  Seçiniz
+                </option>
               <option value="18 -25" key="1">
                 18 -25
               </option>
@@ -255,6 +267,9 @@ export default function Register() {
               className="border-gray-400 rounded-md w-full mr-2"
               onChange={handleProfileInputChange}
             >
+              <option value="" selected disabled hidden>
+                  Seçiniz
+                </option>
               {bloodTypes.map((blood) => {
                 return (
                   <option key={blood} value={blood}>
