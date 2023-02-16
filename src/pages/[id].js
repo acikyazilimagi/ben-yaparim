@@ -10,6 +10,7 @@ import {
   addApplicantToCallDoc,
   getApplicantsMetaData,
   getCall,
+  closeCall,
 } from "@/src/firebase/calls";
 
 import { updateUserAppliedCalls } from "../firebase/users";
@@ -22,7 +23,7 @@ import Badge from "@/components/Badge/Badge";
 import { Status } from "@/src/utils/constants";
 import { formatDate } from "@/src/helpers";
 import { auth } from "../firebase-config";
-import { Button } from "@material-tailwind/react";
+import { Button, Switch } from "@material-tailwind/react";
 
 export default function CallDetail() {
   const [showModal, toggleModal] = useState(false);
@@ -34,6 +35,7 @@ export default function CallDetail() {
   const router = useRouter();
   const { id } = router.query;
   const [call, setCall] = useState([]);
+  const [activeStatus, setActiveStatus] = useState(false);  
   const [applicants, setApplicants] = useState();
   const [applicationStatus, setApplicationStatus] = useState();
 
@@ -55,6 +57,10 @@ export default function CallDetail() {
     }
   }, [id]);
 
+  useEffect(() => {
+    call && setActiveStatus(call?.isActive);
+  }, [call?.isActive])
+  
   const handleApplicationCall = () => {
     if (!!currentUser) {
       addApplicantToCallDoc(id, profileData?.uid).then((res) => {
@@ -242,6 +248,11 @@ export default function CallDetail() {
                 </div>
               </li>
             </ul>
+            {profileData?.role === "admin" && (
+              <div className="flex w-full border-b-4 py-4">
+                <Switch id="close-call" label={activeStatus ? "Çağrıyı kapat" : "Çağrı kapandı"} defaultChecked={activeStatus} onClick={() => (setActiveStatus(false), closeCall(id))} disabled={!activeStatus} color="pink"/>
+              </div>
+            )}
             {profileData?.role !== "admin" && !applicationStatus && (
               <button
                 onClick={handleApplicationCall}

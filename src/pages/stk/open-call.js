@@ -106,7 +106,7 @@ export default function OpenCall() {
 
   const createCall = (event) => {
     event.preventDefault();
-    addCall(callInput);
+    addCall({ ...callInput, isActive: true });
     setCallInput({});
     Router.push("/stk/profile");
   };
@@ -139,50 +139,50 @@ export default function OpenCall() {
   const facilities = ["Yol Masrafı", "Konaklama", "Yemek"];
 
   return (
-    <div className="m-10 lg:mx-36 pb-10">
+    <div className='m-10 lg:mx-36 pb-10'>
       <form onSubmit={createCall}>
-        <div className="">
-          <h1 className="text-4xl mb-10 font-bold">Yeni Çağrı Oluştur</h1>
+        <div className=''>
+          <h1 className='text-4xl mb-10 font-bold'>Yeni Çağrı Oluştur</h1>
 
-          <div className="pb-10">
-            <p className="text-gray-400 font-bold my-3">Genel Bilgiler</p>
-            <div className="flex flex-col lg:flex-row justify-between">
-              <div className="max-w-xl lg:w-1/2 space-y-5">
+          <div className='pb-10'>
+            <p className='text-gray-400 font-bold my-3'>Genel Bilgiler</p>
+            <div className='flex flex-col lg:flex-row justify-between'>
+              <div className='max-w-xl lg:w-1/2 space-y-5'>
                 <Input
                   required
-                  variant="outlined"
-                  label="Başlık"
-                  name="title"
+                  variant='outlined'
+                  label='Başlık'
+                  name='title'
                   value={callInput.title}
                   onChange={(e) => handleInputChange(e)}
                 />
                 <Textarea
-                  variant="outlined"
-                  label="Açıklama"
-                  name="description"
+                  variant='outlined'
+                  label='Açıklama'
+                  name='description'
                   value={callInput.description}
                   onChange={(e) => handleInputChange(e)}
                 />
                 <Textarea
-                  variant="outlined"
-                  label="Ön koşul ve beklenen çalışma frekansı"
-                  name="precondition"
+                  variant='outlined'
+                  label='Ön koşul ve beklenen çalışma frekansı'
+                  name='precondition'
                   value={callInput.precondition}
                   onChange={(e) => handleInputChange(e)}
                 />
               </div>
-              <div className="max-w-xl lg:w-1/2 space-y-5">
-                <div className="flex flex-start items-center space-x-3">
+              <div className='max-w-xl lg:w-1/2 space-y-5'>
+                <div className='flex flex-start items-center space-x-3'>
                   <Location />
-                  <p className="">Faliyet Lokasyonu</p>
+                  <p className=''>Faliyet Lokasyonu</p>
                 </div>
-                <div className="flex justify-between">
+                <div className='flex justify-between'>
                   <select
-                    name="location"
+                    name='location'
                     onChange={handleInputChange}
-                    className="border-gray-400 rounded-md w-full mr-2"
+                    className='border-gray-400 rounded-md w-full mr-2'
                   >
-                    <option value="" selected disabled hidden>
+                    <option value='' selected disabled hidden>
                       İl Seçiniz
                     </option>
                     {places.map((city) => {
@@ -195,11 +195,11 @@ export default function OpenCall() {
                   </select>
 
                   <select
-                    name="town"
+                    name='town'
                     onChange={handleInputChange}
-                    className="border-gray-400 rounded-md w-full"
+                    className='border-gray-400 rounded-md w-full'
                   >
-                    <option value="" selected disabled hidden>
+                    <option value='' selected disabled hidden>
                       İlçe Seçiniz
                     </option>
                     {towns &&
@@ -212,26 +212,26 @@ export default function OpenCall() {
                       })}
                   </select>
                 </div>
-                <div className="flex flex-start items-center space-x-3">
+                <div className='flex flex-start items-center space-x-3'>
                   <Calendar />
-                  <p className="">Faaliyet Tarihleri</p>
+                  <p className=''>Faaliyet Tarihleri</p>
                 </div>
                 <DateRange
-                  className="min-w-full"
+                  className='min-w-full'
                   editableDateInputs={true}
                   onChange={(item) => setDate([item.selection])}
                   moveRangeOnFirstSelection={false}
                   ranges={date}
                 />
-                <div className="flex flex-start items-center space-x-3">
+                <div className='flex flex-start items-center space-x-3'>
                   <People />
-                  <p className="">Aranan Gönüllü Sayısı</p>
+                  <p className=''>Aranan Gönüllü Sayısı</p>
                 </div>
                 <Input
-                  variant="outlined"
-                  label="Sayı"
-                  name="needOfVolunteer"
-                  type="number"
+                  variant='outlined'
+                  label='Sayı'
+                  name='needOfVolunteer'
+                  type='number'
                   min={0}
                   value={callInput.needOfVolunteer}
                   onChange={(e) => handleInputChange(e)}
@@ -240,20 +240,20 @@ export default function OpenCall() {
             </div>
           </div>
 
-          <p className="text-gray-400 font-bold my-5">Aranılan Yetenekler</p>
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
+          <p className='text-gray-400 font-bold my-5'>Aranılan Yetenekler</p>
+          <div className='grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10'>
             {skills.map((skill, index) => {
               return (
-                <div className="flex min-w-fit items-center" key={index}>
+                <div className='flex min-w-fit items-center' key={index}>
                   <Checkbox
-                    name="skills"
-                    type="checkbox"
+                    name='skills'
+                    type='checkbox'
                     value={skill}
                     onChange={handleSkillCheck}
                   />
                   <label
-                    htmlFor="checked-checkbox"
-                    className="text-sm font-medium w-28"
+                    htmlFor='checked-checkbox'
+                    className='text-sm font-medium w-28'
                   >
                     {skill}
                   </label>
@@ -262,29 +262,29 @@ export default function OpenCall() {
             })}
 
             <Input
-              variant="outlined"
-              label="Diğer"
-              name="otherSkills"
-              className="max-w-xs"
+              variant='outlined'
+              label='Diğer'
+              name='otherSkills'
+              className='max-w-xs'
               value={callInput.otherSkills}
               onChange={(e) => handleInputChange(e)}
             />
           </div>
 
-          <p className="text-gray-400 font-bold my-5">Konuşulan Diller</p>
-          <div className="grid grid-cols-3 gap-3 mb-10">
+          <p className='text-gray-400 font-bold my-5'>Konuşulan Diller</p>
+          <div className='grid grid-cols-3 gap-3 mb-10'>
             {language_spoken.map((languages, index) => {
               return (
-                <div className="flex min-w-fit items-center" key={index}>
+                <div className='flex min-w-fit items-center' key={index}>
                   <Checkbox
-                    name="languages"
-                    type="checkbox"
+                    name='languages'
+                    type='checkbox'
                     value={languages}
                     onChange={handleLanguageCheck}
                   />
                   <label
-                    htmlFor="checked-checkbox"
-                    className="text-sm font-medium w-28"
+                    htmlFor='checked-checkbox'
+                    className='text-sm font-medium w-28'
                   >
                     {languages}
                   </label>
@@ -293,23 +293,23 @@ export default function OpenCall() {
             })}
           </div>
 
-          <p className="text-gray-400 font-bold my-5">Sertifikalar</p>
-          <div className="grid grid-cols-3 gap-3 mb-10">
+          <p className='text-gray-400 font-bold my-5'>Sertifikalar</p>
+          <div className='grid grid-cols-3 gap-3 mb-10'>
             {certificates.map((certificate, index) => {
               return (
                 <div
-                  className="flex flex-row min-w-fit items-center"
+                  className='flex flex-row min-w-fit items-center'
                   key={index}
                 >
                   <Checkbox
-                    name="certificates"
-                    type="checkbox"
+                    name='certificates'
+                    type='checkbox'
                     value={certificate}
                     onChange={handleCertificateCheck}
                   />
                   <label
-                    htmlFor="checked-checkbox"
-                    className="text-sm font-medium w-full"
+                    htmlFor='checked-checkbox'
+                    className='text-sm font-medium w-full'
                   >
                     {certificate}
                   </label>
@@ -318,20 +318,20 @@ export default function OpenCall() {
             })}
           </div>
 
-          <p className="text-gray-400 font-bold my-5">Sağlanan İmkanlar</p>
-          <div className="grid grid-cols-3 gap-3 mb-10">
+          <p className='text-gray-400 font-bold my-5'>Sağlanan İmkanlar</p>
+          <div className='grid grid-cols-3 gap-3 mb-10'>
             {facilities.map((facility, index) => {
               return (
-                <div className="flex min-w-fit items-center" key={index}>
+                <div className='flex min-w-fit items-center' key={index}>
                   <Checkbox
-                    name="facilities"
-                    type="checkbox"
+                    name='facilities'
+                    type='checkbox'
                     value={facility}
                     onChange={handleFacilitiesCheck}
                   />
                   <label
-                    htmlFor="checked-checkbox"
-                    className="text-sm font-medium w-full"
+                    htmlFor='checked-checkbox'
+                    className='text-sm font-medium w-full'
                   >
                     {facility}
                   </label>
@@ -341,18 +341,18 @@ export default function OpenCall() {
           </div>
 
           <Textarea
-            variant="outlined"
-            label="Notlar"
-            name="notes"
-            className="mb-10"
+            variant='outlined'
+            label='Notlar'
+            name='notes'
+            className='mb-10'
             value={callInput?.notes}
             onChange={(e) => handleInputChange(e)}
           />
 
-          <div className="flex justify-end gap-x-3">
+          <div className='flex justify-end gap-x-3'>
             <Button disabled>Kaydet</Button>
 
-            <Button color="pink" type="submit" onClick={createCall}>
+            <Button color='pink' type='submit' onClick={createCall}>
               Yayınla
             </Button>
           </div>

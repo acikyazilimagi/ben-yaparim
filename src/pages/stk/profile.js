@@ -130,9 +130,7 @@ export default function Profile() {
   if (profileData?.role === "volunteer") {
     Router.push("/profile");
   }
-
-  console.log("profileData", profileData);
-
+  
   if (profileData?.role === "admin") {
     return (
       <div className="m-10 lg:mx-36">
