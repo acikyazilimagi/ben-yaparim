@@ -121,7 +121,6 @@ export const checkUserAppliedCallDates = async (applicantID, proposedCall) => {
           proposedCall.date.startDate >= call.date.startDate)
       );
     });
-    console.log(userBlockingAppliedCalls);
     return userBlockingAppliedCalls.length > 0 ? false : true;
   } catch (error) {
     console.log(error);
