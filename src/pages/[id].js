@@ -40,10 +40,10 @@ export default function CallDetail() {
   const [applicationStatus, setApplicationStatus] = useState();
 
   useEffect(() => {
-    setApplicationStatus(
-      profileData?.appliedCalls?.find((call) => call.id === id)?.status
+    call?.applicants?.map(
+      (user) => user.uid === currentUser.uid && setApplicationStatus(user.approvedStatus)
     );
-  }, [profileData]);
+  }, [call]);
 
   useEffect(() => {
     if (id) {
@@ -61,12 +61,14 @@ export default function CallDetail() {
     call && setActiveStatus(call?.isActive);
   }, [call?.isActive])
   
-  const handleApplicationCall = () => {
+  const handleApplicationCall = async () => {
     if (!!currentUser) {
       addApplicantToCallDoc(id, profileData?.uid).then((res) => {
         res ? toggleModal(true) : toast.error(err.message);
       });
-      updateUserAppliedCalls(null, id, "pending");
+      await updateUserAppliedCalls(null, id, "pending");
+      const callData = await getCall(id);
+      setCall(callData);
     } else {
       Router.push("/register");
     }
@@ -152,8 +154,8 @@ export default function CallDetail() {
                   <ColorTag text={skill} color="#FFDCDC" />
                 ))}
                 {call?.otherSkills && (
-                <ColorTag text={call?.otherSkills} color="#FFDCDC" />
-              )}
+                  <ColorTag text={call?.otherSkills} color="#FFDCDC" />
+                )}
               </div>
             </div>
 

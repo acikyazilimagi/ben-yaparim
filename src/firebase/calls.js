@@ -38,7 +38,6 @@ export const getCall = async (id) => {
   try {
     const docRef = doc(db, "calls", id);
     const docSnapshot = await getDoc(docRef);
-
     if (docSnapshot.exists()) {
       return docSnapshot.data();
     } else {
@@ -51,12 +50,14 @@ export const getCall = async (id) => {
 
 export const getApplicantsMetaData = async (applicants) => {
   try {
-    return await Promise.all(
-      applicants?.map(async (applicant) => {
-        const user = await getUser(applicant.uid);
-        return { ...user, applicant };
-      })
-    );
+    if (applicants?.length) {
+      return await Promise.all(
+        applicants?.map(async (applicant) => {
+          const user = await getUser(applicant.uid);
+          return { ...user, applicant };
+        })
+      );
+    }
   } catch (err) {
     console.log(err);
   }
