@@ -288,7 +288,7 @@ const Profile = () => {
                   {formik.errors.name}
                 </span>
               )}
-            </div>
+            </div>  
             <div className="w-full">
               <Input
                 variant="outlined"
