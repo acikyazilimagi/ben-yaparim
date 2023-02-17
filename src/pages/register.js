@@ -80,9 +80,12 @@ export default function Register() {
       emergencycontactname: Yup.string().required(
         "Lütfen acil durumda ulaşılacak kişi bilgisi girin."
       ),
-      emergencycontactphone: Yup.string().required(
-        "Lütfen acil durumda ulaşılacak kişi telefon bilgisi girin."
-      ),
+      emergencycontactphone: Yup.string()
+        .required("Lütfen acil durumda ulaşılacak kişi telefon bilgisi girin.")
+        .min(
+          10,
+          "Cep telefon numarasını doğru formatta girdiğinizden emin olun."
+        ),
       consents: Yup.array()
         .min(2, "Tüm şart ve koşullara onay vermeniz gerekmektedir.")
         .required(),
@@ -125,8 +128,8 @@ export default function Register() {
     } else {
       updatedList.splice(checkedSkills.indexOf(event.target.value), 1);
     }
-    formik.values.skills = updatedList;
     setCheckedSkills(updatedList);
+    formik.values.skills = updatedList;
   };
 
   const handleLanguageCheck = (event) => {
@@ -345,13 +348,13 @@ export default function Register() {
                 <option value="" selected disabled hidden>
                   Cinsiyet*
                 </option>
-                <option value="woman" key="1">
+                <option value="Kadın" key="1">
                   Kadın
                 </option>
-                <option value="man" key="2">
+                <option value="Erkek" key="2">
                   Erkek
                 </option>
-                <option value="not" key="3">
+                <option value="Belirtmek istemiyorum" key="3">
                   Belirtmek istemiyorum
                 </option>
               </select>
