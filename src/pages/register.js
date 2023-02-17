@@ -187,6 +187,7 @@ export default function Register() {
           uid: user.uid,
           email: user.email,
           appliedCalls: [],
+          checkedCertificates,
         },
         { merge: true }
       );

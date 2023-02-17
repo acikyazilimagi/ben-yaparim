@@ -21,7 +21,7 @@ export default function Login() {
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email().required("Lütfen e-mailinizi giriniz."),
+      email: Yup.string().email("Lütfen geçerli bir mail adresi giriniz.").required("Lütfen e-mailinizi giriniz."),
       password: Yup.string()
         .required("Lütfen şifre giriniz.")
         .min(6, "Şifreniz minimum 6 karakterden oluşmalıdır.")

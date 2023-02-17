@@ -123,7 +123,7 @@ export default function CallDetail() {
                 callId={id}
                 certificates={user.checkedCertificates}
                 languages={user.checkedLanguages}
-                skills={user.checkedSkills}
+                skills={user.skills}
                 applicationStatus=""
               />
             ))}

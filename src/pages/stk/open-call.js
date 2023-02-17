@@ -29,6 +29,8 @@ export default function OpenCall() {
   const [cities, setCities] = useState([]);
   const [towns, setTowns] = useState([]);
 
+  const { callInput, setCallInput } = useContext(CallContext);
+
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -36,6 +38,9 @@ export default function OpenCall() {
       location: "",
       town: "",
       needOfVolunteer: 0,
+      precondition: "",
+      otherSkills: "",
+      notes: "",
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Lütfen görev başlığını giriniz."),
@@ -45,14 +50,19 @@ export default function OpenCall() {
       needOfVolunteer: Yup.number("Lütfen sayı formatında giriş yapınız")
         .min(1, "Gönüllü sayısı sıfır veya negatif olamaz.")
         .required("Lütfen ihtiyaç duyduğunuz gönüllü sayısını belirtiniz."),
+      precondition: Yup.string(),
+      otherSkills: Yup.string(),
+      notes: Yup.string(),
     }),
     onSubmit: async function (values) {
-      addCall(formik.values);
+      addCall({
+        ...values,
+        ...callInput,
+      });
       setCallInput({});
       Router.push("/stk/profile");
     },
   });
-
   useEffect(() => {
     setCities(places);
   }, []);
@@ -65,13 +75,9 @@ export default function OpenCall() {
     },
   ]);
 
-  const { callInput, setCallInput } = useContext(CallContext);
-  const handleInputChange = (e) => {
-    setCallInput({ ...callInput, [e.target.name]: e.target.value });
-  };
   useEffect(() => {
     setCallInput({
-      ...formik.values,
+      ...callInput,
       date: date[0],
     });
   }, [date]);
@@ -85,7 +91,7 @@ export default function OpenCall() {
 
   useEffect(() => {
     setCallInput({
-      ...formik.values,
+      ...callInput,
       checkedSkills: checkedSkills,
       checkedLanguages: checkedLanguages,
       checkedCertificates: checkedCertificates,
@@ -179,8 +185,8 @@ export default function OpenCall() {
                   variant="outlined"
                   label="Ön koşul ve beklenen çalışma frekansı"
                   name="precondition"
-                  value={callInput.precondition}
-                  onChange={(e) => handleInputChange(e)}
+                  value={formik.values.precondition}
+                  onChange={formik.handleChange}
                 />
               </div>
               <div className="max-w-xl lg:w-1/2 space-y-5">
@@ -305,8 +311,8 @@ export default function OpenCall() {
               label="Diğer"
               name="otherSkills"
               className="max-w-xs"
-              value={callInput.otherSkills}
-              onChange={(e) => handleInputChange(e)}
+              value={formik.values.otherSkills}
+              onChange={formik.handleChange}
             />
           </div>
 
@@ -384,8 +390,8 @@ export default function OpenCall() {
             label="Notlar"
             name="notes"
             className="mb-10"
-            value={callInput?.notes}
-            onChange={(e) => handleInputChange(e)}
+            value={formik.values.notes}
+            onChange={formik.handleChange}
           />
 
           <div className="flex justify-end gap-x-3">

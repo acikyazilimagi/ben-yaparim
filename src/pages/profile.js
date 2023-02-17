@@ -118,9 +118,9 @@ const Profile = () => {
   useEffect(() => {
     cities &&
       cities.find(
-        (city) => city.name === formik.vales?.location && setTowns(city.towns)
+        (city) => city.name === formik?.values?.location && setTowns(city.towns)
       );
-  }, [formik.values?.location]);
+  }, [formik?.values?.location]);
 
   const [date, setDate] = useState([
     {
@@ -239,7 +239,7 @@ const Profile = () => {
           <div className="flex flex-col space-y-10">
             <p className="text-xl font-bold text-gray-600">Yetkinlikler</p>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
-              {profileData?.checkedSkills?.map((skill) => (
+              {profileData?.skills?.map((skill) => (
                 <ColorTag text={skill} color="#FFDCDC" />
               ))}
               {profileData?.otherSkills && (
@@ -247,7 +247,7 @@ const Profile = () => {
               )}
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
-              {profileData?.checkedLanguages?.map((language) => (
+              {profileData?.languages?.map((language) => (
                 <LanguageTag text={language} />
               ))}
             </div>
@@ -288,7 +288,7 @@ const Profile = () => {
                   {formik.errors.name}
                 </span>
               )}
-            </div>  
+            </div>
             <div className="w-full">
               <Input
                 variant="outlined"
