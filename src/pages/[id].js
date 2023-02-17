@@ -203,9 +203,7 @@ export default function CallDetail() {
                 <div className="flex min-w-full justify-between">
                   <div className="flex items-center space-x-2 text-l font-bold text-gray-600">
                     <Location className="w-6 h-6" />
-                    <p>Faaliyet Lokasyonu</p>toggleModal(true) await
-                    updateUserAppliedCalls(null, id, "pending"); const callData
-                    = await getCall(id); setCall(callData);
+                    <p>Faaliyet Lokasyonu</p>
                   </div>
                   <div className="flex space-x-2 text-l font-bold">
                     <p>

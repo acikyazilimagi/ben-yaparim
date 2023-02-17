@@ -103,7 +103,7 @@ export const getUserAppliedCallsData = async (appliedCalls) => {
 export const checkUserAppliedCallDates = async (applicantID, proposedCall) => {
   try {
     //We do not need to consider rejected applications
-    const userAppliedCallsRef = (await getUserAppliedCalls(applicantID)).filter(
+    const userAppliedCallsRef = (await getUserAppliedCalls(applicantID))?.filter(
       function (call) {
         return call.status !== "rejected";
       }
@@ -113,7 +113,7 @@ export const checkUserAppliedCallDates = async (applicantID, proposedCall) => {
     //(start1 < end2 && start1 > start2) || (start2 < end1 && start2 > start1);
     const userBlockingAppliedCalls = (
       await getUserAppliedCallsData(userAppliedCallsRef)
-    ).filter(function (call) {
+    )?.filter(function (call) {
       return (
         (call?.date?.startDate <= proposedCall?.date?.endDate &&
           call?.date?.startDate >= proposedCall?.date?.startDate) ||
