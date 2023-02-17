@@ -6,7 +6,6 @@ import { collection, setDoc, doc } from "firebase/firestore";
 import { UserContext } from "@/src/context/UserContext";
 
 import Router from "next/router";
-import Link from "next/link";
 
 import places from "./places.json" assert { type: "json" };
 import skills from "./skills.json" assert { type: "json" };
@@ -594,13 +593,6 @@ export default function Register() {
             <Button color="gray" type="submit" className="w-36">
               Kayıt ol
             </Button>
-
-            <Link
-              href={"/login"}
-              className="text-center text-pink-600 font-bold hover:text-pink-800"
-            >
-              Zaten Kaydın Var mı? Giriş Yap.
-            </Link>
           </div>
         </form>
       </div>

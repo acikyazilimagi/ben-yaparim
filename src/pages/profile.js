@@ -89,15 +89,17 @@ const Profile = () => {
       (async () => {
         const data = await getUserAppliedCalls(currentUser?.uid);
 
-        await Promise.all(
-          data?.map(async (call) => {
-            const callData = await getCall(call.id);
-            const mergedData = { ...callData, ...call };
-            return mergedData;
-          })
-        ).then((data) => {
-          setAppliedCalls(data);
-        });
+        if (data?.length) {
+          await Promise.all(
+            data?.map(async (call) => {
+              const callData = await getCall(call.id);
+              const mergedData = { ...callData, ...call };
+              return mergedData;
+            })
+          ).then((data) => {
+            setAppliedCalls(data);
+          });
+        }
       })();
     }
   }, [currentUser]);

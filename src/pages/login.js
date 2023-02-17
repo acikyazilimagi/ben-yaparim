@@ -1,11 +1,12 @@
 import Router from "next/router";
-import { useState, useEffect, useContext } from "react";
-
+import { useContext } from "react";
 import { UserContext } from "@/src/context/UserContext";
 import { app } from "@/src/firebase-config";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-import { Button, Textarea, Input } from "@material-tailwind/react";
+import { Button, Input } from "@material-tailwind/react";
+
+import Link from "next/link";
 import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -98,6 +99,13 @@ export default function Login() {
         <Button className="w-36 right-0 my-5" type="submit" color="gray">
           Giriş yap
         </Button>
+
+        <Link
+          href={"/register"}
+          className="text-center text-pink-600 font-bold hover:text-pink-800"
+        >
+          Hesabın yok mu? Kayıt ol.
+        </Link>
       </form>
     </div>
   );
