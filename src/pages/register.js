@@ -7,7 +7,6 @@ import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { UserContext } from "@/src/context/UserContext";
 import toast from "react-hot-toast";
 import Router from "next/router";
-import Link from "next/link";
 import places from "./places.json" assert { type: "json" };
 import skills from "./skills.json" assert { type: "json" };
 import spokenLanguages from "./spokenLanguages.json" assert { type: "json" };
@@ -424,13 +423,6 @@ export default function Register() {
             >
               Kayıt ol
             </Button>
-
-            <Link
-              href={"/login"}
-              className="text-center text-pink-600 font-bold hover:text-pink-800"
-            >
-              Zaten Kaydın Var mı? Giriş Yap.
-            </Link>
           </div>
         </form>
       </div>

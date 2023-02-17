@@ -70,7 +70,7 @@ export default function Navbar() {
           </div>
           <div className="flex justify-end w-full">
             <Link
-              href={"/register"}
+              href={"/login"}
               className="text-center text-pink-600 font-bold ml-5"
             >
               Giriş

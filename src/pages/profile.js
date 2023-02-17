@@ -61,10 +61,11 @@ const Profile = () => {
       //TODO: MOVE THIS INTO FIREBASE FOLDER
       (async () => {
         const data = await getUserAppliedCalls(currentUser?.uid);
-        
-        await getUserAppliedCallsData(data).then((data) => {
-          setAppliedCalls(data);
-        });
+        if (data?.length) {
+          await getUserAppliedCallsData(data).then((data) => {
+            setAppliedCalls(data);
+          });
+        }
       })();
     }
   }, [currentUser]);

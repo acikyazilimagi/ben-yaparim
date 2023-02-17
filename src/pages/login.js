@@ -1,10 +1,10 @@
 import Router from "next/router";
-import { useState, useEffect, useContext } from "react";
-import { Button, Textarea, Input } from "@material-tailwind/react";
+import { useState, useContext } from "react";
+import { Button, Input } from "@material-tailwind/react";
 import { UserContext } from "@/src/context/UserContext";
 import { app } from "@/src/firebase-config";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-
+import Link from "next/link";
 import toast from "react-hot-toast";
 
 const auth = getAuth(app);
@@ -38,7 +38,7 @@ export default function Login() {
   return (
     <div className="m-10 lg:mx-36 space-y-10">
       <form className="max-w-xl mx-auto grid gap-y-4" onSubmit={handleSubmit}>
-        <p className="text-4xl font-bold">Kurum Girişi</p>
+        <p className="text-4xl font-bold">Giriş</p>
         <p className="text-gray-500 text-xs py-2" >Tüm alanlar doldurulmalıdır.</p>
         <Input
           label="E-mail"
@@ -63,6 +63,13 @@ export default function Login() {
         >
           Giriş yap
         </Button>
+
+        <Link
+          href={"/register"}
+          className="text-center text-pink-600 font-bold hover:text-pink-800"
+        >
+          Hesabın yok mu? Kayıt ol.
+        </Link>
       </form>
     </div>
   );
