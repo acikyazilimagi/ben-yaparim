@@ -28,6 +28,7 @@ import { Button, Switch } from "@material-tailwind/react";
 export default function CallDetail() {
   const [showModal, toggleModal] = useState(false);
   const [applicantModalStatus, setApplicantModalStatus] = useState(false);
+  const [closeCallModalStatus, setCloseCallModalStatus] = useState(false);
   const { profileData } = useContext(UserContext);
 
   const { currentUser } = auth;
@@ -35,13 +36,15 @@ export default function CallDetail() {
   const router = useRouter();
   const { id } = router.query;
   const [call, setCall] = useState([]);
-  const [activeStatus, setActiveStatus] = useState(false);  
+  const [activeStatus, setActiveStatus] = useState(false);
   const [applicants, setApplicants] = useState();
   const [applicationStatus, setApplicationStatus] = useState();
 
   useEffect(() => {
     call?.applicants?.map(
-      (user) => user.uid === currentUser.uid && setApplicationStatus(user.approvedStatus)
+      (user) =>
+        user.uid === currentUser.uid &&
+        setApplicationStatus(user.approvedStatus)
     );
   }, [call]);
 
@@ -59,8 +62,8 @@ export default function CallDetail() {
 
   useEffect(() => {
     call && setActiveStatus(call?.isActive);
-  }, [call?.isActive])
-  
+  }, [call?.isActive]);
+
   const handleApplicationCall = async () => {
     if (!!currentUser) {
       addApplicantToCallDoc(id, profileData?.uid).then((res) => {
@@ -72,6 +75,10 @@ export default function CallDetail() {
     } else {
       Router.push("/register");
     }
+  };
+
+  const closeCallVerify = () => {
+    setCloseCallModalStatus(true);
   };
 
   const seeAllApplicants = () => {
@@ -135,6 +142,48 @@ export default function CallDetail() {
             ))}
           </div>
         </Modal>
+
+        <Modal
+          show={closeCallModalStatus}
+          close={() => {
+            setCloseCallModalStatus(false);
+          }}
+        >
+          <div className="my-5 flex flex-col lg:flex-row justify-center">
+            <p className="text-xl mt-6 font-bold text-pink-600">
+              Çağrıyı kapatmak istediğinize emin misiniz?
+            </p>
+          </div>
+          <div className="my-5 flex flex-col lg:flex-row justify-center">
+            <p className="text-l mt-6 font-bold text-gray-600 center">
+              Kapattığın çağrıları Kurum Profili’nde ‘Kapalı Çağrılar’ altında görebilirsin.
+            </p>
+          </div>
+          <div className="my-5 items-center flex flex-col lg:flex-row">
+            <div className="flex w-full py-4">
+                  <Button
+                    color={"pink" }
+                    size="lg"
+                    ripple="true"
+                    onClick={() => (setActiveStatus(false), closeCall(id))}
+                  >
+                    {"Çağrıyı kapat"}
+                  </Button>
+            </div>
+            <div className="flex w-full py-4">
+                  <Button
+                    color={"gray" }
+                    size="lg"
+                    ripple="true"
+                  >
+                    {"Geri dön"}
+                  </Button>
+            </div>
+          </div>
+
+         
+        </Modal>
+
 
         <div className="flex justify-end mr-[7%]">
           <ShareOptions id={id} />
@@ -252,7 +301,15 @@ export default function CallDetail() {
             </ul>
             {profileData?.role === "admin" && (
               <div className="flex w-full border-b-4 py-4">
-                <Switch id="close-call" label={activeStatus ? "Çağrıyı kapat" : "Çağrı kapandı"} defaultChecked={activeStatus} onClick={() => (setActiveStatus(false), closeCall(id))} disabled={!activeStatus} color="pink"/>
+                <Button
+                  color={activeStatus ? "pink" : "gray"}
+                  onClick={closeCallVerify}
+                  size="lg"
+                  ripple="true"
+                  disabled={!activeStatus}
+                >
+                  {activeStatus ? "Çağrıyı kapat" : "Çağrı kapandı"}
+                </Button>
               </div>
             )}
             {profileData?.role !== "admin" && !applicationStatus && (
