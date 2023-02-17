@@ -378,15 +378,15 @@ export default function Register() {
               <Input
                 variant="outlined"
                 label="İsim Soyisim"
-                name="emercengyName"
-                value={info?.emercengyName}
+                name="emergencyName"
+                value={info?.emergencyName}
                 onChange={(e) => handleProfileInputChange(e)}
               />
               <Input
                 variant="outlined"
                 label="Telefon"
-                name="emercengyPhone"
-                value={info?.emercengyPhone}
+                name="emergencyPhone"
+                value={info?.emergencyPhone}
                 onChange={(e) => handleProfileInputChange(e)}
               />
             </div>
