@@ -69,10 +69,10 @@ export const updateUserAppliedCalls = async (id, callID, status) => {
     await updateDoc(doc(db, "users", userId), {
       appliedCalls: [...updatedCalls, { id: callID, status: status }],
     });
-
-    return;
+    return true;
   } catch (error) {
     console.log(error);
+    return false;
   }
 };
 
@@ -115,10 +115,10 @@ export const checkUserAppliedCallDates = async (applicantID, proposedCall) => {
       await getUserAppliedCallsData(userAppliedCallsRef)
     ).filter(function (call) {
       return (
-        (call.date.startDate <= proposedCall.date.endDate &&
-          call.date.startDate >= proposedCall.date.startDate) ||
-        (proposedCall.date.startDate <= call.date.endDate &&
-          proposedCall.date.startDate >= call.date.startDate)
+        (call?.date?.startDate <= proposedCall?.date?.endDate &&
+          call?.date?.startDate >= proposedCall?.date?.startDate) ||
+        (proposedCall?.date?.startDate <= call?.date?.endDate &&
+          proposedCall?.date?.startDate >= call?.date?.startDate)
       );
     });
     return userBlockingAppliedCalls.length > 0 ? false : true;

@@ -12,7 +12,10 @@ import {
   getCall,
 } from "@/src/firebase/calls";
 
-import { updateUserAppliedCalls, checkUserAppliedCallDates } from "../firebase/users";
+import {
+  updateUserAppliedCalls,
+  checkUserAppliedCallDates,
+} from "../firebase/users";
 import Location from "@/src/components/icons/Location";
 import Calendar from "@/src/components/icons/Calendar";
 import People from "@/src/components/icons/People";
@@ -38,10 +41,12 @@ export default function CallDetail() {
   const [applicationStatus, setApplicationStatus] = useState();
 
   useEffect(() => {
-    setApplicationStatus(
-      profileData?.appliedCalls?.find((call) => call.id === id)?.status
+    call?.applicants?.map(
+      (user) =>
+        user.uid === currentUser.uid &&
+        setApplicationStatus(user.approvedStatus)
     );
-  }, [profileData]);
+  }, [call]);
 
   useEffect(() => {
     if (id) {
@@ -55,16 +60,22 @@ export default function CallDetail() {
     }
   }, [id]);
 
-  const handleApplicationCall = () => {
+  const handleApplicationCall = async () => {
     if (!!currentUser) {
-      checkUserAppliedCallDates(profileData?.uid, call).then((dateCheck) => {
-        !dateCheck
-          ? toast.error("Tarihleri çakışan başvurular yapamazsınız! Bu faaliyet tarihlerinde başka aktif bir başvurun var.")
-          : (addApplicantToCallDoc(id, profileData?.uid).then((res) => {
-              res ? toggleModal(true) : toast.error(err.message);
-            }),
-            updateUserAppliedCalls(null, id, "pending"));
-      });
+      if (!(await checkUserAppliedCallDates(profileData?.uid, call))) {
+        toast.error(
+          "Tarihleri çakışan başvurular yapamazsınız! Bu faaliyet tarihlerinde başka aktif bir başvurun var."
+        );
+      } else {
+        if (!(await addApplicantToCallDoc(id, profileData?.uid))) {
+          toast.error(err.message);
+        } else {
+          toggleModal(true);
+          await updateUserAppliedCalls(null, id, "pending");
+          const callData = await getCall(id);
+          setCall(callData);
+        }
+      }
     } else {
       Router.push("/register");
     }
@@ -150,8 +161,8 @@ export default function CallDetail() {
                   <ColorTag text={skill} color="#FFDCDC" />
                 ))}
                 {call?.otherSkills && (
-                <ColorTag text={call?.otherSkills} color="#FFDCDC" />
-              )}
+                  <ColorTag text={call?.otherSkills} color="#FFDCDC" />
+                )}
               </div>
             </div>
 
@@ -192,7 +203,9 @@ export default function CallDetail() {
                 <div className="flex min-w-full justify-between">
                   <div className="flex items-center space-x-2 text-l font-bold text-gray-600">
                     <Location className="w-6 h-6" />
-                    <p>Faaliyet Lokasyonu</p>
+                    <p>Faaliyet Lokasyonu</p>toggleModal(true) await
+                    updateUserAppliedCalls(null, id, "pending"); const callData
+                    = await getCall(id); setCall(callData);
                   </div>
                   <div className="flex space-x-2 text-l font-bold">
                     <p>
