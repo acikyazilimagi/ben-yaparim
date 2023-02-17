@@ -114,11 +114,15 @@ export const checkUserAppliedCallDates = async (applicantID, proposedCall) => {
     const userBlockingAppliedCalls = (
       await getUserAppliedCallsData(userAppliedCallsRef)
     )?.filter(function (call) {
+      const callStartDate = call?.date?.startDate;
+      const callEndDate = call?.date?.endDate;
+      const proposedCallStartDate = proposedCall?.date?.startDate;
+      const proposedCallEndDate = proposedCall?.date?.endDate;
       return (
-        (call?.date?.startDate <= proposedCall?.date?.endDate &&
-          call?.date?.startDate >= proposedCall?.date?.startDate) ||
-        (proposedCall?.date?.startDate <= call?.date?.endDate &&
-          proposedCall?.date?.startDate >= call?.date?.startDate)
+        (callStartDate <= proposedCallEndDate &&
+          callStartDate >= proposedCallStartDate) ||
+        (proposedCallStartDate <= callEndDate &&
+          proposedCallStartDate >= callStartDate)
       );
     });
     return userBlockingAppliedCalls.length > 0 ? false : true;
