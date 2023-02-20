@@ -104,7 +104,7 @@ export default function CallDetail() {
           close={() => {
             setApplicantModalStatus(false);
           }}
-          title={`Başvurular (${applicants?.length})`}
+          title={`Başvurular (${applicants?.length ? applicants?.length : 0})`}
         >
           <p className="text-lg my-5">{call?.title}</p>
 
@@ -124,7 +124,7 @@ export default function CallDetail() {
                 certificates={user.checkedCertificates}
                 languages={user.checkedLanguages}
                 skills={user.checkedSkills}
-                applicationStatus=""
+                applicationStatus={user.applicant.approvedStatus}
               />
             ))}
           </div>

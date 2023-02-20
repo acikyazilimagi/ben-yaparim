@@ -10,6 +10,9 @@ import { updateApplicantStatus } from "@/src/firebase/calls";
 import { sendMail } from "@/src/firebase/mail";
 import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
+import { Status } from "@/src/utils/constants";
+import { getUserAppliedSpecificCall } from "@/src/firebase/users";
+import Badge from "../Badge/Badge";
 
 function Icon({ id, open }) {
   return (
@@ -42,11 +45,19 @@ export default function Collapse({
   certificates,
   languages,
   skills,
+  applicationStatus,
 }) {
   const [open, setOpen] = useState(0);
+  const [status, setStatus] = useState(applicationStatus);
 
   const handleOpen = (value) => {
     setOpen(open === value ? 0 : value);
+  };
+
+  const getUpdatedCall = () => {
+    getUserAppliedSpecificCall(id, callId).then((data) =>
+      setStatus(data?.status)
+    );
   };
 
   return (
@@ -54,6 +65,18 @@ export default function Collapse({
       <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
         <AccordionHeader onClick={() => handleOpen(1)}>
           {name} {surname}
+          <div className="ml-[40%]">
+            <Badge
+              status={
+                status === "approved"
+                  ? "success"
+                  : status === "pending"
+                  ? "info"
+                  : "danger"
+              }
+              text={"Başvuru " + Status[status]}
+            />
+          </div>
         </AccordionHeader>
         <AccordionBody>
           <div className="flex space-x-10">
@@ -98,6 +121,7 @@ export default function Collapse({
                           : toast.error(
                               "Gönüllümüze onay emaili gönderilemedi."
                             );
+                        getUpdatedCall();
                       });
                   }
                 );
@@ -108,7 +132,8 @@ export default function Collapse({
             <Button
               onClick={() => {
                 updateApplicantStatus(callId, id, "rejected").then(() => {
-                  toast.error("Çağrı Başvurunuz Reddedildi.");
+                  toast.error("Gönüllümüzün Başvurusu Reddedildi.");
+                  getUpdatedCall();
                 });
               }}
               color="red"
