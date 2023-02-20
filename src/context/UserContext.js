@@ -7,6 +7,7 @@ import { onAuthStateChanged } from "firebase/auth";
 export const UserContext = createContext(null);
 
 const UserProvider = (props) => {
+  const [autProfileData, setAuthProfileData] = useState(null);
   const [profileData, setProfileData] = useState(null);
   const [updatedField, setUpdatedFields] = useState({});
 
@@ -25,6 +26,8 @@ const UserProvider = (props) => {
   return (
     <UserContext.Provider
       value={{
+        autProfileData,
+        setAuthProfileData,
         profileData,
         setProfileData,
         updatedField,

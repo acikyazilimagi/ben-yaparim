@@ -7,8 +7,8 @@ import CallTabs from "@/components/CallTabs";
 import Modal from "@/components/Modal";
 import Card from "@/components/Card";
 import Edit from "@/components/icons/Edit";
-import Spinner from "@/components/icons/Spinner";
 import { getAllCalls } from "@/src/firebase/calls";
+import { getUser } from "@/src/firebase/users";
 import places from "../places.json" assert { type: "json" };
 import skills from "../skills.json" assert { type: "json" };
 import { updateUser } from "@/src/firebase/users";
@@ -59,6 +59,7 @@ export default function Profile() {
       town: profileData?.town,
       phone: profileData?.phone || "",
     },
+    enableReinitialize:true,
     validationSchema: Yup.object({
       displayName: Yup.string().required("Lütfen kurum isminizi giriniz."),
       website: Yup.string(),
@@ -73,8 +74,9 @@ export default function Profile() {
     }),
     onSubmit: async function (values) {
       toggleProfileModal(false);
-      setProfileData({ ...profileData, ...values });
-      updateUser(profileData?.id, ...values, ...checkedSkills);
+      await updateUser(profileData?.uid, {...values, checkedSkills});
+      const updatedProfileData = await getUser(profileData?.uid);
+      setProfileData(updatedProfileData);
     },
   });
 
