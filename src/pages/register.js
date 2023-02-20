@@ -22,7 +22,7 @@ const auth = getAuth(app);
 
 export default function Register() {
   const { setAuthProfileData } = useContext(UserContext);
-  
+
   const [cities, setCities] = useState([]);
   const [towns, setTowns] = useState([]);
 
@@ -321,10 +321,10 @@ export default function Register() {
                   İlçe Seçiniz*
                 </option>
                 {towns &&
-                  towns.map((town) => {
+                  towns?.map((town) => {
                     return (
-                      <option key={town.name} value={town.name}>
-                        {town.name}
+                      <option key={town?.name} value={town?.name}>
+                        {town?.name}
                       </option>
                     );
                   })}

@@ -349,10 +349,10 @@ const Profile = () => {
                     İlçe Seçiniz*
                   </option>
                   {towns &&
-                    towns.map((town) => {
+                    towns?.map((town) => {
                       return (
-                        <option key={town.name} value={town.name}>
-                          {town.name}
+                        <option key={town?.name} value={town?.name}>
+                          {town?.name}
                         </option>
                       );
                     })}
