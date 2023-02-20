@@ -114,7 +114,6 @@ export const closeCall = async (callID) => {
     const closeCall = await updateDoc(doc(db, "calls", callID),{
       isActive: false,
     });
-    console.log('closed call')
     return true;
   } catch (error) {
     console.log(error);
