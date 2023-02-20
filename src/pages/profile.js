@@ -10,8 +10,8 @@ import {
   getUserAppliedCalls,
   updateUser,
   getUserAppliedCallsData,
+  getUser,
 } from "@/src/firebase/users";
-import { getCall } from "@/src/firebase/calls";
 import Edit from "@/components/icons/Edit";
 import ColorTag from "@/components/Tags/color-tag";
 import LanguageTag from "@/components/Tags/language-tag";
@@ -61,7 +61,6 @@ const Profile = () => {
   const [checkedSkills, setCheckedSkills] = useState([]);
   const [checkedLanguages, setCheckedLanguage] = useState([]);
   const [checkedCertificates, setCheckedCertificates] = useState([]);
-
   const formik = useFormik({
     initialValues: {
       name: profileData?.name,
@@ -70,6 +69,7 @@ const Profile = () => {
       town: profileData?.town,
       phone: profileData?.phone,
     },
+    enableReinitialize:true,
     validationSchema: Yup.object({
       name: Yup.string().required("Lütfen isminizi giriniz."),
       surname: Yup.string().required("Lütfen soyisminizi giriniz."),
@@ -84,14 +84,14 @@ const Profile = () => {
     }),
     onSubmit: async function (values) {
       toggleProfileModal(false);
-      setProfileData({ ...profileData, ...values });
-      updateUser(
-        profileData?.uid,
+      await updateUser(profileData?.uid, {
         ...values,
         checkedSkills,
         checkedCertificates,
-        checkedLanguages
-      );
+        checkedLanguages,
+      });
+      const updatedProfileData = await getUser(profileData?.uid);
+      setProfileData(updatedProfileData);
     },
   });
 
@@ -254,7 +254,7 @@ const Profile = () => {
               )}
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
-              {profileData?.languages?.map((language) => (
+              {profileData?.checkedLanguages?.map((language) => (
                 <LanguageTag text={language} />
               ))}
             </div>

@@ -21,8 +21,6 @@ import * as Yup from "yup";
 const auth = getAuth(app);
 
 export default function Register() {
-  const { setAuthProfileData } = useContext(UserContext);
-
   const [cities, setCities] = useState([]);
   const [towns, setTowns] = useState([]);
 
@@ -170,7 +168,6 @@ export default function Register() {
         email,
         password
       );
-      setAuthProfileData(user);
       return user;
     } catch (err) {
       toast.error(err.message);
