@@ -42,14 +42,14 @@ export default function CallDetail() {
   const [call, setCall] = useState([]);
   const [activeStatus, setActiveStatus] = useState(false);
   const [applicants, setApplicants] = useState();
-  const [applicationStatus, setApplicationStatus] = useState();
+  const [applicationStatus, setApplicationStatus] = useState("");
 
   useEffect(() => {
-    call?.applicants?.length === 0 && setApplicationStatus(null);
+    call?.applicants?.length === 0 && setApplicationStatus("");
     call?.applicants?.map((user) =>
       user?.uid === currentUser?.uid
         ? setApplicationStatus(user.approvedStatus)
-        : setApplicationStatus(null)
+        : setApplicationStatus("")
     );
   }, [call]);
 

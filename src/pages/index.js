@@ -63,7 +63,7 @@ export default function Home() {
                   role={profileData?.role === "volunteer" ? "volunteer" : "stk"}
                   status={
                     call?.applicants?.find(
-                      (applicant) => applicant.uid === profileData.uid
+                      (applicant) => applicant?.uid === profileData?.uid
                     )?.approvedStatus
                   }
                 />
