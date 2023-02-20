@@ -36,13 +36,15 @@ export default function Home() {
           <p className="text-xl text-center text-pink-600  font-bold">
             Aktif çağrıları incele
           </p>
-          <CircleDown className="w-10 h-10 m-auto mb-10"/>
+          <CircleDown className="w-10 h-10 m-auto mb-10" />
         </div>
+       
         <div className="grid lg:grid-cols-2 gap-14 m-auto p-24 justify-center">
-          {
-            calls?.filter((call) => {
-              return call.isActive
-            }).map((call, i) => {
+          {calls
+            ?.filter((call) => {
+              return call.isActive;
+            })
+            .map((call, i) => {
               return (
                 <Card
                   key={i}
@@ -60,13 +62,13 @@ export default function Home() {
                   id={call.id}
                   role={profileData?.role === "volunteer" ? "volunteer" : "stk"}
                   status={
-                    profileData?.appliedCalls?.find((c) => c.id === call.id)
-                      ?.status
+                    call?.applicants?.find(
+                      (applicant) => applicant.uid === profileData.uid
+                    )?.approvedStatus
                   }
                 />
               );
-            })
-            }
+            })}
         </div>
       </main>
     </div>
