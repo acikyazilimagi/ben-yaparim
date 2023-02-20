@@ -131,8 +131,6 @@ export default function Profile() {
     Router.push("/profile");
   }
 
-  console.log("profileData", profileData);
-
   if (profileData?.role === "admin") {
     return (
       <div className="m-10 lg:mx-36">

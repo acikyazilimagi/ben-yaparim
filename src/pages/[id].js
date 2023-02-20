@@ -12,7 +12,10 @@ import {
   getCall,
 } from "@/src/firebase/calls";
 
-import { updateUserAppliedCalls } from "../firebase/users";
+import {
+  updateUserAppliedCalls,
+  checkUserAppliedCallDates,
+} from "../firebase/users";
 import Location from "@/src/components/icons/Location";
 import Calendar from "@/src/components/icons/Calendar";
 import People from "@/src/components/icons/People";
@@ -39,7 +42,9 @@ export default function CallDetail() {
 
   useEffect(() => {
     call?.applicants?.map(
-      (user) => user.uid === currentUser.uid && setApplicationStatus(user.approvedStatus)
+      (user) =>
+        user.uid === currentUser.uid &&
+        setApplicationStatus(user.approvedStatus)
     );
   }, [call]);
 
@@ -57,12 +62,20 @@ export default function CallDetail() {
 
   const handleApplicationCall = async () => {
     if (!!currentUser) {
-      addApplicantToCallDoc(id, profileData?.uid).then((res) => {
-        res ? toggleModal(true) : toast.error(err.message);
-      });
-      await updateUserAppliedCalls(null, id, "pending");
-      const callData = await getCall(id);
-      setCall(callData);
+      if (!(await checkUserAppliedCallDates(profileData?.uid, call))) {
+        toast.error(
+          "Tarihleri çakışan başvurular yapamazsınız! Bu faaliyet tarihlerinde başka aktif bir başvurun var."
+        );
+      } else {
+        if (!(await addApplicantToCallDoc(id, profileData?.uid))) {
+          toast.error(err.message);
+        } else {
+          toggleModal(true);
+          await updateUserAppliedCalls(null, id, "pending");
+          const callData = await getCall(id);
+          setCall(callData);
+        }
+      }
     } else {
       Router.push("/register");
     }

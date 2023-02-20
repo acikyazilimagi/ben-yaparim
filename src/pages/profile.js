@@ -6,7 +6,11 @@ import { Button, Textarea, Input, Checkbox } from "@material-tailwind/react";
 import CallTabs from "@/components/CallTabs";
 import Modal from "@/components/Modal";
 import Card from "@/components/Card";
-import { getUserAppliedCalls, updateUser } from "@/src/firebase/users";
+import {
+  getUserAppliedCalls,
+  updateUser,
+  getUserAppliedCallsData,
+} from "@/src/firebase/users";
 import { getCall } from "@/src/firebase/calls";
 import Edit from "@/components/icons/Edit";
 import ColorTag from "@/components/Tags/color-tag";
@@ -57,15 +61,8 @@ const Profile = () => {
       //TODO: MOVE THIS INTO FIREBASE FOLDER
       (async () => {
         const data = await getUserAppliedCalls(currentUser?.uid);
-
         if (data?.length) {
-          await Promise.all(
-            data?.map(async (call) => {
-              const callData = await getCall(call.id);
-              const mergedData = { ...callData, ...call };
-              return mergedData;
-            })
-          ).then((data) => {
+          await getUserAppliedCallsData(data).then((data) => {
             setAppliedCalls(data);
           });
         }
