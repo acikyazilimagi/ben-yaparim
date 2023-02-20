@@ -146,3 +146,32 @@ export const getUserAppliedSpecificCall = async (uid, callID) => {
     console.log(error);
   }
 }
+
+export const revokeAppliedCall = async (uid, callID) => {
+  try {
+    const userDoc = await getDoc(doc(db, "users", uid));
+    const callDoc = await getDoc(doc(db, "calls", callID));
+
+    if (userDoc.exists() && callDoc.exists()) {
+      const appliedCalls = userDoc.data().appliedCalls || [];
+      const callApplicants = callDoc.data().applicants || [];
+
+      const updatedUserCalls = appliedCalls.filter(
+        (call) => call.id !== callID
+      );
+      const updatedCall = callApplicants.filter((call) => call.uid !== uid);
+
+      await updateDoc(doc(db, "users", uid), {
+        appliedCalls: [...updatedUserCalls],
+      });
+
+      await updateDoc(doc(db, "calls", callID), {
+        applicants: [...updatedCall],
+      });
+    } else {
+      console.log("No such document!");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
