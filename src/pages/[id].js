@@ -46,7 +46,7 @@ export default function CallDetail() {
   useEffect(() => {
     call?.applicants?.map(
       (user) =>
-        user.uid === currentUser.uid &&
+        user?.uid === currentUser?.uid &&
         setApplicationStatus(user.approvedStatus)
     );
   }, [call]);
@@ -300,7 +300,7 @@ export default function CallDetail() {
                     <p>Başvuran Gönüllü Sayısı</p>
                   </div>
                   <div className="flex space-x-2 font-bold">
-                    <p>
+                    <p className="mx-3">
                       {call?.applicants?.length > 0
                         ? call?.applicants?.length
                         : "İlk adımı sen at!"}
