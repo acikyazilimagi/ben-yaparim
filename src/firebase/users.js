@@ -1,35 +1,6 @@
-import {
-  collection,
-  query,
-  getDocs,
-  getDoc,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase-config";
 import { getCall } from "./calls";
-export const addUser = async (userData) => {
-  try {
-    await addDoc(collection(db, "users"), userData);
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const getAllUsers = async () => {
-  try {
-    const usersRef = collection(db, "users");
-    const q = query(usersRef);
-    const querySnapshot = await getDocs(q);
-    const data = [];
-    querySnapshot.forEach((doc) => {
-      data.push(doc.data());
-    });
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 export const getUser = async (uid) => {
   try {
@@ -103,11 +74,11 @@ export const getUserAppliedCallsData = async (appliedCalls) => {
 export const checkUserAppliedCallDates = async (applicantID, proposedCall) => {
   try {
     //We do not need to consider rejected applications
-    const userAppliedCallsRef = (await getUserAppliedCalls(applicantID))?.filter(
-      function (call) {
-        return call.status !== "rejected";
-      }
-    );
+    const userAppliedCallsRef = (
+      await getUserAppliedCalls(applicantID)
+    )?.filter(function (call) {
+      return call.status !== "rejected";
+    });
 
     //Overlapping time intervals are calculated by the following clause
     //(start1 < end2 && start1 > start2) || (start2 < end1 && start2 > start1);
@@ -130,7 +101,7 @@ export const checkUserAppliedCallDates = async (applicantID, proposedCall) => {
     console.log(error);
     return false;
   }
-}
+};
 export const getUserAppliedSpecificCall = async (uid, callID) => {
   try {
     const userDoc = await getDoc(doc(db, "users", uid));
