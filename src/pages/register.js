@@ -178,11 +178,12 @@ export default function Register() {
   };
 
   const addUser = async (user) => {
+    const { password, ...values } = formik.values;
     try {
       await setDoc(
         doc(db, "users", user.uid),
         {
-          ...formik.values,
+          ...values,
           uid: user.uid,
           email: user.email,
           appliedCalls: [],
