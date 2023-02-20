@@ -34,7 +34,7 @@ export default function Card({
 }) {
   return (
     <div className="h-auto min-h-full border-2 border-gray-300 p-5">
-      <div className="flex justify-between my-3">
+      <div className="flex justify-between my-3 space-x-3">
         <div className="flex items-center space-x-1">
           <Location className="w-6 h-6" />
           <p className="text-sm"> {location}</p>
@@ -74,13 +74,14 @@ export default function Card({
         <p className="my-2">{description}</p>
         <p className="text-sm font-bold my-5">Aranan Yetkinlikler</p>
 
-        <div className="my-5 flex flex-col space-y-1 lg:flex-row justify-between items-center">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 my-2">
           {checkedSkills?.map((skill) => (
             <ColorTag text={skill} color="#FFDCDC" />
           ))}
           {otherSkills && <ColorTag text={otherSkills} color="#FFDCDC" />}
         </div>
-        <div className="my-5 flex flex-col space-y-1 lg:flex-row justify-between items-center">
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 my-2">
           {checkedLanguages?.map((language) => (
             <LanguageTag text={language} />
           ))}
