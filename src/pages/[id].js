@@ -10,6 +10,7 @@ import {
   addApplicantToCallDoc,
   getApplicantsMetaData,
   getCall,
+  closeCall,
 } from "@/src/firebase/calls";
 
 import {
@@ -30,6 +31,7 @@ import { Button } from "@material-tailwind/react";
 export default function CallDetail() {
   const [showModal, toggleModal] = useState(false);
   const [applicantModalStatus, setApplicantModalStatus] = useState(false);
+  const [closeCallModalStatus, setCloseCallModalStatus] = useState(false);
   const { profileData } = useContext(UserContext);
 
   const { currentUser } = auth;
@@ -37,13 +39,14 @@ export default function CallDetail() {
   const router = useRouter();
   const { id } = router.query;
   const [call, setCall] = useState([]);
+  const [activeStatus, setActiveStatus] = useState(false);
   const [applicants, setApplicants] = useState();
   const [applicationStatus, setApplicationStatus] = useState();
 
   useEffect(() => {
     call?.applicants?.map(
       (user) =>
-        user.uid === currentUser.uid &&
+        user?.uid === currentUser?.uid &&
         setApplicationStatus(user.approvedStatus)
     );
   }, [call]);
@@ -59,6 +62,10 @@ export default function CallDetail() {
       })();
     }
   }, [id]);
+
+  useEffect(() => {
+    call && setActiveStatus(call?.isActive);
+  }, [call?.isActive]);
 
   const handleApplicationCall = async () => {
     if (!!currentUser) {
@@ -79,6 +86,10 @@ export default function CallDetail() {
     } else {
       Router.push("/register");
     }
+  };
+
+  const closeCallVerify = () => {
+    setCloseCallModalStatus(true);
   };
 
   const seeAllApplicants = () => {
@@ -143,6 +154,52 @@ export default function CallDetail() {
           </div>
         </Modal>
 
+        <Modal
+          show={closeCallModalStatus}
+          close={() => {
+            setCloseCallModalStatus(false);
+          }}
+        >
+          <div className="my-5 flex flex-col lg:flex-row justify-center">
+            <p className="text-xl mt-6 font-bold text-pink-600">
+              Çağrıyı kapatmak istediğinize emin misiniz?
+            </p>
+          </div>
+          <div className="my-5 flex flex-col lg:flex-row justify-center">
+            <p className="text-l mt-6 font-bold text-gray-600 center">
+              Kapattığın çağrıları Kurum Profili’nde ‘Kapalı Çağrılar’ altında
+              görebilirsin.
+            </p>
+          </div>
+          <div className="flex justify-center mt-3">
+            <Button
+              color="red"
+              className="mx-2"
+              size="lg"
+              onClick={() => {
+                if (activeStatus) {
+                  setActiveStatus(false);
+                  closeCall(id);
+                  setCloseCallModalStatus(false);
+                } else {
+                  toast.error("Kapatmaya çalıştığınız çağrı aktif değil.");
+                }
+              }}
+            >
+              Çağrıyı Kapat
+            </Button>
+            <Button
+              color="gray"
+              size="lg"
+              onClick={() => {
+                setCloseCallModalStatus(false);
+              }}
+            >
+              Geri Dön
+            </Button>
+          </div>
+        </Modal>
+
         <div className="flex justify-end mr-[7%]">
           <ShareOptions id={id} />
         </div>
@@ -193,6 +250,27 @@ export default function CallDetail() {
               <p className="text-xl mt-6 font-bold text-gray-600">
                 Önemli Bilgiler
               </p>
+              <div className="mt-2 grid grid-cols-2 gap-3">
+                {call?.checkedFacilities?.map((facility) => (
+                  <ul>
+                    <li className="mt-2">
+                      {facility.includes("Yol")
+                        ? "Yol karşılanacaktır."
+                        : "Yol karşılanmayacaktır."}
+                    </li>
+                    <li className="mt-2">
+                      {facility.includes("Konaklama")
+                        ? "Konaklanma karşılanacaktır."
+                        : "Konaklanma karşılanmayacaktır."}
+                    </li>
+                    <li className="mt-2">
+                      {facility.includes("Yemek")
+                        ? "Yemek karşılanacaktır."
+                        : "Yemek karşılanmayacaktır."}
+                    </li>
+                  </ul>
+                ))}
+              </div>
               <p className="max-w-xl my-3">{call?.notes}</p>
             </div>
           </div>
@@ -243,7 +321,7 @@ export default function CallDetail() {
                     <p>Başvuran Gönüllü Sayısı</p>
                   </div>
                   <div className="flex space-x-2 font-bold">
-                    <p>
+                    <p className="mx-3">
                       {call?.applicants?.length > 0
                         ? call?.applicants?.length
                         : "İlk adımı sen at!"}
@@ -257,13 +335,28 @@ export default function CallDetail() {
                 </div>
               </li>
             </ul>
+            {profileData?.role === "admin" && (
+              <div className="flex w-full border-b-4 py-4">
+                <Button
+                  color={activeStatus ? "pink" : "gray"}
+                  onClick={closeCallVerify}
+                  size="lg"
+                  ripple="true"
+                  disabled={!activeStatus}
+                >
+                  {activeStatus ? "Çağrıyı kapat" : "Çağrı kapandı"}
+                </Button>
+              </div>
+            )}
             {profileData?.role !== "admin" && !applicationStatus && (
-              <button
+              <Button
                 onClick={handleApplicationCall}
-                className="bg-pink-600 text-white p-3 text-sm rounded-full my-5 font-bold"
+                color={activeStatus? "pink" : "gray"}
+                className="mt-2"
+                disabled={!activeStatus}
               >
-                BEN YAPARIM!
-              </button>
+                {activeStatus ? "BEN YAPARIM!" : "Çağrı Kapatıldı"}
+              </Button>
             )}
 
             {applicationStatus && (

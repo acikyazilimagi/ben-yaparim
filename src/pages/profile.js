@@ -26,8 +26,11 @@ import * as Yup from "yup";
 
 import { auth } from "@/src/firebase-config";
 
-const renderAppliedCallContent = (calls, id) => {
-  return calls?.map((call, i) => {
+const renderAppliedCallContent = ({calls, isOpen} = {}) => {
+  const renderedCalls = calls?.filter((call) => {
+    return isOpen ? call.isActive : !call.isActive 
+  })
+  return renderedCalls?.map((call) => {
     return (
       <Card
         key={call.id}
@@ -105,12 +108,12 @@ const Profile = () => {
     {
       label: "Aktif Başvurularım",
       value: "aktif",
-      content: renderAppliedCallContent(appliedCalls, profileData?.id),
+      content: renderAppliedCallContent({calls: appliedCalls, isOpen: true}),
     },
     {
       label: "Kapanmış Başvurularım",
       value: "kapali",
-      content: "",
+      content: renderAppliedCallContent({calls: appliedCalls, isOpen: false}),
     },
   ];
 

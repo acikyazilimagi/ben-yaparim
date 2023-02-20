@@ -12,12 +12,14 @@ import { getAllCalls } from "@/src/firebase/calls";
 import places from "../places.json" assert { type: "json" };
 import skills from "../skills.json" assert { type: "json" };
 import { updateUser } from "@/src/firebase/users";
-
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-const renderOpenCallContent = (calls) => {
-  return calls?.map((call, i) => {
+const renderCallContent = ({calls, isOpen} = {}) => {
+  const renderedCalls = calls?.filter((call) => {
+    return isOpen ? call.isActive : !call.isActive 
+  })
+  return renderedCalls?.map((call, i) => {
     return (
       <Card
         key={i}
@@ -80,12 +82,12 @@ export default function Profile() {
     {
       label: "Açık Çağrılar",
       value: "acik",
-      content: renderOpenCallContent(calls),
+      content: renderCallContent({calls: calls, isOpen: true}),
     },
     {
       label: "Kapalı Çağrılar",
       value: "kapali",
-      content: "",
+      content: renderCallContent({calls: calls, isOpen: false}),
     },
     {
       label: "Taslaklar",
@@ -150,7 +152,6 @@ export default function Profile() {
   if (profileData?.role === "volunteer") {
     Router.push("/profile");
   }
-
   if (profileData?.role === "admin") {
     return (
       <div className="m-10 lg:mx-36">
