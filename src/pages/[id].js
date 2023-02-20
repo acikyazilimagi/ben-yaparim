@@ -16,6 +16,7 @@ import {
 import {
   updateUserAppliedCalls,
   checkUserAppliedCallDates,
+  revokeAppliedCall,
 } from "../firebase/users";
 import Location from "@/src/components/icons/Location";
 import Calendar from "@/src/components/icons/Calendar";
@@ -41,13 +42,14 @@ export default function CallDetail() {
   const [call, setCall] = useState([]);
   const [activeStatus, setActiveStatus] = useState(false);
   const [applicants, setApplicants] = useState();
-  const [applicationStatus, setApplicationStatus] = useState();
+  const [applicationStatus, setApplicationStatus] = useState("");
 
   useEffect(() => {
-    call?.applicants?.map(
-      (user) =>
-        user?.uid === currentUser?.uid &&
-        setApplicationStatus(user.approvedStatus)
+    call?.applicants?.length === 0 && setApplicationStatus("");
+    call?.applicants?.map((user) =>
+      user?.uid === currentUser?.uid
+        ? setApplicationStatus(user.approvedStatus)
+        : setApplicationStatus("")
     );
   }, [call]);
 
@@ -66,6 +68,12 @@ export default function CallDetail() {
   useEffect(() => {
     call && setActiveStatus(call?.isActive);
   }, [call?.isActive]);
+
+  const revokeApplication = () => {
+    revokeAppliedCall(currentUser?.uid, id).then(() =>
+      getCall(id).then((data) => setCall(data))
+    );
+  };
 
   const handleApplicationCall = async () => {
     if (!!currentUser) {
@@ -351,7 +359,7 @@ export default function CallDetail() {
             {profileData?.role !== "admin" && !applicationStatus && (
               <Button
                 onClick={handleApplicationCall}
-                color={activeStatus? "pink" : "gray"}
+                color={activeStatus ? "pink" : "gray"}
                 className="mt-2"
                 disabled={!activeStatus}
               >
@@ -373,6 +381,12 @@ export default function CallDetail() {
                   text={Status[applicationStatus]}
                 />
               </div>
+            )}
+
+            {profileData?.role === "volunteer" && applicationStatus && (
+              <Button color="red" onClick={revokeApplication}>
+                Başvurunu geri al
+              </Button>
             )}
           </div>
         </div>
