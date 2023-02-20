@@ -4,6 +4,7 @@ import Card from "@/components/Card";
 import { getAllCalls } from "@/src/firebase/calls";
 import { UserContext } from "../context/UserContext";
 import CircleDown from "@/src/components/icons/CircleDown";
+import Logo from "@/images/logo.png";
 
 export default function Home() {
   const [calls, setCalls] = useState([]);
@@ -24,10 +25,14 @@ export default function Home() {
       </Head>
       <main>
         <div>
-          <p className="text-6xl text-center text-pink-600 mt-4 font-bold font-marker">
-            BEN YAPARIM
-          </p>
-          <p className="text-center max-w-xl w-1/2 m-auto my-20">
+          <div className="flex items-center justify-center">
+            <img
+              src={Logo.src}
+              alt="Kurum Logo"
+              className="cursor-pointer w-full max-w-5xl"
+            />
+          </div>
+          <p className="text-center max-w-xl w-1/2 m-auto my-10">
             Ben Yaparım! <br /> Afet zamanlarında belli yetkinliklere sahip acil
             gönüllü ihtiyacı duyan kurumlarla, bu ihtiyacı karşılayabilecek
             gönüllü uzmanları bir araya getiren platformdur.
@@ -38,12 +43,13 @@ export default function Home() {
           </p>
           <CircleDown className="w-10 h-10 m-auto mb-10" />
         </div>
-       
+
         <div className="grid lg:grid-cols-2 gap-14 m-auto p-24 justify-center">
-          {
-            calls?.filter((call) => {
-              return call?.isActive
-            }).map((call, i) => {
+          {calls
+            ?.filter((call) => {
+              return call?.isActive;
+            })
+            .map((call, i) => {
               return (
                 <Card
                   key={i}
