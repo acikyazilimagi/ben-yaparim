@@ -49,7 +49,7 @@ export default function ShareOptions({id}) {
                         type="button"
                         onClick={() =>
                           window.open(
-                            `https://twitter.com/intent/tweet?text=${window.location.href}${id}`,
+                            `https://twitter.com/intent/tweet?text=${window.location.origin}/${id}`,
                             '_blank'
                           )
                         }
@@ -73,7 +73,7 @@ export default function ShareOptions({id}) {
                         type="button"
                         onClick={() =>
                           window.open(
-                            `https://www.facebook.com/sharer/sharer.php?u=${window.location.href}${id}`,
+                            `https://www.facebook.com/sharer/sharer.php?u=${window.location.origin}/${id}`,
                             '_blank'
                           )
                         }
@@ -95,7 +95,7 @@ export default function ShareOptions({id}) {
                     <li className="inline-block">
                       <button
                         onClick={() => {
-                          navigator.clipboard.writeText(`${window.location.href}${id}`);
+                          navigator.clipboard.writeText(`${window.location.origin}/${id}`);
                           changeText('Copied!');
                         }}
                         className="p-2 hover:bg-hover"
