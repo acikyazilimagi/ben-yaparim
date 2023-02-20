@@ -26,8 +26,8 @@ import certificates from "./certificates.json" assert { type: "json" };
 import { auth } from "@/src/firebase-config";
 
 const renderAppliedCallContent = (calls, id) => {
-  if (calls.length > 0) {
-    return calls?.map((call, i) => {
+  return calls.length > 0 ? (
+    calls?.map((call, i) => {
       return (
         <Card
           key={call.id}
@@ -42,20 +42,18 @@ const renderAppliedCallContent = (calls, id) => {
           status={call.status}
         />
       );
-    });
-  } else {
-    return (
-      <div className="grid w-full place-items-center text-center">
-        <p>Henüz aktif başvurun yok.</p>
-        <Link
-          href={"/"}
-          className="text-center text-pink-600 font-bold underline hover:text-pink-400"
-        >
-          Hemen aktif çağrıları incele!
-        </Link>
-      </div>
-    );
-  }
+    })
+  ) : (
+    <div className="grid w-full place-items-center text-center">
+      <p>Henüz aktif başvurun yok.</p>
+      <Link
+        href={"/"}
+        className="text-center text-pink-600 font-bold underline hover:text-pink-400"
+      >
+        Hemen aktif çağrıları incele!
+      </Link>
+    </div>
+  );
 };
 
 const Profile = () => {

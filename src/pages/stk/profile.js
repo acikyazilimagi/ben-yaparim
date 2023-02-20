@@ -14,25 +14,38 @@ import skills from "../skills.json" assert { type: "json" };
 import { updateUser } from "@/src/firebase/users";
 
 const renderOpenCallContent = (calls) => {
-  return calls?.map((call, i) => {
-    return (
-      <Card
-        key={i}
-        title={call?.title}
-        description={call?.description}
-        startDate={call?.date?.startDate}
-        endDate={call?.date?.endDate}
-        needOfVolunteer={call?.needOfVolunteer}
-        applicants={call?.applicants}
-        checkedCertificates={call?.checkedCertificates}
-        checkedLanguages={call?.checkedLanguages}
-        checkedSkills={call?.checkedSkills}
-        location=""
-        id={call.id}
-        role="stk"
-      />
-    );
-  });
+  return calls.length > 0 ? (
+    calls?.map((call, i) => {
+      return (
+        <Card
+          key={i}
+          title={call?.title}
+          description={call?.description}
+          startDate={call?.date?.startDate}
+          endDate={call?.date?.endDate}
+          needOfVolunteer={call?.needOfVolunteer}
+          applicants={call?.applicants}
+          checkedCertificates={call?.checkedCertificates}
+          checkedLanguages={call?.checkedLanguages}
+          checkedSkills={call?.checkedSkills}
+          location=""
+          id={call.id}
+          role="stk"
+        />
+      );
+    })
+  ) : (
+    <div className="grid w-full place-items-center text-center">
+      <p>Henüz aktif çağrın yok.</p>
+      <Button
+        color="pink"
+        className="my-10"
+        onClick={() => Router.push("/stk/open-call")}
+      >
+        + Yeni Çağrı Oluştur
+      </Button>
+    </div>
+  );
 };
 
 export default function Profile() {
