@@ -15,10 +15,10 @@ import { updateUser } from "@/src/firebase/users";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-const renderCallContent = ({calls, isOpen} = {}) => {
+const renderCallContent = ({ calls, isOpen } = {}) => {
   const renderedCalls = calls?.filter((call) => {
-    return isOpen ? call.isActive : !call.isActive 
-  })
+    return isOpen ? call.isActive : !call.isActive;
+  });
   return renderedCalls?.map((call, i) => {
     return (
       <Card
@@ -53,15 +53,15 @@ export default function Profile() {
 
   const formik = useFormik({
     initialValues: {
-      displayName: "",
-      website: "",
-      location: "",
-      town: "",
-      phone: "",
+      displayName: profileData?.name,
+      website: profileData?.website || "",
+      location: profileData?.location,
+      town: profileData?.town,
+      phone: profileData?.phone || "",
     },
     validationSchema: Yup.object({
       displayName: Yup.string().required("Lütfen kurum isminizi giriniz."),
-      website: Yup.string().required("Lütfen website linkinizi giriniz."),
+      website: Yup.string(),
       location: Yup.string().required("Lütfen ilinizi seçiniz."),
       town: Yup.string().required("Lütfen ilçenizi seçiniz."),
       phone: Yup.string()
@@ -73,8 +73,8 @@ export default function Profile() {
     }),
     onSubmit: async function (values) {
       toggleProfileModal(false);
-      updateUser(profileData?.id, updatedField);
-      setProfileData({ ...profileData, ...formik.values });
+      setProfileData({ ...profileData, ...values });
+      updateUser(profileData?.id, ...values, ...checkedSkills);
     },
   });
 
@@ -82,12 +82,12 @@ export default function Profile() {
     {
       label: "Açık Çağrılar",
       value: "acik",
-      content: renderCallContent({calls: calls, isOpen: true}),
+      content: renderCallContent({ calls: calls, isOpen: true }),
     },
     {
       label: "Kapalı Çağrılar",
       value: "kapali",
-      content: renderCallContent({calls: calls, isOpen: false}),
+      content: renderCallContent({ calls: calls, isOpen: false }),
     },
     {
       label: "Taslaklar",
@@ -166,11 +166,11 @@ export default function Profile() {
           </button>
         </div>
         <p className="text-xl font-bold text-gray-600 my-16">Genel Bilgiler</p>
-        <div className="flex flex-col lg:flex-row justify-between max-w-4xl py-5">
+        <div className="flex flex-col lg:flex-row justify-between max-w-6xl py-5">
           <div className="flex flex-col space-y-10">
             <div className="flex space-x-5">
               <p className="font-bold">Kurum İsmi </p>
-              <p>{profileData?.displayName}</p>
+              <p>{profileData?.name}</p>
             </div>
             <div className="flex space-x-5">
               <p className="font-bold">Website</p>
@@ -194,8 +194,8 @@ export default function Profile() {
             </div>
             <div className="flex space-x-5">
               <p className="font-bold">Faaliyet Alanları</p>
-              <div>
-                {profileData?.skills?.join(", ")}
+              <div className="max-w-sm">
+                {profileData?.checkedSkills?.join(", ")}
                 {", "}
                 {profileData?.otherSkills && profileData?.otherSkills}
               </div>

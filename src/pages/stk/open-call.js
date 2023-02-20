@@ -70,6 +70,7 @@ export default function OpenCall() {
       addCall({
         ...values,
         ...callInput,
+        isActive: true,
       });
       setCallInput({});
       Router.push("/stk/profile");

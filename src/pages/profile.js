@@ -26,10 +26,10 @@ import * as Yup from "yup";
 
 import { auth } from "@/src/firebase-config";
 
-const renderAppliedCallContent = ({calls, isOpen} = {}) => {
+const renderAppliedCallContent = ({ calls, isOpen } = {}) => {
   const renderedCalls = calls?.filter((call) => {
-    return isOpen ? call.isActive : !call.isActive 
-  })
+    return isOpen ? call.isActive : !call.isActive;
+  });
   return renderedCalls?.map((call) => {
     return (
       <Card
@@ -64,16 +64,15 @@ const Profile = () => {
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      surname: "",
-      location: "",
-      town: "",
-      phone: "",
+      name: profileData?.name,
+      surname: profileData?.surname,
+      location: profileData?.location,
+      town: profileData?.town,
+      phone: profileData?.phone,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Lütfen isminizi giriniz."),
       surname: Yup.string().required("Lütfen soyisminizi giriniz."),
-      website: Yup.string().required("Lütfen website linkinizi giriniz."),
       location: Yup.string().required("Lütfen ilinizi seçiniz."),
       town: Yup.string().required("Lütfen ilçenizi seçiniz."),
       phone: Yup.string()
@@ -85,8 +84,14 @@ const Profile = () => {
     }),
     onSubmit: async function (values) {
       toggleProfileModal(false);
-      updateUser(profileData?.uid, updatedField);
-      setProfileData({ ...profileData, ...formik.values });
+      setProfileData({ ...profileData, ...values });
+      updateUser(
+        profileData?.uid,
+        ...values,
+        checkedSkills,
+        checkedCertificates,
+        checkedLanguages
+      );
     },
   });
 
@@ -108,12 +113,12 @@ const Profile = () => {
     {
       label: "Aktif Başvurularım",
       value: "aktif",
-      content: renderAppliedCallContent({calls: appliedCalls, isOpen: true}),
+      content: renderAppliedCallContent({ calls: appliedCalls, isOpen: true }),
     },
     {
       label: "Kapanmış Başvurularım",
       value: "kapali",
-      content: renderAppliedCallContent({calls: appliedCalls, isOpen: false}),
+      content: renderAppliedCallContent({ calls: appliedCalls, isOpen: false }),
     },
   ];
 
@@ -203,7 +208,7 @@ const Profile = () => {
           </button>
         </div>
         <p className="text-xl font-bold text-gray-600 my-16">Genel Bilgiler</p>
-        <div className="flex flex-col lg:flex-row justify-between max-w-4xl py-5l">
+        <div className="flex flex-col lg:flex-row justify-between max-w-6xl py-5l">
           <div className="flex flex-col space-y-10 mb-10">
             <div className="flex space-x-5">
               <p className="font-bold">İsim - Soyisim </p>
@@ -240,8 +245,8 @@ const Profile = () => {
           </div>
           <div className="flex flex-col space-y-10">
             <p className="text-xl font-bold text-gray-600">Yetkinlikler</p>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
-              {profileData?.skills?.map((skill) => (
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10 max-w-sm">
+              {profileData?.checkedSkills?.map((skill) => (
                 <ColorTag text={skill} color="#FFDCDC" />
               ))}
               {profileData?.otherSkills && (

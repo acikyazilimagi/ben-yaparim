@@ -45,12 +45,12 @@ export default function Register() {
       gender: "",
       age: "",
       blood: "",
-      skills: [],
-      languages: [],
+      checkedSkills: checkedSkills,
+      languages: checkedLanguages,
       password: "",
       emergencycontactname: "",
       emergencycontactphone: "",
-      consents: [],
+      consents: checkedConsent,
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Lütfen adınızı giriniz."),
@@ -72,7 +72,7 @@ export default function Register() {
       password: Yup.string()
         .required("Lütfen şifre giriniz.")
         .min(6, "Şifreniz minimum 6 karakterden oluşmalıdır."),
-      skills: Yup.array()
+      checkedSkills: Yup.array()
         .min(1, "En az bir yetenek seçmeniz gerekmektedir.")
         .required(),
       languages: Yup.array().min(1, "En az bir dil seçilmelidir.").required(),
@@ -128,7 +128,7 @@ export default function Register() {
       updatedList.splice(checkedSkills.indexOf(event.target.value), 1);
     }
     setCheckedSkills(updatedList);
-    formik.values.skills = updatedList;
+    formik.values.checkedSkills = updatedList;
   };
 
   const handleLanguageCheck = (event) => {
@@ -440,8 +440,10 @@ export default function Register() {
           <p className="text-2xl text-gray-400 font-bold my-5">Yetkinlikler</p>
 
           <p className="text-gray-400 font-bold my-5">Aranılan Yetenekler*</p>
-          {formik.touched.skills && formik.errors.skills && (
-            <span className="text-red-400 text-sm">{formik.errors.skills}</span>
+          {formik.touched.checkedSkills && formik.errors.checkedSkills && (
+            <span className="text-red-400 text-sm">
+              {formik.errors.checkedSkills}
+            </span>
           )}
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
             {skills.map((skill, index) => {

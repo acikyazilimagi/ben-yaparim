@@ -44,7 +44,7 @@ export default function Collapse({
   callId,
   certificates,
   languages,
-  skills,
+  checkedSkills,
   applicationStatus,
 }) {
   const [open, setOpen] = useState(0);
@@ -91,7 +91,7 @@ export default function Collapse({
             </p>
           </div>
           <div className="grid grid-cols-3 gap-3 my-5">
-            {skills?.map((skill) => (
+            {checkedSkills?.map((skill) => (
               <ColorTag text={skill} color="#FFDCDC" />
             ))}
           </div>
