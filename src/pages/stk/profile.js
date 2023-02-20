@@ -13,8 +13,11 @@ import places from "../places.json" assert { type: "json" };
 import skills from "../skills.json" assert { type: "json" };
 import { updateUser } from "@/src/firebase/users";
 
-const renderOpenCallContent = (calls) => {
-  return calls?.map((call, i) => {
+const renderCallContent = ({calls, isOpen} = {}) => {
+  const renderedCalls = calls?.filter(function (call) {
+    return isOpen ? call.isActive : !call.isActive 
+  })
+  return renderedCalls?.map((call, i) => {
     return (
       <Card
         key={i}
@@ -50,12 +53,12 @@ export default function Profile() {
     {
       label: "Açık Çağrılar",
       value: "acik",
-      content: renderOpenCallContent(calls),
+      content: renderCallContent({calls: calls, isOpen: true}),
     },
     {
       label: "Kapalı Çağrılar",
       value: "kapali",
-      content: "",
+      content: renderCallContent({calls: calls, isOpen: false}),
     },
     {
       label: "Taslaklar",
