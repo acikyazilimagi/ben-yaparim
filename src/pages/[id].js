@@ -13,7 +13,10 @@ import {
   closeCall,
 } from "@/src/firebase/calls";
 
-import { updateUserAppliedCalls } from "../firebase/users";
+import {
+  updateUserAppliedCalls,
+  checkUserAppliedCallDates,
+} from "../firebase/users";
 import Location from "@/src/components/icons/Location";
 import Calendar from "@/src/components/icons/Calendar";
 import People from "@/src/components/icons/People";
@@ -66,12 +69,20 @@ export default function CallDetail() {
 
   const handleApplicationCall = async () => {
     if (!!currentUser) {
-      addApplicantToCallDoc(id, profileData?.uid).then((res) => {
-        res ? toggleModal(true) : toast.error(err.message);
-      });
-      await updateUserAppliedCalls(null, id, "pending");
-      const callData = await getCall(id);
-      setCall(callData);
+      if (!(await checkUserAppliedCallDates(profileData?.uid, call))) {
+        toast.error(
+          "Tarihleri çakışan başvurular yapamazsınız! Bu faaliyet tarihlerinde başka aktif bir başvurun var."
+        );
+      } else {
+        if (!(await addApplicantToCallDoc(id, profileData?.uid))) {
+          toast.error(err.message);
+        } else {
+          toggleModal(true);
+          await updateUserAppliedCalls(null, id, "pending");
+          const callData = await getCall(id);
+          setCall(callData);
+        }
+      }
     } else {
       Router.push("/register");
     }
@@ -117,7 +128,7 @@ export default function CallDetail() {
           close={() => {
             setApplicantModalStatus(false);
           }}
-          title={`Başvurular (${applicants?.length})`}
+          title={`Başvurular (${applicants?.length ? applicants?.length : 0})`}
         >
           <p className="text-lg my-5">{call?.title}</p>
 
@@ -137,7 +148,7 @@ export default function CallDetail() {
                 certificates={user.checkedCertificates}
                 languages={user.checkedLanguages}
                 skills={user.checkedSkills}
-                applicationStatus=""
+                applicationStatus={user.applicant.approvedStatus}
               />
             ))}
           </div>
@@ -156,34 +167,39 @@ export default function CallDetail() {
           </div>
           <div className="my-5 flex flex-col lg:flex-row justify-center">
             <p className="text-l mt-6 font-bold text-gray-600 center">
-              Kapattığın çağrıları Kurum Profili’nde ‘Kapalı Çağrılar’ altında görebilirsin.
+              Kapattığın çağrıları Kurum Profili’nde ‘Kapalı Çağrılar’ altında
+              görebilirsin.
             </p>
           </div>
-          <div className="my-5 items-center flex flex-col lg:flex-row">
-            <div className="flex w-full py-4">
-                  <Button
-                    color={"pink" }
-                    size="lg"
-                    ripple="true"
-                    onClick={() => (setActiveStatus(false), closeCall(id))}
-                  >
-                    {"Çağrıyı kapat"}
-                  </Button>
-            </div>
-            <div className="flex w-full py-4">
-                  <Button
-                    color={"gray" }
-                    size="lg"
-                    ripple="true"
-                  >
-                    {"Geri dön"}
-                  </Button>
-            </div>
+          <div className="flex justify-center mt-3">
+            <Button
+              color="red"
+              className="mx-2"
+              size="lg"
+              ripple="true"
+              onClick={() => {
+                if (activeStatus) {
+                  setActiveStatus(false);
+                  closeCall(id);
+                  setCloseCallModalStatus(false);
+                } else {
+                  toast.error("Kapatmaya çalıştığınız çağrı aktif değil.");
+                }
+              }}
+            >
+              Çağrıyı Kapat
+            </Button>
+            <Button
+              color="gray"
+              size="lg"
+              onClick={() => {
+                setCloseCallModalStatus(false);
+              }}
+            >
+              Geri Dön
+            </Button>
           </div>
-
-         
         </Modal>
-
 
         <div className="flex justify-end mr-[7%]">
           <ShareOptions id={id} />
