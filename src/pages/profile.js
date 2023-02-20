@@ -1,4 +1,6 @@
 import { useContext, useEffect, useState } from "react";
+import Link from "next/link";
+
 import { UserContext } from "@/src/context/UserContext";
 import { CallContext } from "src/context/CallContext";
 import Router from "next/router";
@@ -24,21 +26,36 @@ import certificates from "./certificates.json" assert { type: "json" };
 import { auth } from "@/src/firebase-config";
 
 const renderAppliedCallContent = (calls, id) => {
-  return calls?.map((call, i) => {
+  if (calls.length > 0) {
+    return calls?.map((call, i) => {
+      return (
+        <Card
+          key={call.id}
+          title={call.title}
+          description={call.description}
+          startDate={call?.date?.startDate}
+          endDate={call.date?.endDate}
+          needOfVolunteer={call.needOfVolunteer}
+          skills={call?.checkedSkills}
+          location=""
+          id={call.id}
+          status={call.status}
+        />
+      );
+    });
+  } else {
     return (
-      <Card
-        key={call.id}
-        title={call.title}
-        description={call.description}
-        startDate={call?.date?.startDate}
-        endDate={call.date?.endDate}
-        needOfVolunteer={call.needOfVolunteer}
-        location=""
-        id={call.id}
-        status={call.status}
-      />
+      <div className="grid w-full place-items-center text-center">
+        <p>Henüz aktif başvurun yok.</p>
+        <Link
+          href={"/"}
+          className="text-center text-pink-600 font-bold underline hover:text-pink-400"
+        >
+          Hemen aktif çağrıları incele!
+        </Link>
+      </div>
     );
-  });
+  }
 };
 
 const Profile = () => {

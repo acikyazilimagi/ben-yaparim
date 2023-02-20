@@ -25,7 +25,7 @@ export default function Card({
   applicants,
   checkedCertificates,
   checkedLanguages,
-  checkedSkills,
+  skills,
   otherSkills,
   location,
   id,
@@ -75,7 +75,7 @@ export default function Card({
         <p className="text-sm font-bold my-5">Aranan Yetkinlikler</p>
 
         <div className="my-5 flex flex-col space-y-1 lg:flex-row justify-between items-center">
-          {checkedSkills?.map((skill) => (
+          {skills?.map((skill) => (
             <ColorTag text={skill} color="#FFDCDC" />
           ))}
           {otherSkills && <ColorTag text={otherSkills} color="#FFDCDC" />}

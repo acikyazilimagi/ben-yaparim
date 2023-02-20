@@ -51,7 +51,7 @@ export default function Home() {
                 applicants={call?.applicants}
                 checkedCertificates={call?.checkedCertificates}
                 checkedLanguages={call?.checkedLanguages}
-                checkedSkills={call?.checkedSkills}
+                skills={call?.checkedSkills}
                 otherSkills={call?.otherSkills}
                 location={call?.location}
                 id={call.id}
