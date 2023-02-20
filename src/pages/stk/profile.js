@@ -194,7 +194,7 @@ export default function Profile() {
             <div className="flex space-x-5">
               <p className="font-bold">Faaliyet Alanları</p>
               <div>
-                {profileData?.checkedSkills?.join(", ")}
+                {profileData?.skills?.join(", ")}
                 {", "}
                 {profileData?.otherSkills && profileData?.otherSkills}
               </div>
