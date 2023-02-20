@@ -39,30 +39,34 @@ export default function Home() {
           <CircleDown className="w-10 h-10 m-auto mb-10"/>
         </div>
         <div className="grid lg:grid-cols-2 gap-14 m-auto p-24 justify-center">
-          {calls?.map((call, i) => {
-            return (
-              <Card
-                key={i}
-                title={call?.title}
-                description={call?.description}
-                startDate={call?.date?.startDate}
-                endDate={call?.date?.endDate}
-                needOfVolunteer={call?.needOfVolunteer}
-                applicants={call?.applicants}
-                checkedCertificates={call?.checkedCertificates}
-                checkedLanguages={call?.checkedLanguages}
-                checkedSkills={call?.checkedSkills}
-                otherSkills={call?.otherSkills}
-                location={call?.location}
-                id={call.id}
-                role={profileData?.role === "volunteer" ? "volunteer" : "stk"}
-                status={
-                  profileData?.appliedCalls?.find((c) => c.id === call.id)
-                    ?.status
-                }
-              />
-            );
-          })}
+          {
+            calls?.filter((call) => {
+              return call.isActive
+            }).map((call, i) => {
+              return (
+                <Card
+                  key={i}
+                  title={call?.title}
+                  description={call?.description}
+                  startDate={call?.date?.startDate}
+                  endDate={call?.date?.endDate}
+                  needOfVolunteer={call?.needOfVolunteer}
+                  applicants={call?.applicants}
+                  checkedCertificates={call?.checkedCertificates}
+                  checkedLanguages={call?.checkedLanguages}
+                  checkedSkills={call?.checkedSkills}
+                  otherSkills={call?.otherSkills}
+                  location={call?.location}
+                  id={call.id}
+                  role={profileData?.role === "volunteer" ? "volunteer" : "stk"}
+                  status={
+                    profileData?.appliedCalls?.find((c) => c.id === call.id)
+                      ?.status
+                  }
+                />
+              );
+            })
+            }
         </div>
       </main>
     </div>

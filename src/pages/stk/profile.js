@@ -14,7 +14,7 @@ import skills from "../skills.json" assert { type: "json" };
 import { updateUser } from "@/src/firebase/users";
 
 const renderCallContent = ({calls, isOpen} = {}) => {
-  const renderedCalls = calls?.filter(function (call) {
+  const renderedCalls = calls?.filter((call) => {
     return isOpen ? call.isActive : !call.isActive 
   })
   return renderedCalls?.map((call, i) => {

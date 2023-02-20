@@ -176,7 +176,6 @@ export default function CallDetail() {
               color="red"
               className="mx-2"
               size="lg"
-              ripple="true"
               onClick={() => {
                 if (activeStatus) {
                   setActiveStatus(false);
@@ -329,12 +328,14 @@ export default function CallDetail() {
               </div>
             )}
             {profileData?.role !== "admin" && !applicationStatus && (
-              <button
+              <Button
                 onClick={handleApplicationCall}
-                className="bg-pink-600 text-white p-3 text-sm rounded-full my-5 font-bold"
+                color={activeStatus? "pink" : "gray"}
+                className="mt-2"
+                disabled={!activeStatus}
               >
-                BEN YAPARIM!
-              </button>
+                {activeStatus ? "BEN YAPARIM!" : "Çağrı Kapatıldı"}
+              </Button>
             )}
 
             {applicationStatus && (
