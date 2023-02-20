@@ -7,6 +7,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { auth, db } from "../firebase-config";
+import { getCall } from "./calls";
 export const addUser = async (userData) => {
   try {
     await addDoc(collection(db, "users"), userData);
@@ -68,10 +69,10 @@ export const updateUserAppliedCalls = async (id, callID, status) => {
     await updateDoc(doc(db, "users", userId), {
       appliedCalls: [...updatedCalls, { id: callID, status: status }],
     });
-
-    return;
+    return true;
   } catch (error) {
     console.log(error);
+    return false;
   }
 };
 
@@ -88,3 +89,60 @@ export const getUserAppliedCalls = async (uid) => {
     console.log(error);
   }
 };
+
+export const getUserAppliedCallsData = async (appliedCalls) => {
+  return await Promise.all(
+    appliedCalls?.map(async (call) => {
+      const callData = await getCall(call.id);
+      const mergedCalls = { ...callData, ...call };
+      return mergedCalls;
+    })
+  );
+};
+
+export const checkUserAppliedCallDates = async (applicantID, proposedCall) => {
+  try {
+    //We do not need to consider rejected applications
+    const userAppliedCallsRef = (await getUserAppliedCalls(applicantID))?.filter(
+      function (call) {
+        return call.status !== "rejected";
+      }
+    );
+
+    //Overlapping time intervals are calculated by the following clause
+    //(start1 < end2 && start1 > start2) || (start2 < end1 && start2 > start1);
+    const userBlockingAppliedCalls = (
+      await getUserAppliedCallsData(userAppliedCallsRef)
+    )?.filter(function (call) {
+      const callStartDate = call?.date?.startDate;
+      const callEndDate = call?.date?.endDate;
+      const proposedCallStartDate = proposedCall?.date?.startDate;
+      const proposedCallEndDate = proposedCall?.date?.endDate;
+      return (
+        (callStartDate <= proposedCallEndDate &&
+          callStartDate >= proposedCallStartDate) ||
+        (proposedCallStartDate <= callEndDate &&
+          proposedCallStartDate >= callStartDate)
+      );
+    });
+    return userBlockingAppliedCalls.length > 0 ? false : true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+export const getUserAppliedSpecificCall = async (uid, callID) => {
+  try {
+    const userDoc = await getDoc(doc(db, "users", uid));
+    if (userDoc.exists()) {
+      const appliedCalls = userDoc.data().appliedCalls || [];
+
+      const appliedCall = appliedCalls.find((call) => call.id === callID);
+      return appliedCall;
+    } else {
+      console.log("No such document!");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
