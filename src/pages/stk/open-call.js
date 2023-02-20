@@ -31,6 +31,14 @@ export default function OpenCall() {
 
   const { callInput, setCallInput } = useContext(CallContext);
 
+  const [date, setDate] = useState([
+    {
+      startDate: new Date(),
+      endDate: null,
+      key: "selection",
+    },
+  ]);
+
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -40,6 +48,7 @@ export default function OpenCall() {
       needOfVolunteer: 0,
       precondition: "",
       otherSkills: "",
+      startDate: date[0].startDate,
       notes: "",
     },
     validationSchema: Yup.object({
@@ -52,6 +61,9 @@ export default function OpenCall() {
         .required("Lütfen ihtiyaç duyduğunuz gönüllü sayısını belirtiniz."),
       precondition: Yup.string(),
       otherSkills: Yup.string(),
+      startDate: Yup.date()
+        .min(new Date(), "Lütfen gelecek bir tarih için planlama yapın.")
+        .required("Lütfen geçerli bir başlangıç tarihi seçin"),
       notes: Yup.string(),
     }),
     onSubmit: async function (values) {
@@ -67,19 +79,12 @@ export default function OpenCall() {
     setCities(places);
   }, []);
 
-  const [date, setDate] = useState([
-    {
-      startDate: new Date(),
-      endDate: null,
-      key: "selection",
-    },
-  ]);
-
   useEffect(() => {
     setCallInput({
       ...callInput,
       date: date[0],
     });
+    formik.values.startDate = date[0].startDate;
   }, [date]);
 
   useEffect(() => {
@@ -194,7 +199,7 @@ export default function OpenCall() {
                   <Location />
                   <p className="">Faliyet Lokasyonu*</p>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between gap-x-2">
                   <div className="w-full">
                     <select
                       name="location"
@@ -252,13 +257,20 @@ export default function OpenCall() {
                   <Calendar />
                   <p className="">Faaliyet Tarihleri*</p>
                 </div>
-                <DateRange
-                  className="min-w-full"
-                  editableDateInputs={true}
-                  onChange={(item) => setDate([item.selection])}
-                  moveRangeOnFirstSelection={false}
-                  ranges={date}
-                />
+                <div className="w-full">
+                  <DateRange
+                    className="min-w-full"
+                    editableDateInputs={true}
+                    onChange={(item) => setDate([item.selection])}
+                    moveRangeOnFirstSelection={false}
+                    ranges={date}
+                  />
+                  {formik.touched.date && formik.errors.date && (
+                    <span className="text-red-400 text-sm">
+                      {formik.errors.date}
+                    </span>
+                  )}
+                </div>
                 <div className="flex flex-start items-center space-x-3">
                   <People />
                   <p className="">Aranan Gönüllü Sayısı</p>
