@@ -23,7 +23,7 @@ import certificates from "./certificates.json" assert { type: "json" };
 
 import { auth } from "@/src/firebase-config";
 
-const renderAppliedCallContent = ({calls, isOpen}) => {
+const renderAppliedCallContent = ({calls, isOpen} = {}) => {
   const renderedCalls = calls?.filter(function (call) {
     return isOpen ? call.isActive : !call.isActive 
   })

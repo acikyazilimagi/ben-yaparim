@@ -26,7 +26,7 @@ import Badge from "@/components/Badge/Badge";
 import { Status } from "@/src/utils/constants";
 import { formatDate } from "@/src/helpers";
 import { auth } from "../firebase-config";
-import { Button, Switch } from "@material-tailwind/react";
+import { Button } from "@material-tailwind/react";
 
 export default function CallDetail() {
   const [showModal, toggleModal] = useState(false);
