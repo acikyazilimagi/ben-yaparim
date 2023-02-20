@@ -6,6 +6,7 @@ import {
   setDoc,
   addDoc,
   doc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "@/src/firebase-config";
 import { getUser, updateUserAppliedCalls } from "./users";
@@ -107,3 +108,16 @@ export const updateApplicantStatus = async (callID, applicantID, status) => {
     return false;
   }
 };
+
+export const closeCall = async (callID) => {
+  try {
+    const closeCall = await updateDoc(doc(db, "calls", callID),{
+      isActive: false,
+    });
+    console.log('closed call')
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
