@@ -7,16 +7,18 @@ import CallTabs from "@/components/CallTabs";
 import Modal from "@/components/Modal";
 import Card from "@/components/Card";
 import Edit from "@/components/icons/Edit";
-import Spinner from "@/components/icons/Spinner";
 import { getAllCalls } from "@/src/firebase/calls";
+import { getUser } from "@/src/firebase/users";
 import places from "../places.json" assert { type: "json" };
 import skills from "../skills.json" assert { type: "json" };
 import { updateUser } from "@/src/firebase/users";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
-const renderCallContent = ({calls, isOpen} = {}) => {
+const renderCallContent = ({ calls, isOpen } = {}) => {
   const renderedCalls = calls?.filter((call) => {
-    return isOpen ? call.isActive : !call.isActive 
-  })
+    return isOpen ? call.isActive : !call.isActive;
+  });
   return renderedCalls?.map((call, i) => {
     return (
       <Card
@@ -49,16 +51,45 @@ export default function Profile() {
   const [towns, setTowns] = useState([]);
   const [checkedSkills, setCheckedSkills] = useState([]);
 
+  const formik = useFormik({
+    initialValues: {
+      displayName: profileData?.name,
+      website: profileData?.website || "",
+      location: profileData?.location,
+      town: profileData?.town,
+      phone: profileData?.phone || "",
+    },
+    enableReinitialize:true,
+    validationSchema: Yup.object({
+      displayName: Yup.string().required("Lütfen kurum isminizi giriniz."),
+      website: Yup.string(),
+      location: Yup.string().required("Lütfen ilinizi seçiniz."),
+      town: Yup.string().required("Lütfen ilçenizi seçiniz."),
+      phone: Yup.string()
+        .required("Lütfen cep telefon numaranızı giriniz.")
+        .min(
+          10,
+          "Cep telefon numaranızı doğru formatta girdiğinizden emin olun."
+        ),
+    }),
+    onSubmit: async function (values) {
+      toggleProfileModal(false);
+      await updateUser(profileData?.uid, {...values, checkedSkills});
+      const updatedProfileData = await getUser(profileData?.uid);
+      setProfileData(updatedProfileData);
+    },
+  });
+
   const stkTabsData = [
     {
       label: "Açık Çağrılar",
       value: "acik",
-      content: renderCallContent({calls: calls, isOpen: true}),
+      content: renderCallContent({ calls: calls, isOpen: true }),
     },
     {
       label: "Kapalı Çağrılar",
       value: "kapali",
-      content: renderCallContent({calls: calls, isOpen: false}),
+      content: renderCallContent({ calls: calls, isOpen: false }),
     },
     {
       label: "Taslaklar",
@@ -74,22 +105,12 @@ export default function Profile() {
     })();
   }, []);
 
-  const handleProfileInputChange = (e) => {
-    setUpdatedFields({ ...updatedField, [e.target.name]: e.target.value });
-  };
-
-  const update = () => {
-    toggleProfileModal(false);
-    updateUser(profileData?.id, updatedField);
-    setProfileData({ ...profileData, ...updatedField });
-  };
-
   useEffect(() => {
     cities &&
       cities.find(
-        (city) => city.name === updatedField?.location && setTowns(city.towns)
+        (city) => city.name === formik.values?.location && setTowns(city.towns)
       );
-  }, [updatedField?.location]);
+  }, [formik.values?.location]);
 
   const [date, setDate] = useState([
     {
@@ -105,7 +126,7 @@ export default function Profile() {
 
   useEffect(() => {
     setUpdatedFields({
-      ...updatedField,
+      ...formik.values,
       checkedSkills: checkedSkills,
     });
   }, [checkedSkills]);
@@ -147,11 +168,11 @@ export default function Profile() {
           </button>
         </div>
         <p className="text-xl font-bold text-gray-600 my-16">Genel Bilgiler</p>
-        <div className="flex flex-col lg:flex-row justify-between max-w-4xl py-5">
+        <div className="flex flex-col lg:flex-row justify-between max-w-6xl py-5">
           <div className="flex flex-col space-y-10">
             <div className="flex space-x-5">
               <p className="font-bold">Kurum İsmi </p>
-              <p>{profileData?.displayName}</p>
+              <p>{profileData?.name}</p>
             </div>
             <div className="flex space-x-5">
               <p className="font-bold">Website</p>
@@ -175,7 +196,7 @@ export default function Profile() {
             </div>
             <div className="flex space-x-5">
               <p className="font-bold">Faaliyet Alanları</p>
-              <div>
+              <div className="max-w-sm">
                 {profileData?.checkedSkills?.join(", ")}
                 {", "}
                 {profileData?.otherSkills && profileData?.otherSkills}
@@ -200,64 +221,111 @@ export default function Profile() {
           }}
           title="Profili Düzenle"
         >
-          <div className="max-h-[80%] w-fit items-center text-center z-30 mt-2 space-y-10 m-auto overflow-y-auto overflow-x-hidden p-10 no-scrollbar">
-            <Input
-              variant="outlined"
-              label="Kurum İsmi"
-              name="displayName"
-              value={updatedField?.displayName}
-              onChange={(e) => handleProfileInputChange(e)}
-            />
-            <Input
-              variant="outlined"
-              label="Website"
-              name="website"
-              value={updatedField?.website}
-              onChange={(e) => handleProfileInputChange(e)}
-            />
+          <form
+            onSubmit={formik.handleSubmit}
+            className="max-h-[80%] w-fit items-center text-center z-30 mt-2 space-y-10 m-auto overflow-y-auto overflow-x-hidden p-10 no-scrollbar"
+          >
+            <div className="w-full">
+              <Input
+                variant="outlined"
+                label="Kurum İsmi*"
+                name="displayName"
+                value={formik.values.displayName}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.displayName && formik.errors.displayName && (
+                <span className="text-red-400 text-sm">
+                  {formik.errors.displaydisplayName}
+                </span>
+              )}
+            </div>
+
+            <div className="w-full">
+              <Input
+                variant="outlined"
+                label="Website"
+                name="website"
+                value={formik.values.website}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.website && formik.errors.website && (
+                <span className="text-red-400 text-sm">
+                  {formik.errors.website}
+                </span>
+              )}
+            </div>
             <div className="flex justify-between space-x-2">
-              <select
-                name="location"
-                onChange={handleProfileInputChange}
-                className="border-gray-400 rounded-md w-full mr-2"
-              >
-                <option value="" selected disabled hidden>
-                  İl Seçiniz
-                </option>
-                {places.map((city) => {
-                  return (
-                    <option key={city.name} value={city.name}>
-                      {city.name}
-                    </option>
-                  );
-                })}
-              </select>
-              <select
-                name="town"
-                onChange={handleProfileInputChange}
-                className="border-gray-400 rounded-md w-full"
-              >
-                <option value="" selected disabled hidden>
-                  İlçe Seçiniz
-                </option>
-                {towns &&
-                  towns.map((town) => {
+              <div className="w-full">
+                <select
+                  name="location"
+                  value={formik.values.location}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="border-gray-400 rounded-md w-full mr-2"
+                >
+                  <option value="" selected disabled hidden>
+                    İl Seçiniz*
+                  </option>
+                  {places.map((city) => {
                     return (
-                      <option key={town.name} value={town.name}>
-                        {town.name}
+                      <option key={city.name} value={city.name}>
+                        {city.name}
                       </option>
                     );
                   })}
-              </select>
+                </select>
+                {formik.touched.location && formik.errors.location && (
+                  <span className="text-red-400 text-sm">
+                    {formik.errors.location}
+                  </span>
+                )}
+              </div>
+              <div className="w-full">
+                <select
+                  name="town"
+                  value={formik.values.town}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="border-gray-400 rounded-md w-full mr-2"
+                >
+                  <option value="" selected disabled hidden>
+                    İlçe Seçiniz*
+                  </option>
+                  {towns &&
+                    towns.map((town) => {
+                      return (
+                        <option key={town.name} value={town.name}>
+                          {town.name}
+                        </option>
+                      );
+                    })}
+                </select>
+                {formik.touched.town && formik.errors.town && (
+                  <span className="text-red-400 text-sm">
+                    {formik.errors.town}
+                  </span>
+                )}
+              </div>
             </div>
-            <Input
-              variant="outlined"
-              label="Telefon"
-              name="phone"
-              value={updatedField?.phone}
-              onChange={(e) => handleProfileInputChange(e)}
-            />
+            <div className="w-full">
+              <Input
+                variant="outlined"
+                label="Telefon numaranız*"
+                name="phone"
+                value={formik.values.phone}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.phone && formik.errors.phone && (
+                <span className="text-red-400 text-sm">
+                  {formik.errors.phone}
+                </span>
+              )}
+            </div>
             <p className="text-gray-400 font-bold my-5">Faaliyet Alanları</p>
+
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
               {skills.map((skill, index) => {
                 return (
@@ -289,11 +357,11 @@ export default function Profile() {
             </div>
 
             <div className="flex justify-center">
-              <Button color="pink" className="mt-5" onClick={update}>
+              <Button color="pink" className="mt-5" type="submit">
                 Profili Güncelle
               </Button>
             </div>
-          </div>
+          </form>
         </Modal>
       </div>
     );

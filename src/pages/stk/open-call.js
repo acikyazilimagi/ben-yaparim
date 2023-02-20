@@ -11,7 +11,14 @@ import Calendar from "@/components/icons/Calendar";
 import People from "@/components/icons/People";
 import { Checkbox } from "@material-tailwind/react";
 
-import places from "../places" assert { type: "json" };
+import places from "../places.json" assert { type: "json" };
+import skills from "../skills.json" assert { type: "json" };
+import spokenLanguages from "../spokenLanguages.json" assert { type: "json" };
+import consents from "../consents.json" assert { type: "json" };
+import certificates from "../certificates.json" assert { type: "json" };
+
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 export default function OpenCall() {
   const [checkedSkills, setCheckedSkills] = useState([]);
@@ -22,9 +29,7 @@ export default function OpenCall() {
   const [cities, setCities] = useState([]);
   const [towns, setTowns] = useState([]);
 
-  useEffect(() => {
-    setCities(places);
-  }, []);
+  const { callInput, setCallInput } = useContext(CallContext);
 
   const [date, setDate] = useState([
     {
@@ -34,25 +39,61 @@ export default function OpenCall() {
     },
   ]);
 
-  const { callInput, setCallInput } = useContext(CallContext);
-
-  const handleInputChange = (e) => {
-    setCallInput({ ...callInput, [e.target.name]: e.target.value });
-  };
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      description: "",
+      location: "",
+      town: "",
+      needOfVolunteer: 0,
+      precondition: "",
+      otherSkills: "",
+      startDate: date[0].startDate,
+      notes: "",
+    },
+    validationSchema: Yup.object({
+      title: Yup.string().required("Lütfen görev başlığını giriniz."),
+      description: Yup.string().required("Lütfen görev açıklaması giriniz."),
+      location: Yup.string().required("Lütfen görev yapılacak ili seçiniz."),
+      town: Yup.string().required("Lütfen görev yapılacak ilçeyi seçiniz."),
+      needOfVolunteer: Yup.number("Lütfen sayı formatında giriş yapınız")
+        .min(1, "Gönüllü sayısı sıfır veya negatif olamaz.")
+        .required("Lütfen ihtiyaç duyduğunuz gönüllü sayısını belirtiniz."),
+      precondition: Yup.string(),
+      otherSkills: Yup.string(),
+      startDate: Yup.date()
+        .min(new Date(), "Lütfen gelecek bir tarih için planlama yapın.")
+        .required("Lütfen geçerli bir başlangıç tarihi seçin"),
+      notes: Yup.string(),
+    }),
+    onSubmit: async function (values) {
+      addCall({
+        ...values,
+        ...callInput,
+        isActive: true,
+      });
+      setCallInput({});
+      Router.push("/stk/profile");
+    },
+  });
+  useEffect(() => {
+    setCities(places);
+  }, []);
 
   useEffect(() => {
     setCallInput({
       ...callInput,
       date: date[0],
     });
+    formik.values.startDate = date[0].startDate;
   }, [date]);
 
   useEffect(() => {
     cities &&
       cities.find(
-        (city) => city.name === callInput?.location && setTowns(city.towns)
+        (city) => city.name === formik.values?.location && setTowns(city.towns)
       );
-  }, [callInput?.location]);
+  }, [formik.values?.location]);
 
   useEffect(() => {
     setCallInput({
@@ -104,43 +145,11 @@ export default function OpenCall() {
     setCheckedFacilities(updatedList);
   };
 
-  const createCall = (event) => {
-    event.preventDefault();
-    addCall({ ...callInput, isActive: true });
-    setCallInput({});
-    Router.push("/stk/profile");
-  };
-
-  const skills = [
-    "ilk yardım",
-    "nakliye",
-    "eğitim",
-    "çadır kurulumu",
-    "yemek hazırlık",
-    "saha görevlisi",
-    "psikolojik destek",
-    "yazılım",
-    "tamir",
-    "tercümanlık",
-    "temizlik",
-  ];
-
-  const language_spoken = [
-    "Türkçe",
-    "İngilizce",
-    "Arapça",
-    "İspanyola",
-    "Fransızca",
-    "Japonca",
-    "Portekizce",
-    "Rusça",
-  ];
-  const certificates = ["Ehliyet", "İlk yardım eğitimi", "AKUT/AFAD eğitimi"];
   const facilities = ["Yol Masrafı", "Konaklama", "Yemek"];
 
   return (
     <div className="m-10 lg:mx-36 pb-10">
-      <form onSubmit={createCall}>
+      <form onSubmit={formik.handleSubmit}>
         <div className="">
           <h1 className="text-4xl mb-10 font-bold">Yeni Çağrı Oluştur</h1>
 
@@ -148,94 +157,143 @@ export default function OpenCall() {
             <p className="text-gray-400 font-bold my-3">Genel Bilgiler</p>
             <div className="flex flex-col lg:flex-row justify-between">
               <div className="max-w-xl lg:w-1/2 space-y-5">
-                <Input
-                  required
-                  variant="outlined"
-                  label="Başlık"
-                  name="title"
-                  value={callInput.title}
-                  onChange={(e) => handleInputChange(e)}
-                />
-                <Textarea
-                  variant="outlined"
-                  label="Açıklama"
-                  name="description"
-                  value={callInput.description}
-                  onChange={(e) => handleInputChange(e)}
-                />
+                <div className="w-full">
+                  <Input
+                    variant="outlined"
+                    label="Başlık*"
+                    name="title"
+                    value={formik.values.title}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {formik.touched.title && formik.errors.title && (
+                    <span className="text-red-400 text-sm">
+                      {formik.errors.title}
+                    </span>
+                  )}
+                </div>
+                <div className="w-full">
+                  <Textarea
+                    variant="outlined"
+                    label="Açıklama*"
+                    name="description"
+                    value={formik.values.description}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {formik.touched.description && formik.errors.description && (
+                    <span className="text-red-400 text-sm">
+                      {formik.errors.description}
+                    </span>
+                  )}
+                </div>
                 <Textarea
                   variant="outlined"
                   label="Ön koşul ve beklenen çalışma frekansı"
                   name="precondition"
-                  value={callInput.precondition}
-                  onChange={(e) => handleInputChange(e)}
+                  value={formik.values.precondition}
+                  onChange={formik.handleChange}
                 />
               </div>
               <div className="max-w-xl lg:w-1/2 space-y-5">
                 <div className="flex flex-start items-center space-x-3">
                   <Location />
-                  <p className="">Faliyet Lokasyonu</p>
+                  <p className="">Faliyet Lokasyonu*</p>
                 </div>
-                <div className="flex justify-between">
-                  <select
-                    name="location"
-                    onChange={handleInputChange}
-                    className="border-gray-400 rounded-md w-full mr-2"
-                  >
-                    <option value="" selected disabled hidden>
-                      İl Seçiniz
-                    </option>
-                    {places.map((city) => {
-                      return (
-                        <option key={city.name} value={city.name}>
-                          {city.name}
-                        </option>
-                      );
-                    })}
-                  </select>
-
-                  <select
-                    name="town"
-                    onChange={handleInputChange}
-                    className="border-gray-400 rounded-md w-full"
-                  >
-                    <option value="" selected disabled hidden>
-                      İlçe Seçiniz
-                    </option>
-                    {towns &&
-                      towns.map((town) => {
+                <div className="flex justify-between gap-x-2">
+                  <div className="w-full">
+                    <select
+                      name="location"
+                      value={formik.values.location}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="border-gray-400 rounded-md w-full mr-2"
+                    >
+                      <option value="" selected disabled hidden>
+                        İl Seçiniz*
+                      </option>
+                      {places.map((city) => {
                         return (
-                          <option key={town.name} value={town.name}>
-                            {town.name}
+                          <option key={city.name} value={city.name}>
+                            {city.name}
                           </option>
                         );
                       })}
-                  </select>
+                    </select>
+                    {formik.touched.location && formik.errors.location && (
+                      <span className="text-red-400 text-sm">
+                        {formik.errors.location}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="w-full">
+                    <select
+                      name="town"
+                      value={formik.values.town}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="border-gray-400 rounded-md w-full mr-2"
+                    >
+                      <option value="" selected disabled hidden>
+                        İlçe Seçiniz*
+                      </option>
+                      {towns &&
+                        towns.map((town) => {
+                          return (
+                            <option key={town.name} value={town.name}>
+                              {town.name}
+                            </option>
+                          );
+                        })}
+                    </select>
+                    {formik.touched.town && formik.errors.town && (
+                      <span className="text-red-400 text-sm">
+                        {formik.errors.town}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="flex flex-start items-center space-x-3">
                   <Calendar />
-                  <p className="">Faaliyet Tarihleri</p>
+                  <p className="">Faaliyet Tarihleri*</p>
                 </div>
-                <DateRange
-                  className="min-w-full"
-                  editableDateInputs={true}
-                  onChange={(item) => setDate([item.selection])}
-                  moveRangeOnFirstSelection={false}
-                  ranges={date}
-                />
+                <div className="w-full">
+                  <DateRange
+                    className="min-w-full"
+                    editableDateInputs={true}
+                    onChange={(item) => setDate([item.selection])}
+                    moveRangeOnFirstSelection={false}
+                    ranges={date}
+                  />
+                  {formik.touched.date && formik.errors.date && (
+                    <span className="text-red-400 text-sm">
+                      {formik.errors.date}
+                    </span>
+                  )}
+                </div>
                 <div className="flex flex-start items-center space-x-3">
                   <People />
                   <p className="">Aranan Gönüllü Sayısı</p>
                 </div>
-                <Input
-                  variant="outlined"
-                  label="Sayı"
-                  name="needOfVolunteer"
-                  type="number"
-                  min={0}
-                  value={callInput.needOfVolunteer}
-                  onChange={(e) => handleInputChange(e)}
-                />
+                <div className="w-full">
+                  <Input
+                    variant="outlined"
+                    label="Sayı*"
+                    name="needOfVolunteer"
+                    type="number"
+                    min={0}
+                    value={formik.values.needOfVolunteer}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {formik.touched.needOfVolunteer &&
+                    formik.errors.needOfVolunteer && (
+                      <span className="text-red-400 text-sm">
+                        {formik.errors.needOfVolunteer}
+                      </span>
+                    )}
+                </div>
               </div>
             </div>
           </div>
@@ -266,14 +324,14 @@ export default function OpenCall() {
               label="Diğer"
               name="otherSkills"
               className="max-w-xs"
-              value={callInput.otherSkills}
-              onChange={(e) => handleInputChange(e)}
+              value={formik.values.otherSkills}
+              onChange={formik.handleChange}
             />
           </div>
 
           <p className="text-gray-400 font-bold my-5">Konuşulan Diller</p>
           <div className="grid grid-cols-3 gap-3 mb-10">
-            {language_spoken.map((languages, index) => {
+            {spokenLanguages.map((languages, index) => {
               return (
                 <div className="flex min-w-fit items-center" key={index}>
                   <Checkbox
@@ -345,14 +403,14 @@ export default function OpenCall() {
             label="Notlar"
             name="notes"
             className="mb-10"
-            value={callInput?.notes}
-            onChange={(e) => handleInputChange(e)}
+            value={formik.values.notes}
+            onChange={formik.handleChange}
           />
 
           <div className="flex justify-end gap-x-3">
             <Button disabled>Kaydet</Button>
 
-            <Button color="pink" type="submit" onClick={createCall}>
+            <Button color="pink" type="submit">
               Yayınla
             </Button>
           </div>
