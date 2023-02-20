@@ -88,3 +88,19 @@ export const getUserAppliedCalls = async (uid) => {
     console.log(error);
   }
 };
+
+export const getUserAppliedSpecificCall = async (uid, callID) => {
+  try {
+    const userDoc = await getDoc(doc(db, "users", uid));
+    if (userDoc.exists()) {
+      const appliedCalls = userDoc.data().appliedCalls || [];
+
+      const appliedCall = appliedCalls.find((call) => call.id === callID);
+      return appliedCall;
+    } else {
+      console.log("No such document!");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
