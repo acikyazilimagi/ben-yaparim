@@ -259,25 +259,23 @@ export default function CallDetail() {
                 Önemli Bilgiler
               </p>
               <div className="mt-2 grid grid-cols-2 gap-3">
-                {call?.checkedFacilities?.map((facility) => (
-                  <ul>
-                    <li className="mt-2">
-                      {facility.includes("Yol")
-                        ? "Yol karşılanacaktır."
-                        : "Yol karşılanmayacaktır."}
-                    </li>
-                    <li className="mt-2">
-                      {facility.includes("Konaklama")
-                        ? "Konaklanma karşılanacaktır."
-                        : "Konaklanma karşılanmayacaktır."}
-                    </li>
-                    <li className="mt-2">
-                      {facility.includes("Yemek")
-                        ? "Yemek karşılanacaktır."
-                        : "Yemek karşılanmayacaktır."}
-                    </li>
-                  </ul>
-                ))}
+                <ul>
+                  <li className="mt-2">
+                    {call?.checkedFacilities?.includes("Yol")
+                      ? "Yol karşılanacaktır."
+                      : "Yol karşılanmayacaktır."}
+                  </li>
+                  <li className="mt-2">
+                    {call?.checkedFacilities?.includes("Konaklama")
+                      ? "Konaklanma karşılanacaktır."
+                      : "Konaklanma karşılanmayacaktır."}
+                  </li>
+                  <li className="mt-2">
+                    {call?.checkedFacilities?.includes("Yemek")
+                      ? "Yemek karşılanacaktır."
+                      : "Yemek karşılanmayacaktır."}
+                  </li>
+                </ul>
               </div>
               <p className="max-w-xl my-3">{call?.notes}</p>
             </div>
