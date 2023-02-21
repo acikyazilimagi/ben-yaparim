@@ -26,22 +26,30 @@ import * as Yup from "yup";
 
 import { auth } from "@/src/firebase-config";
 
-const renderAppliedCallContent = ({ calls, isOpen } = {}) => {
+const renderAppliedCallContent = ({ calls, isOpen, profileData } = {}) => {
   const renderedCalls = calls?.filter((call) => {
     return isOpen ? call.isActive : !call.isActive;
   });
   return renderedCalls?.map((call) => {
     return (
       <Card
-        key={call.id}
-        title={call.title}
-        description={call.description}
+        key={call?.id}
+        title={call?.title}
+        description={call?.description}
         startDate={call?.date?.startDate}
-        endDate={call.date?.endDate}
-        needOfVolunteer={call.needOfVolunteer}
-        location=""
-        id={call.id}
-        status={call.status}
+        endDate={call?.date?.endDate}
+        needOfVolunteer={call?.needOfVolunteer}
+        location={call?.location}
+        id={call?.id}
+        checkedCertificates={call?.checkedCertificates}
+        checkedLanguages={call?.checkedLanguages}
+        checkedSkills={call?.checkedSkills}
+        status={
+          call?.applicants?.find(
+            (applicant) => applicant?.uid === profileData?.uid
+          )?.approvedStatus
+        }
+        applicants={call?.applicants}
       />
     );
   });
@@ -69,7 +77,7 @@ const Profile = () => {
       town: profileData?.town,
       phone: profileData?.phone,
     },
-    enableReinitialize:true,
+    enableReinitialize: true,
     validationSchema: Yup.object({
       name: Yup.string().required("Lütfen isminizi giriniz."),
       surname: Yup.string().required("Lütfen soyisminizi giriniz."),
@@ -113,12 +121,12 @@ const Profile = () => {
     {
       label: "Aktif Başvurularım",
       value: "aktif",
-      content: renderAppliedCallContent({ calls: appliedCalls, isOpen: true }),
+      content: renderAppliedCallContent({ calls: appliedCalls, isOpen: true, profileData }),
     },
     {
       label: "Kapanmış Başvurularım",
       value: "kapali",
-      content: renderAppliedCallContent({ calls: appliedCalls, isOpen: false }),
+      content: renderAppliedCallContent({ calls: appliedCalls, isOpen: false, profileData }),
     },
   ];
 
