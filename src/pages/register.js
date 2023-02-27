@@ -204,7 +204,7 @@ export default function Register() {
     "AB Pozittif",
     "AB Negatif",
     "0 Pozittif",
-    "O Negative",
+    "0 Negative",
   ];
 
   return (
@@ -455,9 +455,10 @@ export default function Register() {
                     onChange={handleSkillCheck}
                     name="skills"
                     type="checkbox"
+                    id={`checked-checkbox-skill-${index}`}
                   />
                   <label
-                    htmlFor="checked-checkbox"
+                    htmlFor={`checked-checkbox-skill-${index}`}
                     className="text-sm font-medium w-28"
                   >
                     {skill}
@@ -490,9 +491,10 @@ export default function Register() {
                     type="checkbox"
                     value={languages}
                     onChange={handleLanguageCheck}
+                    id={`checked-checkbox-language-${index}`}
                   />
                   <label
-                    htmlFor="checked-checkbox"
+                    htmlFor={`checked-checkbox-language-${index}`}
                     className="text-sm font-medium w-28"
                   >
                     {languages}
@@ -515,9 +517,10 @@ export default function Register() {
                     type="checkbox"
                     value={certificate}
                     onChange={handleCertificateCheck}
+                    id={`checked-checkbox-certificate-${index}`}
                   />
                   <label
-                    htmlFor="checked-checkbox"
+                    htmlFor={`checked-checkbox-certificate-${index}`}
                     className="text-sm font-medium w-full"
                   >
                     {certificate}
@@ -576,9 +579,10 @@ export default function Register() {
                     type="checkbox"
                     value={consent}
                     onChange={handleConsentCheck}
+                    id={`checked-checkbox-${index}`}
                   />
                   <label
-                    htmlFor="checked-checkbox"
+                    htmlFor={`checked-checkbox-${index}`}
                     className="text-sm w-full py-5"
                   >
                     {consent}
