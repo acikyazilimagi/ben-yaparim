@@ -71,7 +71,9 @@ export default function Card({
             text={Status[status]}
           />
         )}
-        <p className="my-2">{description}</p>
+        <p className="my-2 max-h-24 text-ellipsis overflow-hidden">
+          {description}
+        </p>
         <p className="text-sm font-bold my-5">Aranan Yetkinlikler</p>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 my-2">
