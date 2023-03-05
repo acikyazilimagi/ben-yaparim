@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package Call;
+
+message Call {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    string location = 4;
+    string town = 5;
+    int32 need_of_volunteer = 6;
+    string precondition = 7;
+    string other_skills = 8;
+    uint64 start_date_epoc = 9;
+    uint64 end_date_epoc = 10;
+    repeated CallCondition call_conditions = 11;
+    string organization_id = 12;
+    string organization_name = 13;
+    string organization_logo = 14;
+    string organization_url = 15;
+    string status = 16;
+}
+
+message CallCondition {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    enum CALL_CONDITION_TYPE {
+        CHECKBOX = 0;
+        RADIO = 1;
+        TEXT = 2; 
+     }
+    CALL_CONDITION_TYPE type = 4;
+    bool is_required = 5;
+}
+
+message CreateCallRequest {
+    string title = 1;
+    string description = 2;
+    string location = 3;
+    string town = 4;
+    int32 need_of_volunteer = 5;
+    string precondition = 6;
+    string other_skills = 7;
+    uint64 start_date_epoc = 8;
+    uint64 end_date_epoc = 9;
+    repeated CallCondition call_conditions = 10;
+    string organization_id = 11;
+    string organization_name = 13;
+    string organization_logo = 14;
+    string organization_url = 15;
+    string status = 16;
+}
+
+message CreateCallResponse {
+    string id = 1;
+    string code = 2;
+    bool success = 3;
+    string message = 4;
+}
+
+message UpdateCallRequest {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    string location = 4;
+    string town = 5;
+    int32 need_of_volunteer = 6;
+    string precondition = 7;
+    string other_skills = 8;
+    uint64 start_date_epoc = 9;
+    uint64 end_date_epoc = 10;
+    repeated CallCondition call_conditions = 11;
+    string organization_id = 12;
+    string organization_name = 13;
+    string organization_logo = 14;
+    string organization_url = 15;
+    string status = 16;
+}
+
+message UpdateCallResponse {
+    string id = 1;
+    string code = 2;
+    bool success = 3;
+    string message = 4;
+}
+
+message DeleteCallRequest {
+    string id = 1;
+}
+
+message DeleteCallResponse {
+    string id = 1;
+    string code = 2;
+    bool success = 3;
+    string message = 4;
+}
+
+message GetCallsRequest{
+    int32 page_size = 1;
+    string next_cursor = 2;
+    string organization_id = 3;
+}
+
+message GetCallsResponse {
+    repeated Call calls = 1;
+    int32 total_count = 2;
+    int32 page_size = 3;
+    string next_cursor = 4;
+    string code = 5;
+    bool success = 6;
+    string message = 7;
+}
+
+service CallService {
+    rpc CreateCall(CreateCallRequest) returns (CreateCallResponse);
+    rpc UpdateCall(UpdateCallRequest) returns (UpdateCallResponse);
+    rpc DeleteCall(DeleteCallRequest) returns (DeleteCallResponse);
+    rpc GetCalls(GetCallsRequest) returns (GetCallsResponse);
+}
